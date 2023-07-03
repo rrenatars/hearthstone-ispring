@@ -5,7 +5,7 @@ import Card from "./CardComponent"
 
 const Cards = ({ cards }) => {
     return (
-        <div>
+        <div className="cards">
             {cards.map((card) => (
                 <Card card={card}></Card>
             ))}

@@ -7,7 +7,7 @@ const Card = ({ card }) => {
     const cardClass = 'card';
 
     return (
-        <div className={cardClass}>{name}</div>
+        <div className={cardClass}>{name} {mana} {attack}</div>
     );
 };
 
