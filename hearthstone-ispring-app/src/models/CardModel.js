@@ -1,5 +1,5 @@
-import { record } from 'immutable';
-export const CardRecord  = record({
+import { Record } from 'immutable';
+export const CardRecord  = Record({
     id: null,
     name: '',
     mana: null,

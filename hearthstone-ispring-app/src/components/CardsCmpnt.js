@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { CardRecord } from "../models/CardModel";
-import {Card} from "./CardComponent"
+import Card from "./CardComponent"
 
 const Cards = ({ cards }) => {
     return (
@@ -17,4 +17,4 @@ Cards.propTypes = {
     cards: PropTypes.arrayOf(PropTypes.instanceOf(CardRecord)).isRequired,
 };
 
-export default Card;
+export default Cards;
