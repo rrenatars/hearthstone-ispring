@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/css/arena.css" rel="stylesheet">
+    <title>Hearthstone</title>
+</head>
+<body>
+<header class="heading">
+    HEARTHSTONE
+</header>
+<div class="main">
+    <div class="main__field">
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+    </div>
+    <div class="main__player">
+        Player1
+    </div>
+    <div class="main__cards">
+        {{ range .Cards}}
+        <div class="cards__card">
+            <img src="{{ .Portrait }}" alt="">
+            {{ .Name }}
+            {{ .Mana }}
+        </div>
+        {{ end }}
+    </div>
+</div>
+<script src="../static/js/arena.js"></script>
+</body>
+</html>
