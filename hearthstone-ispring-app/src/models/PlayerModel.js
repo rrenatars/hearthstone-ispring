@@ -1,10 +1,9 @@
 import {Record} from 'immutable';
 
-export const CardRecord = Record({
+export const PlayerRecord = Record({
     id: null,
-    name: '',
+    name: 'Player',
     mana: null,
-    attack: null,
     defense: null,
     portrait: null,
 });

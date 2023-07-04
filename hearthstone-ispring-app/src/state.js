@@ -1,4 +1,5 @@
-import { CardRecord } from "./models/CardModel.js"
+import {CardRecord} from "./models/CardModel.js"
+import {PlayerRecord} from "./models/PlayerModel";
 
 const fireball = CardRecord({
     id: 3,
@@ -18,4 +19,11 @@ const golem = CardRecord({
     mana: 4,
 });
 
+const player1= PlayerRecord({
+   id: 1,
+   name: 'Player1',
+   mana: 10,
+});
+
 export const cards = [fireball, waterball, golem]
+export const player = player1
