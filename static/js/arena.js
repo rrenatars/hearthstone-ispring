@@ -3,6 +3,8 @@ const fieldListElement = document.querySelector('.main__field');
 
 cardsListElement.addEventListener(`dragstart`, (evt) => {
     evt.target.classList.add(`selected`);
+    selectedCard = cardsListElement.querySelector('.selected');
+    divCard = selectedCard.closest('div');
 });
 
 fieldListElement.addEventListener(`dragend`, (evt) => {
@@ -27,9 +29,11 @@ fieldListElement.addEventListener(`dragover`, (evt) => {
     if (nextElement !== null && activeElement !== null) {
         fieldListElement.insertBefore(activeElement, nextElement);
         fieldListElement.removeChild(currentElement);
+        cardsListElement.removeChild(divCard);
     } else if (activeElement !== null) {
         fieldListElement.appendChild(activeElement);
         fieldListElement.removeChild(currentElement);
+        cardsListElement.removeChild(divCard);
     }
 
 });
