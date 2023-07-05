@@ -34,6 +34,13 @@
     margin-bottom: 80px;
 }
 
+.main__cards-and-mana
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .main__cards {
     display: flex;
     justify-content: center;
@@ -50,7 +57,6 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    cursor: grab;
     font-family: 'Roboto', sans-serif;
 }
 
@@ -77,12 +83,12 @@
 
 body {
     overflow: hidden;
-    cursor: url(../cursor/cursor.png) 10 2, auto;
+    cursor: url(../images/cursor/cursor.png) 10 2, auto;
     background-color: black;
 }
 
 body:active {
-    cursor: url(../cursor/click.png) 10 2, auto;
+    cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
 .enemycards {

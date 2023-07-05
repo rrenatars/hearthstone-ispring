@@ -50,14 +50,22 @@
         <div class="field__empty"></div>
         <div class="field__empty"></div>
     </div>
-    <div class="main__cards">
-        {{ range .Cards}}
-        <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
-<!--            <img src="{{ .Portrait }}" alt="">-->
-            <span>{{ .Name }}</span>
-            <span>{{ .Mana }}</span>
+    <div class="main__cards-and-mana">
+        <div class="main__cards">
+            {{ range .Cards}}
+            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
+                <!--            <img src="{{ .Portrait }}" alt="">-->
+                <span class="card__name">{{ .Name }}</span>
+                <span class="card__mana">{{ .Mana }}</span>
+            </div>
+            {{ end }}
         </div>
-        {{ end }}
+        <div class="manabar">
+            <img src="../static/images/field/mana.png" alt="" class="manabar__crystall">
+            <img src="../static/images/field/mana.png" alt="" class="manabar__crystall">
+            <img src="../static/images/field/mana.png" alt="" class="manabar__crystall">
+            <img src="../static/images/field/mana.png" alt="" class="manabar__crystall">
+        </div>
     </div>
 </div>
 <script src="../static/js/arena.js"></script>
