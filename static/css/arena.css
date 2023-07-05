@@ -1,0 +1,268 @@
+.heading {
+    min-height: 10vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: darkgoldenrod;
+    margin-bottom: 50px;
+}
+
+.background {
+    text-align: center;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-image: url(../images/field/background.png) !important;
+    background-size: contain;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.main__player {
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    margin-bottom: 80px;
+}
+
+.main__cards {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 100%;
+    height: 200px;
+    gap: 5px;
+    margin-top: 150px;
+}
+
+.cards__card {
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    cursor: grab;
+    font-family: 'Roboto', sans-serif;
+}
+
+.selected {
+    opacity: 0.6;
+}
+
+.main__field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.field__empty {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #79f019;
+}
+
+.field__empty_hidden
+{
+    visibility: hidden;
+}
+
+body {
+    overflow: hidden;
+    cursor: url(../images/cursor/cursor.png) 10 2, auto;
+    background-color: black;
+}
+
+body:active {
+    cursor: url(../images/cursor/click.png) 10 2, auto;
+}
+
+button:hover {
+	cursor: url(../images/cursor/cursor.png) 10 2, auto;
+}
+
+button:active {
+	cursor: url(../images/cursor/click.png) 10 2, auto;
+}
+
+.enemycards {
+    margin-right: 11px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+.card {
+    height: 150px;
+    position: relative;
+    width: 100px;
+    border-radius: 8px;
+    float: left;
+}
+.card .cardtutorialhint {
+    display: none;
+}
+.card:hover .cardtutorialhint {
+    display: block;
+    color: white;
+    font-size: 14px;
+    line-height: 10.5rem;
+    position: absolute;
+    top: -65%;
+    width: 134%;
+    padding-right: 10px;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+}
+.enemycard {
+    width: 70px;
+    height: 112px;
+    z-index: 5;
+    background-image: url(../images/field/halfcardbackside.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.opponenthero {
+    position: absolute;
+    width: 11%;
+    height: 17%;
+    left: 45.9%;
+    top: 9.75%;
+    z-index: 11;
+    background-image: url(../images/field/medivh.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.playerhero {
+    position: absolute;
+    width: 11.5%;
+    height: 17.5%;
+    left: 45.85%;
+    top: 67.45%;
+    z-index: 20;
+    background-image: url(../images/field/jaina_proudmoore.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.opposingHeroHealthBackground {
+    position: absolute;
+    width: 17%;
+    height: 32%;
+    top: 76%;
+    left: 53.5%;
+    background-image: url(../images/field/HP.png);
+    background-size: cover;
+    user-select: none;
+    /* visibility: hidden; */
+}
+
+.opposingHeroHealthValue {
+    margin-top: 47%;
+    font-size: 27px;
+    font-weight: bold;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;   
+}
+
+.playerHeroHealthBackground {
+    position: absolute;
+    width: 17%;
+    height: 32%;
+    top: 69%;
+    left: 51%;
+    background-image: url(../images/field/HP.png);
+    background-size: cover;
+    user-select: none;
+    /* visibility: hidden; */
+}
+
+.playerHeroHealthValue {
+    margin-top: 48%;
+    font-size: 27px;
+    font-weight: bold;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;   
+}
+
+.playerHeroPower {
+    position: absolute;
+    width: 6%;
+    height: 13%;
+    top: 71.5%;
+    left: 53.5%;
+    z-index: 0;
+    background-image: url(../images/field/playerpower.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.endturn-button {
+    width: 8%;
+    height: 8%;
+    position: absolute;
+    left: 73.65%;
+    top: 42.1%;
+    user-select: none;
+    font-size: 16px;
+    font-weight: bold;
+    background: url(../images/field/endturn1.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    font-family: BelweBdBTBold;
+    border: none;
+    z-index: 2;
+}
+
+.playerManaValue {
+    position: absolute;
+    top: 91.25%;
+    left: 62.85%;
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+    user-select: none;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.opponentManaValue {
+    position: absolute;
+    top: 5.25%;
+    left: 61.15%;
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+    user-select: none;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.manabox {
+    background-image: url(../images/field/mana.png);
+    position: absolute;
+    width: 29px;
+    height: 32px;
+    left: 65.9%;
+    top: 90.2%;
+    margin: 8.66px 0;
+}
