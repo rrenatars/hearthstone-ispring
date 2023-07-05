@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Hearthstone</title>
     <link rel="stylesheet" href="style.css">
-    <!--<link rel="stylesheet" href="animations.css">-->
 </head>
 
 <body>
@@ -25,8 +24,7 @@
     </div>
     <div id="cards" class="cards">
     </div>
-    <button id="confirm">Play</button>
-    <div class="opponenthero">
+    <!--<div class="opponenthero">
         <div class="cardinplay" id="opposinghero">
                 <div class="opposingHeroHealth">30</div>
         </div>
@@ -35,10 +33,10 @@
         <div class="cardinplay" id="playerhero">
             <div class="playerHeroHealth">30</div>
         </div>
-    </div>
+    </div>-->
     <button id="endturn" class="endturn-button">END TURN</button>
     <div id="block"></div>
-    <div class="playerheropower">
+    <!--<div class="playerheropower">
         <div class="cardinplay" id="playerheropower">
             <div>
                 <div class="heroPowerAttack">1</div>
@@ -47,24 +45,10 @@
                 <div class="heroPowerHealth">99999999</div>
             </div>
         </div>
-    </div>
-    <div class="mana" id="mana">1/1</div>
-    <div class="board board--player"></div>
+    </div>-->
+    <div class="playermana" id="mana">1/1</div>
+    <div class="opponentmana" id="mana">1/1</div>
 
 </body>
-
-
-<!-- Scripts -->
-<script src="index.js"></script>
-
-<script>
-    function showGameMenu() {
-        // show game menu
-        document.getElementById("gamemenu").style.display = "block";
-        document.getElementById("gamemenuContent").style.display = "block";
-        document.getElementById("gamemenuContent").classList.add('openMenuAnim');
-        openmenuSnd.play();
-    }
-</script>
 
 </html>

@@ -63,8 +63,8 @@ body:active {
    1px 1px 0 #000;
 }
 .enemycard {
-    width: 100px;
-    height: 160px;
+    width: 70px;
+    height: 112px;
     z-index: 5;
     background-image: url(src/images/halfcardbackside.png);
     background-repeat: no-repeat;
@@ -189,13 +189,41 @@ body:active {
 	user-select: none;
 	font-size: 17px;
     font-weight: bold;
-	background: url(src/images/endturn.png);
+	background: url(src/images/endturn.jpg);
 	border-top-left-radius: 120%35px;
 	border-bottom-left-radius: 120%35px; 
 	border-top-right-radius: 120%35px;
 	border-bottom-right-radius: 120%35px; 
 	font-family: BelweBdBTBold;
 	z-index: 2;
+}
+
+.collisionbox {
+	width: 90%;
+	height: 30%;
+	position: absolute;
+	left: 5%;
+	top: 35%;
+}
+
+.playermana {
+	position: absolute;
+	top: 91.25%;
+	left: 62.85%;
+	color: white;
+	font-size: 23px;
+	font-weight: bold;
+	user-select: none;
+}
+
+.opponentmana {
+	position: absolute;
+	top: 5.25%;
+	left: 61.15%;
+	color: white;
+	font-size: 23px;
+	font-weight: bold;
+	user-select: none;
 }
 
 .manabox {
@@ -209,11 +237,3 @@ body:active {
 	border-left: solid 1.5px #333333;
 	border-right: solid 1.5px #333333;
   }
-
-.collisionbox {
-	width: 90%;
-	height: 30%;
-	position: absolute;
-	left: 5%;
-	top: 35%;
-}
