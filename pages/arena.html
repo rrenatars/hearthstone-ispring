@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link href="../static/css/arena.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Hearthstone</title>
+</head>
+<body>
+    <div class="background">
+        <div id="manacontainer"></div>
+        <div class="enemycards">
+            <div class="enemycard"></div>
+            <div class="enemycard"></div>
+            <div class="enemycard"></div>
+            <div class="enemycard"></div>
+            <div class="enemycard"></div>
+        </div>
+        <div id="cards" class="cards">
+        </div>
+        <div class="opponenthero">
+            <div class="opposingHeroHealthBackground">
+                <div class="opposingHeroHealthValue">30</div>
+            </div>
+        </div>
+        <div class="playerhero">
+            <div class="playerHeroHealthBackground">
+                <div class="playerHeroHealthValue">30</div>
+            </div>
+        </div>
+        <button id="endturn" class="endturn-button"></button>
+        <div id="block"></div>
+        <div class="playerHeroPower"></div>
+    <div class="playerManaValue" id="mana">1/1</div>
+    <div class="opponentManaValue" id="mana">1/1</div>
+    <div class="manabox"></div>
+    <div class="main__field">
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
+    </div>
+    <div class="main__player">
+        <!-- Player1 -->
+    </div>
+    <div class="main__cards">
+        <!-- {{ range .Cards}} -->
+        <div class="cards__card" style="background: url(&quot;{{ .Portrait }}&quot;);">
+            <!--            <img src="{{ .Portrait }}" alt="">-->
+            <!-- {{ .Name }} -->
+            <!-- {{ .Mana }} -->
+        </div>
+        <!-- {{ end }} -->
+    </div>
+    </div>
+</div>
+    <script src="../static/js/arena.js"></script>
+</body>
+
+</html>
