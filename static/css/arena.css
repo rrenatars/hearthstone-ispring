@@ -53,6 +53,7 @@
 .field__empty {
     width: 200px;
     height: 200px;
+    border: 1px solid #79f019;
 }
 
 .field__empty_hidden

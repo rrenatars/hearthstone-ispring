@@ -38,7 +38,6 @@ fieldListElement.addEventListener(`dragover`, (evt) => {
         fieldListElement.insertBefore(activeElement, nextElement);
         fieldListElement.removeChild(currentElement);
         cardsListElement.removeChild(divCard);
-
     } else if (activeElement !== null) {
         fieldListElement.appendChild(activeElement);
         fieldListElement.removeChild(currentElement);
