@@ -1,30 +1,8 @@
-const draggableElements = document.querySelectorAll('.draggable');
-
-draggableElements.forEach(element => {
-    element.addEventListener('dragstart', dragStart);
-    element.addEventListener('dragend', dragEnd);
-});
-
-function dragStart(event) {
-    event.dataTransfer.setData('text/plain', event.target.id);
-    event.currentTarget.classList.add('dragging');
-}
-
-function dragEnd(event) {
-    event.currentTarget.classList.remove('dragging');
-}
-
 const cardsListElement = document.querySelector(`.main__cards`);
 const fieldListElement = document.querySelector('.main__field');
-emptyFieldHidden = fieldListElement.querySelector('.field__empty_hidden');
 
 cardsListElement.addEventListener(`dragstart`, (evt) => {
     evt.target.classList.add(`selected`);
-    selectedCard = cardsListElement.querySelector('.selected');
-    divCard = selectedCard;
-    console.log(divCard);
-    // emptyFieldHidden.removeAttribute('class');
-    // emptyFieldHidden.setAttribute('class', 'field__empty');
 });
 
 fieldListElement.addEventListener(`dragend`, (evt) => {
@@ -54,11 +32,9 @@ fieldListElement.addEventListener(`dragover`, (evt) => {
     if (nextElement !== null && activeElement !== null) {
         fieldListElement.insertBefore(activeElement, nextElement);
         fieldListElement.removeChild(currentElement);
-        cardsListElement.removeChild(divCard);
     } else if (activeElement !== null) {
         fieldListElement.appendChild(activeElement);
         fieldListElement.removeChild(currentElement);
-        cardsListElement.removeChild(divCard);
     }
 
 });

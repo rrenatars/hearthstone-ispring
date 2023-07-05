@@ -55,3 +55,21 @@ VALUES
     '6',
     '/static/images/cards-in-hand/Boulderfist Ogre.png'
 );
+
+INSERT INTO
+    card
+(
+    name,
+    mana,
+    healthpoint,
+    attack,
+    portrait
+)
+VALUES
+(
+    'Argent Squire',
+    '1',
+    '1',
+    '1',
+    '/static/images/cards-in-hand/Argent Squire.png'
+);
