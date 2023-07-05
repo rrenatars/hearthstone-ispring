@@ -11,6 +11,19 @@
 
 .main {
     text-align: center;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-image: url(../images/field/background.png) !important;
+    background-size: contain;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
 }
 
 .main__player {
@@ -26,7 +39,7 @@
     justify-content: center;
     align-items: flex-end;
     width: 100%;
-    height: 200px;
+    height: 135px;
     gap: 5px;
     margin-top: 150px;
 }
@@ -49,12 +62,12 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 200px;
 }
 
 .field__empty {
-    width: 200px;
-    height: 200px;
-    border: 1px solid #79f019;
+    width: 94px;
+    height: 135px;
 }
 
 .field__empty_hidden
@@ -70,22 +83,6 @@ body {
 
 body:active {
     cursor: url(../cursor/click.png) 10 2, auto;
-}
-
-.field-background {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-    background-image: url(../images/field/background.png) !important;
-    background-size: contain;
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: -1;
 }
 
 .enemycards {
@@ -253,14 +250,6 @@ body:active {
     border-bottom-right-radius: 120%35px;
     font-family: BelweBdBTBold;
     z-index: 2;
-}
-
-.collisionbox {
-    width: 90%;
-    height: 30%;
-    position: absolute;
-    left: 5%;
-    top: 35%;
 }
 
 .playermana {
