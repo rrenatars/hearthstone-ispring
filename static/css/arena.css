@@ -28,6 +28,7 @@
     width: 100%;
     height: 200px;
     gap: 5px;
+    margin-top: 150px;
 }
 
 .cards__card {
@@ -59,4 +60,237 @@
 .field__empty_hidden
 {
     visibility: hidden;
+}
+
+body {
+    overflow: hidden;
+    cursor: url(../cursor/cursor.png) 10 2, auto;
+    background-color: black;
+}
+
+body:active {
+    cursor: url(../cursor/click.png) 10 2, auto;
+}
+
+.field-background {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-image: url(../images/field/background.png) !important;
+    background-size: contain;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+.enemycards {
+    margin-right: 11px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+.card {
+    height: 150px;
+    position: relative;
+    width: 100px;
+    border-radius: 8px;
+    float: left;
+}
+.card .cardtutorialhint {
+    display: none;
+}
+.card:hover .cardtutorialhint {
+    display: block;
+    color: white;
+    font-size: 14px;
+    line-height: 10.5rem;
+    position: absolute;
+    top: -65%;
+    width: 134%;
+    padding-right: 10px;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+}
+.enemycard {
+    width: 70px;
+    height: 112px;
+    z-index: 5;
+    background-image: url(../images/field/halfcardbackside.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.deck {
+    margin: 0 -25px;
+    position: absolute;
+    font-size: 27px;
+    font-weight: bold;
+    letter-spacing: -0.025em;
+}
+
+.opponenthero {
+    position: absolute;
+    width: 11%;
+    height: 17%;
+    left: 45.85%;
+    top: 9.75%;
+    z-index: 11;
+    background-image: url(../images/field/medivh.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.playerhero {
+    position: absolute;
+    width: 11.5%;
+    height: 17.5%;
+    left: 45.8%;
+    top: 67.45%;
+    z-index: 20;
+    background-image: url(../images/field/jaina_proudmoore.gif);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.cardinplay {
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    float: left;
+    margin: 0 auto;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    border: solid 5px #735c4c;
+    border-radius: 100%;
+}
+
+.opposingHeroHealth {
+    position: absolute;
+    width: 1.75rem;
+    height: 2rem;
+    margin: 0 auto;
+    padding-left: 0.5rem;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    background-size: cover;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: -0.025em;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    user-select: none;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.playerHeroHealth {
+    position: absolute;
+    width: 1.75rem;
+    height: 2rem;
+    margin: 0 auto;
+    padding-left: 0.5rem;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+    background-size: cover;
+    font-size: 40px;
+    font-weight: bold;
+    letter-spacing: -0.025em;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    user-select: none;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.playerheropower {
+    position: absolute;
+    width: 6%;
+    height: 13%;
+    top: 72%;
+    left: 54%;
+    z-index: 0;
+    background-image: url(../images/field/playerpower.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+
+.heroPowerAttack {
+    font-size: 0px;
+    user-select: none;
+}
+.heroPowerHealth {
+    font-size: 0px;
+    user-select: none;
+}
+
+.endturn-button {
+    width: 5.9%;
+    height: 5.4%;
+    position: absolute;
+    left: 74.58%;
+    top: 43.19%;
+    user-select: none;
+    font-size: 17px;
+    font-weight: bold;
+    background: url(../images/field/endturn.jpg);
+    border-top-left-radius: 120%35px;
+    border-bottom-left-radius: 120%35px;
+    border-top-right-radius: 120%35px;
+    border-bottom-right-radius: 120%35px;
+    font-family: BelweBdBTBold;
+    z-index: 2;
+}
+
+.collisionbox {
+    width: 90%;
+    height: 30%;
+    position: absolute;
+    left: 5%;
+    top: 35%;
+}
+
+.playermana {
+    position: absolute;
+    top: 91.25%;
+    left: 62.85%;
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+    user-select: none;
+}
+
+.opponentmana {
+    position: absolute;
+    top: 5.25%;
+    left: 61.15%;
+    color: white;
+    font-size: 23px;
+    font-weight: bold;
+    user-select: none;
+}
+
+.manabox {
+    position: relative;
+    width: 30px;
+    height: 17.32px;
+    float: left;
+    background-color: #3669c9;
+    margin: 8.66px 0;
+    box-shadow: 0 0 40px rgba(0,0,0,0.9);
+    border-left: solid 1.5px #333333;
+    border-right: solid 1.5px #333333;
 }
