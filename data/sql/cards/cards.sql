@@ -53,5 +53,5 @@ VALUES
     '6',
     '7',
     '6',
-    '/static/images/creatures/Boulderfist Ogre.png'
+    '/static/images/cards-in-hand/Boulderfist Ogre.png'
 );

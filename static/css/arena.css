@@ -31,11 +31,8 @@
 }
 
 .cards__card {
-    background-color: aquamarine;
-    border: 1px solid #bd61fb;
-    border-radius: 70px;
-    width: 200px;
-    height: 200px;
+    width: 94px;
+    height: 135px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -56,4 +53,9 @@
 .field__empty {
     width: 200px;
     height: 200px;
+}
+
+.field__empty_hidden
+{
+    visibility: hidden;
 }
