@@ -36,10 +36,12 @@
         <button id="endturn" class="endturn-button"></button>
         <div id="block"></div>
         <div class="playerHeroPower"></div>
-    <div class="playerManaValue" id="mana">1/1</div>
-    <div class="opponentManaValue" id="mana">1/1</div>
+    <div class="playerManaValue" id="MyMana">10/1</div>
+    <div class="opponentManaValue" id="OpponentMana">1/1</div>
     <div class="manabox"></div>
-    <div class="main__field">
+    <div class="background__field">
+        <div class="field__empty"></div>
+        <div class="field__empty"></div>
         <div class="field__empty"></div>
         <div class="field__empty"></div>
         <div class="field__empty"></div>
@@ -47,18 +49,19 @@
         <div class="field__empty"></div>
         <div class="field__empty"></div>
     </div>
-    <div class="main__player">
-        <!-- Player1 -->
-    </div>
-    <div class="main__cards">
-        <!-- {{ range .Cards}} -->
-        <div class="cards__card" style="background: url(&quot;{{ .Portrait }}&quot;);">
-            <!--            <img src="{{ .Portrait }}" alt="">-->
-            <!-- {{ .Name }} -->
-            <!-- {{ .Mana }} -->
+    <div class="background__cards-and-mana">
+        <div class="background__cards">
+            {{ range .Cards}}
+            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
+                <!--            <img src="{{ .Portrait }}" alt="">-->
+                <span class="card__name">{{ .Name }}</span>
+                <span class="card__mana">{{ .Mana }}</span>
+            </div>
+            {{ end }}
         </div>
-        <!-- {{ end }} -->
-    </div>
+        <div class="manabar" id="Manabar">
+
+        </div>
     </div>
 </div>
     <script src="../static/js/arena.js"></script>
