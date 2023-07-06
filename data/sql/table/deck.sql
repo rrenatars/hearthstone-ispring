@@ -17,6 +17,12 @@ CREATE TABLE  IF NOT EXISTS deck
 
 INSERT INTO deck (name, mana, healthpoint, attack, portrait)
 VALUES
+    (
+     'Fireball', '4', '4', '4', '/static/images/cards-in-hand/card-sprite.png'
+    );
+
+INSERT INTO deck (name, mana, healthpoint, attack, portrait)
+VALUES
     ('Boulderfist Ogre', '6', '7', '6', '/static/images/cards-in-hand/Boulderfist Ogre.png'),
     ('Pompous Actor', '2', '2', '3', '/static/images/cards-in-hand/Pompous Actor.png'),
     ('Stoneskin Basilisk', '3', '1', '1', '/static/images/cards-in-hand/Stoneskin Basilisk.png'),

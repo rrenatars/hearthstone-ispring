@@ -1,4 +1,5 @@
-.heading {
+.heading
+{
     min-height: 10vh;
     display: flex;
     flex-direction: row;
@@ -9,7 +10,8 @@
     margin-bottom: 50px;
 }
 
-.background {
+.background
+{
     text-align: center;
     margin: 0;
     width: 100%;
@@ -27,7 +29,8 @@
     z-index: -1;
 }
 
-.background__player {
+.background__player
+{
     height: 100px;
     display: flex;
     justify-content: center;
@@ -42,7 +45,8 @@
     align-items: center;
 }
 
-.background__cards {
+.background__cards
+{
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -53,7 +57,8 @@
     z-index: 3;
 }
 
-.cards__card {
+.cards__card
+{
     width: 94px;
     height: 135px;
     display: flex;
@@ -62,59 +67,74 @@
     font-family: 'Roboto', sans-serif;
 }
 
-.selected {
-    opacity: 0.6;
-}
+/*.selected*/
+/*{*/
+/*    opacity: 0.6;*/
+/*}*/
 
-.background__field {
+.background__field
+{
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0;
     margin-top: 200px;
+    /*width: 500px;*/
+    /*height: 200px;*/
 }
 
-.field__empty {
+.field__empty
+{
     width: 94px;
     height: 135px;
+    /*border: 1px solid #f43232;*/
 }
 
 
 
-body {
+body
+{
     overflow: hidden;
     cursor: url(../images/cursor/cursor.png) 10 2, auto;
     background-color: black;
 }
 
-body:active {
+body:active
+{
     cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
-button:hover {
+button:hover
+{
 	cursor: url(../images/cursor/cursor.png) 10 2, auto;
 }
 
-button:active {
+button:active
+{
 	cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
-.enemycards {
+.enemycards
+{
     margin-right: 11px;
     display: flex;
     justify-content: center;
     gap: 4px;
 }
-.card {
+.card
+{
     height: 150px;
     position: relative;
     width: 100px;
     border-radius: 8px;
     float: left;
 }
-.card .cardtutorialhint {
+.card .cardtutorialhint
+{
     display: none;
 }
-.card:hover .cardtutorialhint {
+.card:hover .cardtutorialhint
+{
     display: block;
     color: white;
     font-size: 14px;
@@ -129,7 +149,9 @@ button:active {
             -1px 1px 0 #000,
             1px 1px 0 #000;
 }
-.enemycard {
+
+.enemycard
+{
     width: 70px;
     height: 112px;
     z-index: 5;
@@ -138,7 +160,8 @@ button:active {
     background-size: contain;
 }
 
-.opponenthero {
+.opponenthero
+{
     position: absolute;
     width: 11%;
     height: 17%;
@@ -150,7 +173,8 @@ button:active {
     background-size: contain;
 }
 
-.playerhero {
+.playerhero
+{
     position: absolute;
     width: 11.5%;
     height: 17.5%;
@@ -162,7 +186,8 @@ button:active {
     background-size: contain;
 }
 
-.opposingHeroHealthBackground {
+.opposingHeroHealthBackground
+{
     position: absolute;
     width: 17%;
     height: 32%;
@@ -174,7 +199,8 @@ button:active {
     /* visibility: hidden; */
 }
 
-.opposingHeroHealthValue {
+.opposingHeroHealthValue
+{
     margin-top: 47%;
     font-size: 27px;
     font-weight: bold;
@@ -183,10 +209,11 @@ button:active {
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px 1px 0 #000,
-            1px 1px 0 #000;   
+            1px 1px 0 #000;
 }
 
-.playerHeroHealthBackground {
+.playerHeroHealthBackground
+{
     position: absolute;
     width: 17%;
     height: 32%;
@@ -198,7 +225,8 @@ button:active {
     /* visibility: hidden; */
 }
 
-.playerHeroHealthValue {
+.playerHeroHealthValue
+{
     margin-top: 48%;
     font-size: 27px;
     font-weight: bold;
@@ -207,10 +235,11 @@ button:active {
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px 1px 0 #000,
-            1px 1px 0 #000;   
+            1px 1px 0 #000;
 }
 
-.playerHeroPower {
+.playerHeroPower
+{
     position: absolute;
     width: 6%;
     height: 13%;
@@ -222,7 +251,8 @@ button:active {
     background-size: contain;
 }
 
-.endturn-button {
+.endturn-button
+{
     width: 8%;
     height: 8%;
     position: absolute;
@@ -239,7 +269,8 @@ button:active {
     z-index: 2;
 }
 
-.playerManaValue {
+.playerManaValue
+{
     position: absolute;
     top: 91.25%;
     left: 62.85%;
@@ -250,7 +281,8 @@ button:active {
     text-shadow: 1px 1px 2px #000000;
 }
 
-.opponentManaValue {
+.opponentManaValue
+{
     position: absolute;
     top: 5.25%;
     left: 61.15%;
@@ -261,7 +293,8 @@ button:active {
     text-shadow: 1px 1px 2px #000000;
 }
 
-.manabox {
+.manabox
+{
     background-image: url(../images/field/mana.png);
     position: absolute;
     width: 29px;

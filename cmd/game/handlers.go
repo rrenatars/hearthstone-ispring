@@ -22,7 +22,7 @@ type cardData struct {
 	Defense       int    `db:"defense"`
 	Portrait      string `db:"portrait"`
 	CardID        string `db:"card_id"`
-	Specification string `db : "specification"`
+	Specification string `db:"specification"`
 }
 
 func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
