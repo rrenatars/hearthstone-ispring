@@ -3,32 +3,45 @@ package main
 import (
 	"html/template"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 )
 
 type arenaPageData struct {
 	Cards []cardData
+	Deck  []cardData
 }
 
 type cardData struct {
-	Name     string `db:"name"`
-	Mana     int    `db:"mana"`
-	Attack   int    `db:"attack"`
-	Defense  int    `db:"defense"`
-	Portrait string `db:"portrait"`
-	CardID   string `db:"card_id"`
+	Name          string `db:"name"`
+	Mana          int    `db:"mana"`
+	Attack        int    `db:"attack"`
+	Defense       int    `db:"defense"`
+	Portrait      string `db:"portrait"`
+	CardID        string `db:"card_id"`
+	Specification string `db : "specification"`
 }
 
 func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cards, err := cards(db)
+		//cards, err := cards(db)
+		// if err != nil {
+		// 	http.Error(w, "Internal Server Error", 500)
+		// 	log.Println(err)
+		// 	return
+		// }
+
+		deck, err := deck(db)
 		if err != nil {
-			http.Error(w, "Internal Server Error", 500)
+			http.Error(w, "Internal Server a Error", 500)
 			log.Println(err)
 			return
 		}
+
+		cards := GetRandomElements(deck, 3)
 
 		ts, err := template.ParseFiles("pages/arena.html")
 		if err != nil {
@@ -39,6 +52,7 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 
 		data := arenaPageData{
 			Cards: cards,
+			Deck:  deck,
 		}
 
 		err = ts.Execute(w, data)
@@ -50,6 +64,23 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 
 		log.Println("Request completed successfully")
 	}
+}
+
+func GetRandomElements(arr []cardData, numElements int) []cardData {
+	rand.Seed(time.Now().UnixNano())
+
+	if numElements > len(arr) {
+		numElements = len(arr)
+	}
+
+	result := make([]cardData, numElements)
+
+	for i := 0; i < numElements; i++ {
+		randomIndex := rand.Intn(len(arr))
+		result[i] = arr[randomIndex]
+	}
+
+	return result
 }
 
 func cards(db *sqlx.DB) ([]cardData, error) {
@@ -72,4 +103,27 @@ func cards(db *sqlx.DB) ([]cardData, error) {
 	}
 
 	return cards, nil
+}
+
+func deck(db *sqlx.DB) ([]cardData, error) {
+	const query = `
+		SELECT
+			name,
+			mana,
+			attack,
+			defense,
+			portrait,
+			specification
+		FROM
+			deck
+	`
+
+	var deck []cardData
+
+	err := db.Select(&deck, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return deck, nil
 }

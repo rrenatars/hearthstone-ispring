@@ -57,7 +57,7 @@ VALUES
 );
 
 INSERT INTO
-    card
+    deck
 (
     name,
     mana,
@@ -66,10 +66,10 @@ INSERT INTO
     portrait
 )
 VALUES
-(
-    'Argent Squire',
-    '1',
-    '1',
-    '1',
-    '/static/images/cards-in-hand/Argent Squire.png'
-);
+    (
+        'Argent Squire',
+        '1',
+        '1',
+        '1',
+        '/static/images/cards-in-hand/Argent Squire.png'
+    );

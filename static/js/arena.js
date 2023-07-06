@@ -1,6 +1,7 @@
-const cardsListElement = document.querySelector(`.main__cards`);
+const endTurnButton = document.getElementById('endturn')
+const cardsListElement = document.querySelector(`.background__cards`);
 const cardsElements = document.querySelectorAll('.cards__card')
-const fieldListElement = document.querySelector('.main__field');
+const fieldListElement = document.querySelector('.background__field');
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
@@ -70,3 +71,17 @@ fieldListElement.addEventListener(`dragover`, (evt) => {
     }
 });
 
+endTurnButton.addEventListener(
+    "click",
+    () => {
+        opponentTurn()
+    },
+    false
+
+);
+
+function opponentTurn() {
+    playersTurn = false;
+    document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+    endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
+    };

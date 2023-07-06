@@ -9,8 +9,9 @@
     margin-bottom: 50px;
 }
 
-.main {
+.background {
     text-align: center;
+    margin: 0;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -26,7 +27,7 @@
     z-index: -1;
 }
 
-.main__player {
+.background__player {
     height: 100px;
     display: flex;
     justify-content: center;
@@ -34,14 +35,14 @@
     margin-bottom: 80px;
 }
 
-.main__cards-and-mana
+.background__cards-and-mana
 {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.main__cards {
+.background__cards {
     display: flex;
     justify-content: center;
     align-items: flex-end;
@@ -49,6 +50,7 @@
     height: 135px;
     gap: 5px;
     margin-top: 150px;
+    z-index: 3;
 }
 
 .cards__card {
@@ -64,7 +66,7 @@
     opacity: 0.6;
 }
 
-.main__field {
+.background__field {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,10 +78,7 @@
     height: 135px;
 }
 
-.field__empty_hidden
-{
-    visibility: hidden;
-}
+
 
 body {
     overflow: hidden;
@@ -89,6 +88,14 @@ body {
 
 body:active {
     cursor: url(../images/cursor/click.png) 10 2, auto;
+}
+
+button:hover {
+	cursor: url(../images/cursor/cursor.png) 10 2, auto;
+}
+
+button:active {
+	cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
 .enemycards {
@@ -131,19 +138,11 @@ body:active {
     background-size: contain;
 }
 
-.deck {
-    margin: 0 -25px;
-    position: absolute;
-    font-size: 27px;
-    font-weight: bold;
-    letter-spacing: -0.025em;
-}
-
 .opponenthero {
     position: absolute;
     width: 11%;
     height: 17%;
-    left: 45.85%;
+    left: 45.9%;
     top: 9.75%;
     z-index: 11;
     background-image: url(../images/field/medivh.gif);
@@ -155,110 +154,92 @@ body:active {
     position: absolute;
     width: 11.5%;
     height: 17.5%;
-    left: 45.8%;
+    left: 45.85%;
     top: 67.45%;
-    z-index: 20;
+    z-index: 2;
     background-image: url(../images/field/jaina_proudmoore.gif);
     background-repeat: no-repeat;
     background-size: contain;
 }
 
-.cardinplay {
-    position: relative;
+.opposingHeroHealthBackground {
+    position: absolute;
+    width: 17%;
+    height: 32%;
+    top: 76%;
+    left: 53.5%;
+    background-image: url(../images/field/HP.png);
     background-size: cover;
-    background-repeat: no-repeat;
-    float: left;
-    margin: 0 auto;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    border: solid 5px #735c4c;
-    border-radius: 100%;
+    user-select: none;
+    /* visibility: hidden; */
 }
 
-.opposingHeroHealth {
-    position: absolute;
-    width: 1.75rem;
-    height: 2rem;
-    margin: 0 auto;
-    padding-left: 0.5rem;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-    background-size: cover;
-    font-size: 40px;
+.opposingHeroHealthValue {
+    margin-top: 47%;
+    font-size: 27px;
     font-weight: bold;
-    letter-spacing: -0.025em;
     color: white;
     text-shadow:
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px 1px 0 #000,
-            1px 1px 0 #000;
-    user-select: none;
-    visibility: hidden;
-    pointer-events: none;
+            1px 1px 0 #000;   
 }
 
-.playerHeroHealth {
+.playerHeroHealthBackground {
     position: absolute;
-    width: 1.75rem;
-    height: 2rem;
-    margin: 0 auto;
-    padding-left: 0.5rem;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    width: 17%;
+    height: 32%;
+    top: 69%;
+    left: 51%;
+    background-image: url(../images/field/HP.png);
     background-size: cover;
-    font-size: 40px;
+    user-select: none;
+    /* visibility: hidden; */
+}
+
+.playerHeroHealthValue {
+    margin-top: 48%;
+    font-size: 27px;
     font-weight: bold;
-    letter-spacing: -0.025em;
     color: white;
     text-shadow:
             -1px -1px 0 #000,
             1px -1px 0 #000,
             -1px 1px 0 #000,
-            1px 1px 0 #000;
-    user-select: none;
-    visibility: hidden;
-    pointer-events: none;
+            1px 1px 0 #000;   
 }
 
-.playerheropower {
+.playerHeroPower {
     position: absolute;
     width: 6%;
     height: 13%;
-    top: 72%;
-    left: 54%;
+    top: 71.5%;
+    left: 53.5%;
     z-index: 0;
     background-image: url(../images/field/playerpower.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
 
-
-.heroPowerAttack {
-    font-size: 0px;
-    user-select: none;
-}
-.heroPowerHealth {
-    font-size: 0px;
-    user-select: none;
-}
-
 .endturn-button {
-    width: 5.9%;
-    height: 5.4%;
+    width: 8%;
+    height: 8%;
     position: absolute;
-    left: 74.58%;
-    top: 43.19%;
+    left: 73.65%;
+    top: 42.1%;
     user-select: none;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: bold;
-    background: url(../images/field/endturn.jpg);
-    border-top-left-radius: 120%35px;
-    border-bottom-left-radius: 120%35px;
-    border-top-right-radius: 120%35px;
-    border-bottom-right-radius: 120%35px;
+    background: url(../images/field/endturn1.png);
+    background-repeat: no-repeat;
+    background-size: contain;
     font-family: BelweBdBTBold;
+    border: none;
     z-index: 2;
 }
 
-.playermana {
+.playerManaValue {
     position: absolute;
     top: 91.25%;
     left: 62.85%;
@@ -266,9 +247,10 @@ body:active {
     font-size: 23px;
     font-weight: bold;
     user-select: none;
+    text-shadow: 1px 1px 2px #000000;
 }
 
-.opponentmana {
+.opponentManaValue {
     position: absolute;
     top: 5.25%;
     left: 61.15%;
@@ -276,16 +258,15 @@ body:active {
     font-size: 23px;
     font-weight: bold;
     user-select: none;
+    text-shadow: 1px 1px 2px #000000;
 }
 
 .manabox {
-    position: relative;
-    width: 30px;
-    height: 17.32px;
-    float: left;
-    background-color: #3669c9;
+    background-image: url(../images/field/mana.png);
+    position: absolute;
+    width: 29px;
+    height: 32px;
+    left: 65.9%;
+    top: 90.2%;
     margin: 8.66px 0;
-    box-shadow: 0 0 40px rgba(0,0,0,0.9);
-    border-left: solid 1.5px #333333;
-    border-right: solid 1.5px #333333;
 }
