@@ -73,6 +73,7 @@ for (var i = 0; i < cards.length; i++) {
                             card.style.position = 'static';
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
+                            // card.style.backgroundImage = '';
 
                             mana = mana - manaSelectedCard;
                             manabarFilling();

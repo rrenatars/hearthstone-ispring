@@ -10,9 +10,19 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
+type creatureData struct {
+	Name          string `db:"name"`
+	Attack        int    `db:"attack"`
+	Defense       int    `db:"defense"`
+	Portrait      string `db:"portrait"`
+	CardID        string `db:"card_id"`
+	Specification string `db:"specification"`
+}
+
 type arenaPageData struct {
 	Cards []cardData
 	Deck  []cardData
+	Creature []creatureData
 }
 
 type cardData struct {
@@ -41,6 +51,13 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+        creature, err := creatures(db)
+        if err != nil {
+            http.Error(w, "Internal Server a Error", 500)
+            log.Println(err)
+            return
+        }
+
 		cards := GetRandomElements(deck, 3)
 
 		ts, err := template.ParseFiles("pages/arena.html")
@@ -53,6 +70,7 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 		data := arenaPageData{
 			Cards: cards,
 			Deck:  deck,
+			Creature: creature,
 		}
 
 		err = ts.Execute(w, data)
@@ -103,6 +121,27 @@ func cards(db *sqlx.DB) ([]cardData, error) {
 	}
 
 	return cards, nil
+}
+
+func creatures(db *sqlx.DB) ([]creatureData, error) {
+	const query = `
+		SELECT
+			name,
+			attack,
+			defense,
+			portrait
+		FROM
+			creature
+	`
+
+	var creatures []creatureData
+
+	err := db.Select(&creatures, query)
+	if err != nil {
+		return nil, err
+	}
+
+	return creatures, nil
 }
 
 func deck(db *sqlx.DB) ([]cardData, error) {

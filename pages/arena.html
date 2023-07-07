@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <link href="../static/css/arena.css" rel="stylesheet">
@@ -43,10 +42,11 @@
         <div class="field__empty"></div>
     </div>
     <div class="background__cards-and-mana">
-        <div class="background__cards" >
+        <div class="background__cards">
             {{ range .Cards}}
-            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);" >
+            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
                 <span class="card__mana">{{ .Mana }}</span>
+<!--                <span class="card__name">{{ .Name }}</span>-->
             </div>
             {{ end }}
         </div>
