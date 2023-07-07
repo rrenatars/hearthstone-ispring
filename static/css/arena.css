@@ -67,6 +67,10 @@
     font-family: 'Roboto', sans-serif;
 }
 
+.cards__card:hover {
+    animation: 2s ease-in-out 0s infinite alternate;
+}
+
 /*.selected*/
 /*{*/
 /*    opacity: 0.6;*/
@@ -79,15 +83,22 @@
     align-items: center;
     margin: 0;
     margin-top: 200px;
-    /*width: 500px;*/
-    /*height: 200px;*/
 }
 
 .field__empty
 {
     width: 94px;
     height: 135px;
-    /*border: 1px solid #f43232;*/
+}
+
+.field__card
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
 }
 
 

@@ -46,8 +46,6 @@
         <div class="background__cards" >
             {{ range .Cards}}
             <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);" >
-                <!--            <img src="{{ .Portrait }}" alt="">-->
-                <span class="card__name">{{ .Name }}</span>
                 <span class="card__mana">{{ .Mana }}</span>
             </div>
             {{ end }}
