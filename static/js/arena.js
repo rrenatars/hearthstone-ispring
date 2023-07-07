@@ -1,7 +1,4 @@
 const endTurnButton = document.getElementById('endturn')
-const cardsListElement = document.querySelector(`.background__cards`);
-const cardsElements = document.querySelectorAll('.cards__card')
-const fieldListElement = document.querySelector('.background__field');
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
@@ -16,72 +13,126 @@ function manabarFilling() {
         arr.push(manaCrystalImage);
     }
 
+    manaElement.textContent = mana + '/10';
     manabar.replaceChildren(...arr);
 }
 
 manabarFilling();
 
-cardsListElement.addEventListener(`dragstart`, (evt) => {
-    const selectedCardMana = evt.target.querySelector('.card__mana').textContent;
-    tempManaAfterDrag = (parseInt(mana) - parseInt(selectedCardMana));
-    if (tempManaAfterDrag < 0) {
-        evt.preventDefault();
-        alert("Недостаточно маны");
-        return;
-    }
-    evt.target.classList.add(`selected`);
-});
+const field = document.querySelector('.background__field');
+const hand = document.querySelector('.background__cards');
 
-fieldListElement.addEventListener(`dragend`, (evt) => {
-    evt.target.classList.remove(`selected`);
-});
+function getCoords(elem) {
+    var box = elem.getBoundingClientRect();
+    return {
+        top: box.top + scrollY,
+        left: box.left + scrollX
+    };
+}
 
-cardsListElement.addEventListener(`dragend`, (evt) => {
-    evt.target.classList.remove(`selected`);
-});
+const handLimits = 420;
+let cards = document.querySelector('.cards__card');
+let cardMana = parseInt(document.querySelector('.card__mana').textContent);
 
-fieldListElement.addEventListener(`dragover`, (evt) => {
-    evt.preventDefault();
-
-    const activeElement = cardsListElement.querySelector(`.selected`);
-    const currentElement = evt.target;
-
-    const isMoveable = activeElement !== currentElement &&
-        currentElement.classList.contains(`field__empty`);
-
-    if (!isMoveable) {
-        return;
-    }
-
-    const nextElement = currentElement.nextElementSibling;
-
-    if (nextElement !== null && activeElement !== null) {
-
-        fieldListElement.insertBefore(activeElement, nextElement);
-        fieldListElement.removeChild(currentElement);
-        manaElement.textContent = tempManaAfterDrag + "/10";
-        mana = tempManaAfterDrag;
-        manabarFilling();
-    } else if (activeElement !== null) {
-        fieldListElement.appendChild(activeElement);
-        fieldListElement.removeChild(currentElement);
-        manaElement.textContent = tempManaAfterDrag + "/10";
-        mana = tempManaAfterDrag;
-        manabarFilling();
+cards.addEventListener("mousedown", function() {
+    for (var i = 0; i < cards.length; i++) {
+        console.log(cardMana);
+        if (mana < cardMana) {
+            cards[i].style.boxShadow = "none"; //не доделано
+        }
     }
 });
 
-endTurnButton.addEventListener(
-    "click",
-    () => {
-        opponentTurn()
-    },
-    false
+for (var i = 0; i < cards.length; i++) {
+    console.log(cardMana);
+    if (mana < cardMana) {
+        cards[i].style.boxShadow = "none";
+    }
+}
 
-);
+for (var i = 0; i < cards.length; i++) {
+    (function (card) {
+        card.onmousedown = function (e) {
+            if (card.classList.contains('cards__card')) {
+                let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
+                if ((mana - manaSelectedCard) < 0) {
+                    alert("Недостаточно маны");
+                    return;
+                } else {
+                    var coords = getCoords(card);
+                    var shiftX = e.pageX - coords.left;
+                    var shiftY = e.pageY - coords.top;
 
-function opponentTurn() {
-    playersTurn = false;
+                    card.style.position = 'absolute';
+                    moveAt(e);
+
+                    card.style.zIndex = 1000;
+
+                    function moveAt(e) {
+                        card.style.left = e.pageX - shiftX + 'px';
+                        card.style.top = e.pageY - shiftY + 'px';
+                        top = e.pageY - shiftY;
+                    }
+
+                    document.onmousemove = function (e) {
+                        moveAt(e);
+                    };
+
+                    card.onmouseup = function () {
+                        document.onmousemove = null;
+                        card.onmouseup = null;
+
+                        if (parseInt(card.style.top) < handLimits) {
+                            let fieldEmpty = field.querySelector('.field__empty');
+                            if (fieldEmpty) {
+                                field.removeChild(fieldEmpty);
+                            }
+                            field.appendChild(card);
+                            card.style.position = 'static';
+                            card.classList.remove('cards__card');
+                            card.classList.add('field__card');
+
+                            mana = mana - manaSelectedCard;
+                            manabarFilling();
+                        } else {
+                            hand.appendChild(card);
+                            card.style.position = 'static';
+                        }
+                    }
+                }
+                ;
+            }
+        };
+
+        card.ondragstart = function () {
+            return false;
+        };
+    })(cards[i]);
+}
+
+
+endTurnButton.addEventListener("click", function () {
+    playerTurn = false;
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
-    };
+    endTurnButton.setAttribute('disabled', '');
+    enemyTurn()
+});
+
+function enemyTurn() {
+    newEnemyCard()
+};
+
+
+function newEnemyCard() {
+    const cardSet = document.getElementById("enemycards");
+    const card = document.getElementById("enemycard");
+    const newCard = document.createElement('div');
+    let iValue = card.style.cssText;
+    newCard.style = iValue + "1";
+    newCard.classList.add("enemycard");
+    cardSet.appendChild(newCard);
+    console.log(iValue)
+}
+
+
