@@ -14,12 +14,10 @@
 <body>
     <div class="background">
         <div id="manacontainer"></div>
-        <div class="enemycards">
-            <div class="enemycard"></div>
-            <div class="enemycard"></div>
-            <div class="enemycard"></div>
-            <div class="enemycard"></div>
-            <div class="enemycard"></div>
+        <div class="enemycards" id="enemycards">
+            <div class="enemycard" style="--i:-0.7"></div>
+            <div class="enemycard" style="--i:0"></div>
+            <div class="enemycard" id="enemycard" style="--i:0.7"></div>
         </div>
         <div id="cards" class="cards">
         </div>
@@ -34,7 +32,6 @@
             </div>
         </div>
         <button id="endturn" class="endturn-button"></button>
-        <div id="block"></div>
         <div class="playerHeroPower"></div>
     <div class="playerManaValue" id="MyMana">10/1</div>
     <div class="opponentManaValue" id="OpponentMana">1/1</div>
@@ -52,8 +49,8 @@
     <div class="background__cards-and-mana">
         <div class="background__cards">
             {{ range .Cards}}
-            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
-                <!--            <img src="{{ .Portrait }}" alt="">-->
+            <div class="cards__card" id="playerCard" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
+                           <!-- <img src="{{ .Portrait }}" alt=""> -->
                 <span class="card__name">{{ .Name }}</span>
                 <span class="card__mana">{{ .Mana }}</span>
             </div>
