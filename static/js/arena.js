@@ -1,7 +1,7 @@
-const endTurnButton = document.getElementById('endturn')
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
+const endTurnButton = document.getElementById('endturn');
 
 function manabarFilling() {
     const arr = [];
@@ -30,31 +30,17 @@ function getCoords(elem) {
     };
 }
 
+
 const handLimits = 420;
-let cards = document.querySelector('.cards__card');
+let cards = document.getElementsByClassName('cards__card');
+
 let cardMana = parseInt(document.querySelector('.card__mana').textContent);
-
-cards.addEventListener("mousedown", function() {
-    for (var i = 0; i < cards.length; i++) {
-        console.log(cardMana);
-        if (mana < cardMana) {
-            cards[i].style.boxShadow = "none"; //не доделано
-        }
-    }
-});
-
-for (var i = 0; i < cards.length; i++) {
-    console.log(cardMana);
-    if (mana < cardMana) {
-        cards[i].style.boxShadow = "none";
-    }
-}
 
 for (var i = 0; i < cards.length; i++) {
     (function (card) {
         card.onmousedown = function (e) {
+            let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
             if (card.classList.contains('cards__card')) {
-                let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
                 if ((mana - manaSelectedCard) < 0) {
                     alert("Недостаточно маны");
                     return;
@@ -91,6 +77,7 @@ for (var i = 0; i < cards.length; i++) {
                             card.style.position = 'static';
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
+                            // card.style.backgroundImage = '';
 
                             mana = mana - manaSelectedCard;
                             manabarFilling();
@@ -116,7 +103,7 @@ endTurnButton.addEventListener("click", function () {
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
     endTurnButton.setAttribute('disabled', '');
-    enemyTurn()
+    enemyTurn();
 });
 
 function enemyTurn() {
@@ -126,13 +113,25 @@ function enemyTurn() {
 
 function newEnemyCard() {
     const cardSet = document.getElementById("enemycards");
-    const card = document.getElementById("enemycard");
+    const card = document.getElementsByClassName("enemycard");
     const newCard = document.createElement('div');
-    let iValue = card.style.cssText;
-    newCard.style = iValue + "1";
+    let iValue;
+    for (var i = 0; i < card.length; i++) {
+        iValue = card[i].style.cssText;
+        iValue = iValue.split(':').pop();
+        iValue = iValue.replace(';', '');
+        iValue = Number(iValue) + 0.35;
+        card[i].style = "--i:" + String(iValue);
+    }
+    iValue = card[i - 1].style.cssText;
+    iValue = iValue.split(':').pop();
+    iValue = iValue.replace(';', '');
+    iValue = Number(iValue) - 0.7;
+    newCard.style = "--i:" + String(iValue);
     newCard.classList.add("enemycard");
-    cardSet.appendChild(newCard);
-    console.log(iValue)
-}
+    setTimeout(() => {
+        cardSet.appendChild(newCard);
+    }, 400);
+};
 
 
