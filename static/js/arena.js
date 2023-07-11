@@ -20,7 +20,7 @@ function manabarFilling() {
 manabarFilling();
 
 const field = document.querySelector('.background__field');
-const hand = document.querySelector('.background__cards');
+const hand = document.querySelector('.hand-and-manabar__hand');
 
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
@@ -30,23 +30,23 @@ function getCoords(elem) {
     };
 }
 
-// const startSubmit = document.getElementById('StartSubmit');
-// cardsHeader = document.querySelector('.cards__header');
-// let cards = document.querySelectorAll('.cards__card_start');
-// const handCards = document.querySelector('.hand__cards');
-//
-// startSubmit.addEventListener('click', () => {
-//         hand.classList.remove('background__hand_start');
-//         for (i = 0; i < cards.length; i++) {
-//             cards[i].classList.remove('cards__card_start');
-//         }
-//         handCards.removeChild(startSubmit);
-//         handCards.removeChild(cardsHeader);
-//     }
-// )
+const startSubmit = document.getElementById('StartSubmit');
+cardsHeader = document.querySelector('.cards__header');
+let cards = document.querySelectorAll('.cards__card_start');
+const handCards = document.querySelector('.hand__cards');
+
+startSubmit.addEventListener('click', () => {
+        hand.classList.remove('hand-and-manabar__hand_start');
+        for (i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('cards__card_start');
+        }
+        handCards.removeChild(startSubmit);
+        handCards.removeChild(cardsHeader);
+    }
+)
 
 const handLimits = 420;
-let cards = document.getElementsByClassName('cards__card');
+cards = document.getElementsByClassName('cards__card');
 let cardMana = parseInt(document.querySelector('.card__mana').textContent);
 
 for (var i = 0; i < cards.length; i++) {

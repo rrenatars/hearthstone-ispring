@@ -37,16 +37,23 @@
 <div class="background__field">
     <div class="field__empty"></div>
 </div>
-<div class="background__cards-and-mana">
-    <div class="background__cards">
-        {{ range .Cards}}
-        <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
-            <span class="card__mana">{{ .Mana }}</span>
-            <!--                <span class="card__name">{{ .Name }}</span>-->
+<div class="background__hand-and-manabar">
+    <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
+        <div class="hand__cards">
+            <p class="cards__header">Start hand</p>
+            <div class="cards">
+                {{ range .Cards}}
+                <div class="cards__card cards__card_start" draggable="true"
+                     style="z-index: 3000; background: url(&quot;{{ .Portrait }}&quot;); background-size: cover">
+                    <span class="card__mana">{{ .Mana }}</span>
+                    <!--                <span class="card__name">{{ .Name }}</span>-->
+                </div>
+                {{ end }}
+            </div>
+            <button class="cards__submit" id="StartSubmit">OK</button>
         </div>
-        {{ end }}
     </div>
-    <div class="manabar" id="Manabar">
+    <div class="hand-and-manabar__manabar" id="Manabar">
     </div>
 </div>
 </div>
