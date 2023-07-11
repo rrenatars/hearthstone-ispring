@@ -25,6 +25,10 @@ type arenaPageData struct {
 	Creature []creatureData
 }
 
+type menuPageData struct {
+
+}
+
 type cardData struct {
 	Name          string `db:"name"`
 	Mana          int    `db:"mana"`
@@ -81,6 +85,22 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 		}
 
 		log.Println("Request completed successfully")
+	}
+}
+
+func menu(w http.ResponseWriter, r *http.Request) {
+	ts, err := template.ParseFiles("pages/menu.html")
+	if err != nil {
+		http.Error(w, "Internal Server Error", 500)
+		log.Println(err.Error())
+		return
+	}
+
+	err = ts.Execute(w, nil)
+	if err != nil {
+		http.Error(w, "Internal Server Error", 500)
+		log.Println(err.Error())
+		return
 	}
 }
 

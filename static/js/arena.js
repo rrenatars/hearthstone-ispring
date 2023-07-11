@@ -1,6 +1,7 @@
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
+const endTurnButton = document.getElementById('endturn');
 
 function manabarFilling() {
     const arr = [];
@@ -29,8 +30,24 @@ function getCoords(elem) {
     };
 }
 
+// const startSubmit = document.getElementById('StartSubmit');
+// cardsHeader = document.querySelector('.cards__header');
+// let cards = document.querySelectorAll('.cards__card_start');
+// const handCards = document.querySelector('.hand__cards');
+//
+// startSubmit.addEventListener('click', () => {
+//         hand.classList.remove('background__hand_start');
+//         for (i = 0; i < cards.length; i++) {
+//             cards[i].classList.remove('cards__card_start');
+//         }
+//         handCards.removeChild(startSubmit);
+//         handCards.removeChild(cardsHeader);
+//     }
+// )
+
 const handLimits = 420;
 let cards = document.getElementsByClassName('cards__card');
+let cardMana = parseInt(document.querySelector('.card__mana').textContent);
 
 for (var i = 0; i < cards.length; i++) {
     (function (card) {
@@ -41,6 +58,7 @@ for (var i = 0; i < cards.length; i++) {
                     alert("Недостаточно маны");
                     return;
                 } else {
+                    console.log(card);
                     var coords = getCoords(card);
                     var shiftX = e.pageX - coords.left;
                     var shiftY = e.pageY - coords.top;
@@ -61,6 +79,7 @@ for (var i = 0; i < cards.length; i++) {
                     };
 
                     card.onmouseup = function () {
+                        console.log('fadf');
                         document.onmousemove = null;
                         card.onmouseup = null;
 
@@ -73,7 +92,6 @@ for (var i = 0; i < cards.length; i++) {
                             card.style.position = 'static';
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
-                            // card.style.backgroundImage = '';
 
                             mana = mana - manaSelectedCard;
                             manabarFilling();
@@ -93,18 +111,41 @@ for (var i = 0; i < cards.length; i++) {
     })(cards[i]);
 }
 
-const endTurnButton = document.getElementById('endturn');
 
-endTurnButton.addEventListener(
-    "click",
-    () => {
-        opponentTurn()
-    },
-    false
-);
-
-function opponentTurn() {
-    playersTurn = false;
+endTurnButton.addEventListener("click", function () {
+    playerTurn = false;
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
+    endTurnButton.setAttribute('disabled', '');
+    enemyTurn();
+});
+
+function enemyTurn() {
+    newEnemyCard()
 };
+
+
+function newEnemyCard() {
+    const cardSet = document.getElementById("enemycards");
+    const card = document.getElementsByClassName("enemycard");
+    const newCard = document.createElement('div');
+    let iValue;
+    for (var i = 0; i < card.length; i++) {
+        iValue = card[i].style.cssText;
+        iValue = iValue.split(':').pop();
+        iValue = iValue.replace(';', '');
+        iValue = Number(iValue) + 0.35;
+        card[i].style = "--i:" + String(iValue);
+    }
+    iValue = card[i - 1].style.cssText;
+    iValue = iValue.split(':').pop();
+    iValue = iValue.replace(';', '');
+    iValue = Number(iValue) - 0.7;
+    newCard.style = "--i:" + String(iValue);
+    newCard.classList.add("enemycard");
+    setTimeout(() => {
+        cardSet.appendChild(newCard);
+    }, 400);
+};
+
+

@@ -48,7 +48,8 @@
     width: 100%;
     height: 135px;
     gap: 5px;
-    margin-top: 150px;
+    margin-top: 290px;
+    margin-left: 204px;
     z-index: 3;
 }
 
@@ -59,23 +60,42 @@
     flex-direction: column;
     justify-content: flex-end;
     font-family: 'Roboto', sans-serif;
+    box-shadow: none;
+    transform: none;
+    background-repeat: no-repeat;
 }
 
-.cards__card:hover {
-    animation: 2s ease-in-out 0s infinite alternate;
+.cards__card:hover{
+    margin-bottom: 135px;
+    transform: scale(2.3);
 }
 
-/*.selected*/
-/*{*/
-/*    opacity: 0.6;*/
-/*}*/
+.cards__card:active {
+    cursor: url(../images/cursor/grab.png) 10 2, auto;
+    margin-bottom: 0;
+    transform: none;
+}
+
+.field__card
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: none;
+}
+
+.selected {
+    opacity: 0.6;
+}
 
 .background__field {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 0;
-    margin-top: 210px;
+    margin-top: 302px;
 }
 
 .field__empty {
@@ -91,7 +111,6 @@
     justify-content: flex-end;
     font-family: 'Roboto', sans-serif;
 }
-
 
 body {
     overflow: hidden;
@@ -111,66 +130,24 @@ button:active {
     cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
-.enemycards {
-    margin-right: 11px;
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-}
-
-.card {
-    height: 150px;
-    position: relative;
-    width: 100px;
-    border-radius: 8px;
-    float: left;
-}
-
-.card .cardtutorialhint {
-    display: none;
-}
-
-.card:hover .cardtutorialhint {
-    display: block;
-    color: white;
-    font-size: 14px;
-    line-height: 10.5rem;
-    position: absolute;
-    top: -65%;
-    width: 134%;
-    padding-right: 10px;
-    text-shadow: -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-}
-
-.enemycard {
-    width: 70px;
-    height: 112px;
-    z-index: 5;
-    background-image: url(../images/field/halfcardbackside.png);
-    background-repeat: no-repeat;
-    background-size: contain;
-}
-
 .opponenthero {
     position: absolute;
     width: 11%;
     height: 17%;
-    left: 45.9%;
+    left: 45.55%;
     top: 9.75%;
     z-index: 11;
     background-image: url(../images/field/medivh.gif);
     background-repeat: no-repeat;
     background-size: contain;
+    user-select: none;
 }
 
 .playerhero {
     position: absolute;
     width: 11.5%;
     height: 17.5%;
-    left: 45.85%;
+    left: 45.35%;
     top: 67.45%;
     z-index: 2;
     background-image: url(../images/field/jaina_proudmoore.gif);
@@ -180,33 +157,30 @@ button:active {
 
 .opposingHeroHealthBackground {
     position: absolute;
-    width: 17%;
+    width: 19%;
     height: 32%;
     top: 76%;
-    left: 53.5%;
+    left: 59%;
     background-image: url(../images/field/HP.png);
     background-size: cover;
     user-select: none;
-    /* visibility: hidden; */
 }
 
 .opposingHeroHealthValue {
     margin-top: 47%;
-    font-size: 27px;
+    margin-left: 10%;
+    font-size: 26px;
     font-weight: bold;
     color: white;
-    text-shadow: -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+    text-shadow: 1px 1px 3px #000000;
 }
 
 .playerHeroHealthBackground {
     position: absolute;
-    width: 17%;
+    width: 18%;
     height: 32%;
-    top: 69%;
-    left: 51%;
+    top: 67%;
+    left: 56.5%;
     background-image: url(../images/field/HP.png);
     background-size: cover;
     user-select: none;
@@ -214,22 +188,20 @@ button:active {
 }
 
 .playerHeroHealthValue {
-    margin-top: 48%;
+    margin-top: 49%;
+    margin-left: 10%;
     font-size: 27px;
     font-weight: bold;
     color: white;
-    text-shadow: -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+    text-shadow: 1px 1px 3px #000000;
 }
 
 .playerHeroPower {
     position: absolute;
     width: 6%;
     height: 13%;
-    top: 71.5%;
-    left: 53.5%;
+    top: 70.5%;
+    left: 54%;
     z-index: 0;
     background-image: url(../images/field/playerpower.png);
     background-repeat: no-repeat;
@@ -240,7 +212,7 @@ button:active {
     width: 8%;
     height: 8%;
     position: absolute;
-    left: 73.65%;
+    left: 76.35%;
     top: 42.1%;
     user-select: none;
     font-size: 16px;
@@ -255,8 +227,8 @@ button:active {
 
 .playerManaValue {
     position: absolute;
-    top: 91.25%;
-    left: 62.85%;
+    top: 91.2%;
+    left: 63.5%;
     color: white;
     font-size: 23px;
     font-weight: bold;
@@ -266,8 +238,8 @@ button:active {
 
 .opponentManaValue {
     position: absolute;
-    top: 5.25%;
-    left: 61.15%;
+    top: 5.2%;
+    left: 61.55%;
     color: white;
     font-size: 23px;
     font-weight: bold;
@@ -275,7 +247,7 @@ button:active {
     text-shadow: 1px 1px 2px #000000;
 }
 
-.manabox {
+/* .manabox {
     background-image: url(../images/field/mana.png);
     position: absolute;
     width: 29px;
@@ -283,4 +255,28 @@ button:active {
     left: 65.9%;
     top: 90.2%;
     margin: 8.66px 0;
+    user-select: none;
+} */
+
+.enemycards {
+    margin-right: 81px;
+    margin-top: -33px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.enemycard:after,
+.enemycard:before {
+    content: '';
+    position: absolute;
+    background-image: url(../images/field/cardBackSide.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 70px;
+    height: 112px;
+    --rot: 0deg;
+    transform: rotatez(calc(var(--i) * 15deg)) rotatey(var(--rot));
+    transform-origin: 50% -200%;
+    transition: 0.5s;
 }
