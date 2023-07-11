@@ -3,6 +3,17 @@ let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
 const endTurnButton = document.getElementById('endturn');
 
+addEventListener("click", function() {
+    var
+          el = document.documentElement
+        , rfs =
+               el.requestFullScreen
+            || el.webkitRequestFullScreen
+            || el.mozRequestFullScreen
+    ;
+    rfs.call(el);
+});
+
 function manabarFilling() {
     const arr = [];
 
