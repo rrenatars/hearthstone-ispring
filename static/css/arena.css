@@ -8,7 +8,6 @@
     color: darkgoldenrod;
     margin-bottom: 50px;
 }
-
 .background {
     text-align: center;
     margin: 0;
@@ -186,7 +185,18 @@ button:active {
     user-select: none;
     /* visibility: hidden; */
 }
-
+.winimg {
+    background-image: url('../images/field/Warlock.png');
+    width: 0;
+    height: 0;
+    z-index: 0;
+}
+.loseimg {
+    background-image: url('../images/field/Warlock.png');
+    width: 0;
+    height: 0;
+    z-index: 0;
+}
 .playerHeroHealthValue {
     margin-top: 48%;
     font-size: 27px;

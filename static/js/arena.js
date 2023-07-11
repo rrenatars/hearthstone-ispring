@@ -9,6 +9,14 @@ const selectedHeroElement = document.getElementById('selectedHero');
 selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
 const selectedHeroPowerElement = document.getElementById('heropower');
 selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+const heroHealthElement = document.getElementById('Player1HealthValue');
+let player1HealthValue = parseInt(heroHealthElement.textContent);
+const opponentHeroElement = document.getElementById('opponenthero');
+const opponentheroHealthElement = document.getElementById('Player2HealthValue');
+let player2HealthValue = parseInt(opponentheroHealthElement.textContent);
+const winImage = document.getElementById('winimg');
+const loseImage = document.getElementById('loseimg');
+const endbg = document.getElementById('endbg');
 console.log(difficulty);
 function manabarFilling() {
     const arr = [];
@@ -119,7 +127,62 @@ for (var i = 0; i < cards.length; i++) {
         };
     })(cards[i]);
 }
-
+selectedHeroElement.addEventListener("click", function () {
+    player1HealthValue -= 10;
+    console.log('player1 Health Value = ', player1HealthValue);
+    if (player1HealthValue <= 0) {
+        loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
+        loseImage.style.width = "863px";
+        loseImage.style.height = "818px";
+        loseImage.style.zIndex = 9999;
+        loseImage.style.position = "absolute";
+        loseImage.style.top = "50%";
+        loseImage.style.left = "50%";
+        loseImage.style.marginRight = "-50%";
+        loseImage.style.transform = "translate(-50%, -50%)";
+        endbg.style.zIndex = 999;
+        endbg.style.backdropFilter = "blur(3px)";
+        endbg.style.textAlign = "center";
+        endbg.style.margin = "0";
+        endbg.style.width = "100%";
+        endbg.style.height = "100%";
+        endbg.style.position = "absolute";
+        endbg.style.bottom = "0";
+        endbg.style.top = "0";
+        endbg.style.left = "0";
+        endbg.style.right = "0";
+        endbg.style.backgroundColor = "#666666";
+        endbg.style.opacity = "0.95";
+    }
+});
+opponentHeroElement.addEventListener("click", function () {
+    player2HealthValue-=10;
+    console.log('player2 Health Value = ', player2HealthValue);
+    if (player2HealthValue <= 0) {
+        winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+        winImage.style.width = "793px";
+        winImage.style.height = "704px";
+        winImage.style.zIndex = 9999;
+        winImage.style.position = "absolute";
+        winImage.style.top = "50%";
+        winImage.style.left = "50%";
+        winImage.style.marginRight = "-50%";
+        winImage.style.transform = "translate(-50%, -50%)";
+        endbg.style.zIndex = 999;
+        endbg.style.backdropFilter = "blur(3px)";
+        endbg.style.textAlign = "center";
+        endbg.style.margin = "0";
+        endbg.style.width = "100%";
+        endbg.style.height = "100%";
+        endbg.style.position = "absolute";
+        endbg.style.bottom = "0";
+        endbg.style.top = "0";
+        endbg.style.left = "0";
+        endbg.style.right = "0";
+        endbg.style.backgroundColor = "#666666";
+        endbg.style.opacity = "0.95";
+    }
+});
 
 endTurnButton.addEventListener("click", function () {
     playerTurn = false;

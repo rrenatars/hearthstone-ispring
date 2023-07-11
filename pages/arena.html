@@ -11,6 +11,9 @@
     <title>Hearthstone</title>
 </head>
 <body>
+    <div class = "endbg" id = "endbg"></div>
+<div class = "winimg" id = "winimg"></div>
+<div class = "loseimg" id = "loseimg"></div>
 <div class="background">
     <div class="enemycards" id="enemycards">
         <div class="enemycard" style="--i:-0.7"></div>
@@ -18,14 +21,14 @@
         <div class="enemycard" id="enemycard" style="--i:0.7"></div>
     </div>
     </div>
-    <div class="opponenthero">
+    <div class="opponenthero" id = "opponenthero">
         <div class="opposingHeroHealthBackground">
-            <div class="opposingHeroHealthValue">30</div>
+            <div class="opposingHeroHealthValue" id = "Player2HealthValue">30</div>
         </div>
     </div>
     <div class="playerHero" id = "selectedHero">
         <div class="playerHeroHealthBackground">
-            <div class="playerHeroHealthValue">30</div>
+            <div class="playerHeroHealthValue" id = "Player1HealthValue">30</div>
         </div>
     </div>
     <button id="endturn" class="endturn-button"></button>
