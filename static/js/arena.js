@@ -3,17 +3,6 @@ let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
 const endTurnButton = document.getElementById('endturn');
 
-addEventListener("click", function() {
-    var
-          el = document.documentElement
-        , rfs =
-               el.requestFullScreen
-            || el.webkitRequestFullScreen
-            || el.mozRequestFullScreen
-    ;
-    rfs.call(el);
-});
-
 function manabarFilling() {
     const arr = [];
 
@@ -31,7 +20,7 @@ function manabarFilling() {
 manabarFilling();
 
 const field = document.querySelector('.background__field');
-const hand = document.querySelector('.background__cards');
+const hand = document.querySelector('.hand-and-manabar__hand');
 
 function getCoords(elem) {
     var box = elem.getBoundingClientRect();
@@ -41,21 +30,35 @@ function getCoords(elem) {
     };
 }
 
+const startSubmit = document.getElementById('StartSubmit');
+cardsHeader = document.querySelector('.cards__header');
+let cards = document.querySelectorAll('.cards__card_start');
+const handCards = document.querySelector('.hand__cards');
+
+startSubmit.addEventListener('click', () => {
+        hand.classList.remove('hand-and-manabar__hand_start');
+        for (i = 0; i < cards.length; i++) {
+            cards[i].classList.remove('cards__card_start');
+        }
+        handCards.removeChild(startSubmit);
+        handCards.removeChild(cardsHeader);
+    }
+)
 
 const handLimits = 420;
-let cards = document.getElementsByClassName('cards__card');
-
+cards = document.getElementsByClassName('cards__card');
 let cardMana = parseInt(document.querySelector('.card__mana').textContent);
 
 for (var i = 0; i < cards.length; i++) {
     (function (card) {
         card.onmousedown = function (e) {
-            let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
             if (card.classList.contains('cards__card')) {
+                let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
                 if ((mana - manaSelectedCard) < 0) {
                     alert("Недостаточно маны");
                     return;
                 } else {
+                    console.log(card);
                     var coords = getCoords(card);
                     var shiftX = e.pageX - coords.left;
                     var shiftY = e.pageY - coords.top;
@@ -76,6 +79,7 @@ for (var i = 0; i < cards.length; i++) {
                     };
 
                     card.onmouseup = function () {
+                        console.log('fadf');
                         document.onmousemove = null;
                         card.onmouseup = null;
 
@@ -88,7 +92,6 @@ for (var i = 0; i < cards.length; i++) {
                             card.style.position = 'static';
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
-                            // card.style.backgroundImage = '';
 
                             mana = mana - manaSelectedCard;
                             manabarFilling();
@@ -107,7 +110,6 @@ for (var i = 0; i < cards.length; i++) {
         };
     })(cards[i]);
 }
-
 
 endTurnButton.addEventListener("click", function () {
     playerTurn = false;
