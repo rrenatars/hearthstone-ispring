@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <link href="../static/css/arena.css" rel="stylesheet">
-    <link href="../static/css/animations.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -13,44 +12,50 @@
 </head>
 <body>
 <div class="background">
-
     <div class="enemycards" id="enemycards">
         <div class="enemycard" style="--i:0.7"></div>
         <div class="enemycard" style="--i:0"></div>
         <div class="enemycard" id="enemycard" style="--i:-0.7"></div>
     </div>
+</div>
+<div class="opponenthero">
+    <div class="opposingHeroHealthBackground">
+        <div class="opposingHeroHealthValue">30</div>
     </div>
-    <div class="opponenthero">
-        <div class="opposingHeroHealthBackground">
-            <div class="opposingHeroHealthValue">30</div>
-        </div>
+</div>
+<div class="playerhero">
+    <div class="playerHeroHealthBackground">
+        <div class="playerHeroHealthValue">30</div>
     </div>
-    <div class="playerhero">
-        <div class="playerHeroHealthBackground">
-            <div class="playerHeroHealthValue">30</div>
-        </div>
-    </div>
-    <button id="endturn" class="endturn-button"></button>
-    <div id="block"></div>
-    <div class="playerHeroPower"></div>
-    <div class="playerManaValue" id="MyMana">10/10</div>
-    <div class="opponentManaValue" id="OpponentMana">1/1</div>
-    <div class="manabox"></div>
-    <div class="background__field">
-        <div class="field__empty"></div>
-    </div>
-    <div class="background__cards-and-mana">
-        <div class="background__cards">
-            {{ range .Cards}}
-            <div class="cards__card" draggable="true" style="background: url(&quot;{{ .Portrait }}&quot;);">
-                <span class="card__mana">{{ .Mana }}</span>
-<!--                <span class="card__name">{{ .Name }}</span>-->
+</div>
+<button id="endturn" class="endturn-button"></button>
+<div id="block"></div>
+<div class="playerHeroPower"></div>
+<div class="playerManaValue" id="MyMana">10/10</div>
+<div class="opponentManaValue" id="OpponentMana">1/1</div>
+<div class="manabox"></div>
+<div class="background__field">
+    <div class="field__empty"></div>
+</div>
+<div class="background__hand-and-manabar">
+    <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
+        <div class="hand__cards">
+            <p class="cards__header">Start hand</p>
+            <div class="cards">
+                {{ range .Cards}}
+                <div class="cards__card cards__card_start" draggable="true"
+                     style="z-index: 3000; background: url(&quot;{{ .Portrait }}&quot;); background-size: cover">
+                    <span class="card__mana">{{ .Mana }}</span>
+                    <!--                <span class="card__name">{{ .Name }}</span>-->
+                </div>
+                {{ end }}
             </div>
-            {{ end }}
-        </div>
-        <div class="manabar" id="Manabar">
+            <button class="cards__submit" id="StartSubmit">OK</button>
         </div>
     </div>
+    <div class="hand-and-manabar__manabar" id="Manabar">
+    </div>
+</div>
 </div>
 <script src="../static/js/arena.js"></script>
 </body>
