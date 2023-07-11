@@ -88,6 +88,20 @@ func arena(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func selecthero(db *sqlx.DB) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ts, err := template.ParseFiles("pages/selecthero.html")
+		if err != nil {
+			http.Error(w, "Internal Server Error", 500)
+			log.Println(err)
+			return
+		}
+		f := 1
+		err = ts.Execute(w, f)
+		log.Println("Request completed successfully")
+	}
+}
+
 func menu(w http.ResponseWriter, r *http.Request) {
 	ts, err := template.ParseFiles("pages/menu.html")
 	if err != nil {

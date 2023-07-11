@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Выбор настройки Hearthstone</title>
+</head>
+
+<body>
+    <h1>Выберите настройки Hearthstone</h1>
+    <form id="GameForm" onsubmit="submitForm(event)">
+        <label for="gamemode">Режим игры:</label>
+        <select id="gamemode" name="gamemode" onchange="handleGameModeChange()">
+            <option value="singleplayer">singleplayer</option>
+            <option value="multiplayer">multiplayer</option>
+        </select>
+        <br>
+        <div id="difficulties" style="display: block;">
+            <label for="difficulty" style="visibility: visible;">Сложность бота:</label>
+            <select id="difficulty" name="difficulty">
+                <option value="easy">Легкая</option>
+                <option value="ok">Средняя</option>
+                <option value="hard">Сложная</option>
+                <option value="impossible">Невозможная</option>
+            </select>
+        </div>
+        <label for="heroclass">Класс вашего персонажа:</label>
+        <select id="heroclass" name="heroclass">
+            <option value="Shaman">Шаман</option>
+            <option value="Hunter">Охотник</option>
+            <option value="Rogue">Разбойник</option>
+            <option value="Mage">Маг</option>
+            <option value="Warlock">Чернокнижник</option>
+            <option value="Warrior">Воин</option>
+            <option value="Druid">Друид</option>
+            <option value="Paladin">Паладин</option>
+            <option value="Priest">Жрец</option>
+        </select>
+        <br>
+        <button type="submit">Отправить</button>
+    </form>
+
+    <script>
+        function handleGameModeChange() {
+            const heroClassSelect = document.getElementById('heroclass');
+            const gameModeSelect = document.getElementById('gamemode');
+            const difficultyDiv = document.getElementById('difficulty');
+            const difficultyLabel = document.querySelector('#difficulties label');
+            if (gameModeSelect.value === 'singleplayer') {
+                difficultyLabel.style.visibility = 'visible';
+                difficultyDiv.style.display = 'block';
+            } else {
+                difficultyDiv.style.display = 'none';
+                difficultyLabel.style.visibility = 'hidden';
+            }
+        }
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('GameForm');
+            const formData = new FormData(form);
+            const gameModeSelect = document.getElementById('gamemode');
+            const heroClass = formData.get('heroclass');
+            const gameMode = formData.get('gamemode');
+            const difficulty = formData.get('difficulty');
+            var url;
+            if (gameModeSelect.value === 'singleplayer') {
+                url = 'arena?heroclass=' + encodeURIComponent(heroClass) +
+                '&difficulty=' + encodeURIComponent(difficulty);
+            } else {
+                url = 'multiplayer?heroclass=' + encodeURIComponent(heroClass);    
+            }
+
+            window.location.href = url;
+        }
+    </script>
+</body>
+
+</html>

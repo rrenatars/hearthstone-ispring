@@ -25,6 +25,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/arena", arena(dbx))
+	mux.HandleFunc("/selecthero", selecthero(dbx))
 	mux.HandleFunc("/menu", menu)
 
 	mux.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
