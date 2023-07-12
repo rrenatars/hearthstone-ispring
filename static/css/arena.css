@@ -221,14 +221,14 @@ button:active {
     user-select: none;
 }
 
-.playerhero {
+.playerHero {
     position: absolute;
     width: 11.5%;
     height: 17.5%;
-    left: 45.35%;
+    left: 45.05%;
     top: 67.45%;
     z-index: 2;
-    background-image: url(../images/field/jaina_proudmoore.gif);
+    background-image: url(../images/field/Mage.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -257,12 +257,11 @@ button:active {
     position: absolute;
     width: 18%;
     height: 32%;
-    top: 67%;
-    left: 56.5%;
+    top: 69%;
+    left: 58%;
     background-image: url(../images/field/HP.png);
     background-size: cover;
     user-select: none;
-    /* visibility: hidden; */
 }
 
 .playerHeroHealthValue {
