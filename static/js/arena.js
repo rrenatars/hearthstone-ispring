@@ -113,17 +113,7 @@ for (var i = 0; i < cards.length; i++) {
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
 
-                            setTimeout(function () {
-                                att += 1;
-                            }, 5000);
-                            console.log(att);
-
-                            if (att == 1) {
                                 card.classList.add('canAttack');
-                            }
-                            else {
-                                card.classList.remove('canAttack');
-                            }
 
                             mana = mana - manaSelectedCard;
 
