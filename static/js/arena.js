@@ -2,6 +2,7 @@ const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
 const endTurnButton = document.getElementById('endturn');
+var canAttack = new Boolean(false);
 
 const urlParams = new URLSearchParams(window.location.search);
 const heroClass = urlParams.get('heroclass');
@@ -9,7 +10,7 @@ const difficulty = urlParams.get('difficulty');
 const selectedHeroElement = document.getElementById('selectedHero');
 selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
 const selectedHeroPowerElement = document.getElementById('heropower');
-selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+// selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
 const heroHealthElement = document.getElementById('Player1HealthValue');
 let player1HealthValue = parseInt(heroHealthElement.textContent);
 const opponentHeroElement = document.getElementById('opponenthero');
@@ -53,14 +54,16 @@ let cards = document.querySelectorAll('.cards__card_start');
 const handCards = document.querySelector('.hand__cards');
 
 startSubmit.addEventListener('click', () => {
-        hand.classList.remove('hand-and-manabar__hand_start');
-        for (i = 0; i < cards.length; i++) {
-            cards[i].classList.remove('cards__card_start');
-        }
-        handCards.removeChild(startSubmit);
-        handCards.removeChild(cardsHeader);
+    hand.classList.remove('hand-and-manabar__hand_start');
+    for (i = 0; i < cards.length; i++) {
+        cards[i].classList.remove('cards__card_start');
     }
+    handCards.removeChild(startSubmit);
+    handCards.removeChild(cardsHeader);
+}
 )
+
+let att = 1;
 
 const handLimits = 420;
 cards = document.getElementsByClassName('cards__card');
@@ -110,7 +113,27 @@ for (var i = 0; i < cards.length; i++) {
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
 
+                            setTimeout(function () {
+                                att += 1;
+                            }, 5000);
+                            console.log(att);
+
+                            if (att == 1) {
+                                card.classList.add('canAttack');
+                            }
+                            else {
+                                card.classList.remove('canAttack');
+                            }
+
                             mana = mana - manaSelectedCard;
+
+                            // if (mana >=2)
+                            // {
+                            //     selectedHeroPowerElement.classList.add('canAttack');
+                            //     attack(selectedHeroPowerElement);
+                            // }
+                            
+                            attack(card);
                             manabarFilling();
                         } else {
                             hand.appendChild(card);
@@ -127,6 +150,50 @@ for (var i = 0; i < cards.length; i++) {
         };
     })(cards[i]);
 }
+
+function attack(card) {
+    if (card.classList.contains('canAttack')) {
+        card.addEventListener("mousedown", function (e) {
+            var xOrigin = e.clientX;
+            var yOrigin = e.clientY;
+            svg.style.display = "block";
+            document.getElementById("arrowcursor").style.visibility = "visible";
+            document.body.style.cursor = "none";
+            document.body.addEventListener('mousemove', e2 => {
+                var xDest = e2.clientX;
+                var yDest = e2.clientY;
+                var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
+                var deg = angleDeg + 90;
+                document.getElementById("arrowcursor").style.left = xDest + 'px';
+                document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
+                document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
+                svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                // opponentHeroElement.addEventListener("mouseover", function () {
+                //     document.getElementById("innercursor").style.visibility = "visible";
+                //     document.getElementById("outercursor").style.visibility = "visible";
+                //     document.getElementById("innercursor").style.left = xDest + 'px';
+                //     document.getElementById("innercursor").style.top = yDest + 'px';
+                //     document.getElementById("outercursor").style.left = xDest + 'px';
+                //     document.getElementById("outercursor").style.top = yDest + 'px';
+                // });
+                opponentHeroElement.onclick = function () {
+                    opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
+                    opponentheroHealthElement.style.color = '#c70d0d';
+                    setTimeout(function () {
+                        opponentheroHealthElement.style.color = '#FFFFFF';
+                    }, 2000);
+                    svg.style.display = "none";
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    document.getElementById("arrowcursor").style.visibility = "hidden";
+                    document.getElementById("innercursor").style.visibility = "hidden";
+                    document.getElementById("outercursor").style.visibility = "hidden";
+                    card.classList.remove('canAttack');
+                };
+            });
+        })
+    }
+};
+
 
 selectedHeroElement.addEventListener("click", function () {
     player1HealthValue -= 10;
@@ -156,34 +223,35 @@ selectedHeroElement.addEventListener("click", function () {
         endbg.style.opacity = "0.95";
     }
 });
-opponentHeroElement.addEventListener("click", function () {
-    player2HealthValue-=10;
-    console.log('player2 Health Value = ', player2HealthValue);
-    if (player2HealthValue <= 0) {
-        winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
-        winImage.style.width = "793px";
-        winImage.style.height = "704px";
-        winImage.style.zIndex = 9999;
-        winImage.style.position = "absolute";
-        winImage.style.top = "50%";
-        winImage.style.left = "50%";
-        winImage.style.marginRight = "-50%";
-        winImage.style.transform = "translate(-50%, -50%)";
-        endbg.style.zIndex = 999;
-        endbg.style.backdropFilter = "blur(3px)";
-        endbg.style.textAlign = "center";
-        endbg.style.margin = "0";
-        endbg.style.width = "100%";
-        endbg.style.height = "100%";
-        endbg.style.position = "absolute";
-        endbg.style.bottom = "0";
-        endbg.style.top = "0";
-        endbg.style.left = "0";
-        endbg.style.right = "0";
-        endbg.style.backgroundColor = "#666666";
-        endbg.style.opacity = "0.95";
-    }
-});
+
+// opponentHeroElement.addEventListener("click", function () {
+//     player2HealthValue -= 10;
+//     console.log('player2 Health Value = ', player2HealthValue);
+//     if (player2HealthValue <= 0) {
+//         winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+//         winImage.style.width = "793px";
+//         winImage.style.height = "704px";
+//         winImage.style.zIndex = 9999;
+//         winImage.style.position = "absolute";
+//         winImage.style.top = "50%";
+//         winImage.style.left = "50%";
+//         winImage.style.marginRight = "-50%";
+//         winImage.style.transform = "translate(-50%, -50%)";
+//         endbg.style.zIndex = 999;
+//         endbg.style.backdropFilter = "blur(3px)";
+//         endbg.style.textAlign = "center";
+//         endbg.style.margin = "0";
+//         endbg.style.width = "100%";
+//         endbg.style.height = "100%";
+//         endbg.style.position = "absolute";
+//         endbg.style.bottom = "0";
+//         endbg.style.top = "0";
+//         endbg.style.left = "0";
+//         endbg.style.right = "0";
+//         endbg.style.backgroundColor = "#666666";
+//         endbg.style.opacity = "0.95";
+//     }
+// });
 
 
 endTurnButton.addEventListener("click", function () {
