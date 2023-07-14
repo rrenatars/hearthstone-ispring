@@ -113,7 +113,7 @@ for (var i = 0; i < cards.length; i++) {
                             card.classList.remove('cards__card');
                             card.classList.add('field__card');
 
-                                card.classList.add('canAttack');
+                            card.classList.add('canAttack');
 
                             mana = mana - manaSelectedCard;
 
@@ -122,7 +122,7 @@ for (var i = 0; i < cards.length; i++) {
                             //     selectedHeroPowerElement.classList.add('canAttack');
                             //     attack(selectedHeroPowerElement);
                             // }
-                            
+
                             attack(card);
                             manabarFilling();
                         } else {
@@ -149,7 +149,8 @@ function attack(card) {
             svg.style.display = "block";
             document.getElementById("arrowcursor").style.visibility = "visible";
             document.body.style.cursor = "none";
-            document.body.addEventListener('mousemove', e2 => {
+
+            document.body.addEventListener('mousemove', function (e2) {
                 var xDest = e2.clientX;
                 var yDest = e2.clientY;
                 var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
@@ -167,11 +168,13 @@ function attack(card) {
                 //     document.getElementById("outercursor").style.top = yDest + 'px';
                 // });
                 opponentHeroElement.onclick = function () {
-                    opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
-                    opponentheroHealthElement.style.color = '#c70d0d';
-                    setTimeout(function () {
-                        opponentheroHealthElement.style.color = '#FFFFFF';
-                    }, 2000);
+                    if (svg.style.display == "block") {
+                        opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
+                        opponentheroHealthElement.style.color = '#c70d0d';
+                        setTimeout(function () {
+                            opponentheroHealthElement.style.color = '#FFFFFF';
+                        }, 2000);
+                    };
                     svg.style.display = "none";
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     document.getElementById("arrowcursor").style.visibility = "hidden";
