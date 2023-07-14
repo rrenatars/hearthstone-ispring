@@ -81,7 +81,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Hearthstone</title>
 </head>
@@ -104,7 +104,10 @@
     </div>
     <button id="endturn" class="endturn-button"></button>
     <div class="background__field">
-        <div class="field__empty"></div>
+        {{ range $index, $card := .Cards }}
+        <div class="field__empty" id="{{ $index }}" style="background: url(&quot;{{ $card.Portrait }}&quot;);">
+        </div>
+        {{ end }}
     </div>
     <div class="playerHero" id="selectedHero">
         <div class="playerHeroHealthBackground">

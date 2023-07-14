@@ -114,37 +114,37 @@ startSubmit.addEventListener('click', () => {
             console.log(replacedCardIds);
         });
 
-        const options = {
-            method: 'POST',
-            body: JSON.stringify(replacedCardIds),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        };
-
-        // Отправка данных на сервер и замена непригодных карточек на случайные
-        fetch("/api/post", options)
-            .then(response => response.json())
-            .then(data => {
-                const cardsFromBack = data.cards;
-                if (cardsFromBack.length > 0) {
-                    console.log(cards)
-                    console.log(cardsFromBack)
-                    for (i = 0; i < cardsFromBack.length; i++) {
-                        console.log(cards[i])
-                        console.log(cardsFromBack[i].Portrait)
-                        // cards[i].style.background = ''
-                        const encodedUrl = cardsFromBack[i].Portrait.replace(/ /g, "%20");
-                        cards[i].style.background = `url(${encodedUrl})`;
-                        // cards[i].style.backgroundSize = "cover"
-                        cards[i].setAttribute("data-id", cardsFromBack[i].CardID)
-                    }
-                }
-
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        // const options = {
+        //     method: 'POST',
+        //     body: JSON.stringify(replacedCardIds),
+        //     headers: {
+        //         'Content-Type': 'application/json'
+        //     }
+        // };
+        //
+        // // Отправка данных на сервер и замена непригодных карточек на случайные
+        // fetch("/api/post", options)
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         const cardsFromBack = data.cards;
+        //         if (cardsFromBack.length > 0) {
+        //             console.log(cards)
+        //             console.log(cardsFromBack)
+        //             for (i = 0; i < cardsFromBack.length; i++) {
+        //                 console.log(cards[i])
+        //                 console.log(cardsFromBack[i].Portrait)
+        //                 // cards[i].style.background = ''
+        //                 const encodedUrl = cardsFromBack[i].Portrait.replace(/ /g, "%20");
+        //                 cards[i].style.background = `url(${encodedUrl})`;
+        //                 // cards[i].style.backgroundSize = "cover"
+        //                 cards[i].setAttribute("data-id", cardsFromBack[i].CardID)
+        //             }
+        //         }
+        //
+        //     })
+        //     .catch(error => {
+        //         console.log(error);
+        //     });
 
         cards = document.getElementsByClassName('cards__card');
         for (const card of cards) {
