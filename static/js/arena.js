@@ -1,7 +1,32 @@
+const socket = new WebSocket("ws://localhost:3000/ws");
+
+socket.onmessage = function(event) {
+    const message = document.createElement("div");
+    message.className = "message";
+    message.textContent = event.data;
+    console.log('Получено сообщение от сервера:', event.data);
+};
+
+socket.onopen = () => {
+    console.log('Соединение установлено');
+
+    // Отправка сообщения на сервер
+    socket.send('Привет, сервер!');
+};
+
+socket.onclose = (event) => {
+    console.log('Соединение закрыто:', event.code, event.reason);
+};
+
+socket.onerror = (error) => {
+    console.error('Ошибка соединения:', error);
+};
+
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
 const endTurnButton = document.getElementById('endturn');
+var canAttack = new Boolean(false);
 
 const urlParams = new URLSearchParams(window.location.search);
 const heroClass = urlParams.get('heroclass');
@@ -18,20 +43,19 @@ let player2HealthValue = parseInt(opponentheroHealthElement.textContent);
 const winImage = document.getElementById('winimg');
 const loseImage = document.getElementById('loseimg');
 const endbg = document.getElementById('endbg');
-console.log(difficulty);
 
 function manabarFilling() {
-    const arr = [];
+    const arrayOfCrystals = [];
 
     for (let i = 1; i <= mana; i++) {
         const manaCrystalImage = document.createElement('img');
         manaCrystalImage.src = '../static/images/field/mana.png';
         manaCrystalImage.setAttribute('class', 'manabar__crystall');
-        arr.push(manaCrystalImage);
+        arrayOfCrystals.push(manaCrystalImage);
     }
 
     manaElement.textContent = mana + '/10';
-    manabar.replaceChildren(...arr);
+    manabar.replaceChildren(...arrayOfCrystals);
 }
 
 manabarFilling();
@@ -50,7 +74,24 @@ function getCoords(elem) {
 const startSubmit = document.getElementById('StartSubmit');
 cardsHeader = document.querySelector('.cards__header');
 let cards = document.querySelectorAll('.cards__card_start');
-const handCards = document.querySelector('.hand__cards');
+const handCards = document.querySelector('.hand__cards_start');
+
+let swapCardsId = [];
+let img
+
+Array.from(cards).forEach(function (card) {
+    card.addEventListener('click', function () {
+        if (card.classList.contains('cards__card_swap')) {
+            card.classList.remove('cards__card_swap');
+            card.removeChild(img)
+        } else {
+            card.classList.add('cards__card_swap');
+            img = document.createElement("img")
+            img.src = "/static/images/cross.png"
+            card.appendChild(img)
+        }
+    });
+});
 
 startSubmit.addEventListener('click', () => {
         hand.classList.remove('hand-and-manabar__hand_start');
@@ -59,74 +100,175 @@ startSubmit.addEventListener('click', () => {
         }
         handCards.removeChild(startSubmit);
         handCards.removeChild(cardsHeader);
-    }
-)
+        handCards.classList.remove('hand__cards_start');
 
-const handLimits = 420;
-cards = document.getElementsByClassName('cards__card');
-let cardMana = parseInt(document.querySelector('.card__mana').textContent);
+        let replacedCardIds = [];
 
-for (var i = 0; i < cards.length; i++) {
-    (function (card) {
-        card.onmousedown = function (e) {
-            if (card.classList.contains('cards__card')) {
-                let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
-                if ((mana - manaSelectedCard) < 0) {
-                    alert("Недостаточно маны");
-                    return;
-                } else {
-                    console.log(card);
-                    var coords = getCoords(card);
-                    var shiftX = e.pageX - coords.left;
-                    var shiftY = e.pageY - coords.top;
+        Array.prototype.forEach.call(cards, function (card) {
+            if (card.classList.contains('cards__card_swap')) {
+                card.classList.remove('cards__card_swap');
+                card.removeChild(img)
+                console.log('card', card)
+                replacedCardIds.push(parseInt(card.getAttribute('data-id')));
+            }
+            console.log(replacedCardIds);
+        });
 
-                    card.style.position = 'absolute';
-                    moveAt(e);
-
-                    card.style.zIndex = 1000;
-
-                    function moveAt(e) {
-                        card.style.left = e.pageX - shiftX + 'px';
-                        card.style.top = e.pageY - shiftY + 'px';
-                        top = e.pageY - shiftY;
-                    }
-
-                    document.onmousemove = function (e) {
-                        moveAt(e);
-                    };
-
-                    card.onmouseup = function () {
-                        console.log('fadf');
-                        document.onmousemove = null;
-                        card.onmouseup = null;
-
-                        if (parseInt(card.style.top) < handLimits) {
-                            let fieldEmpty = field.querySelector('.field__empty');
-                            if (fieldEmpty) {
-                                field.removeChild(fieldEmpty);
-                            }
-                            field.appendChild(card);
-                            card.style.position = 'static';
-                            card.classList.remove('cards__card');
-                            card.classList.add('field__card');
-
-                            mana = mana - manaSelectedCard;
-                            manabarFilling();
-                        } else {
-                            hand.appendChild(card);
-                            card.style.position = 'static';
-                        }
-                    }
-                }
-                ;
+        const options = {
+            method: 'POST',
+            body: JSON.stringify(replacedCardIds),
+            headers: {
+                'Content-Type': 'application/json'
             }
         };
 
-        card.ondragstart = function () {
-            return false;
-        };
-    })(cards[i]);
-}
+        // Отправка данных на сервер и замена непригодных карточек на случайные
+        fetch("/api/post", options)
+            .then(response => response.json())
+            .then(data => {
+                const cardsFromBack = data.cards;
+                if (cardsFromBack.length > 0) {
+                    console.log(cards)
+                    console.log(cardsFromBack)
+                    for (i = 0; i < cardsFromBack.length; i++) {
+                        console.log(cards[i])
+                        console.log(cardsFromBack[i].Portrait)
+                        // cards[i].style.background = ''
+                        const encodedUrl = cardsFromBack[i].Portrait.replace(/ /g, "%20");
+                        cards[i].style.background = `url(${encodedUrl})`;
+                        // cards[i].style.backgroundSize = "cover"
+                        cards[i].setAttribute("data-id", cardsFromBack[i].CardID)
+                    }
+                }
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+        cards = document.getElementsByClassName('cards__card');
+        for (const card of cards) {
+            card.draggable = true;
+        }
+        const handLimits = 420;
+        cards = document.getElementsByClassName('cards__card');
+        for (var i = 0; i < cards.length; i++) {
+            (function (card) {
+                card.onmousedown = function (e) {
+                    if (card.classList.contains('cards__card')) {
+                        let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
+                        if ((mana - manaSelectedCard) < 0) {
+                            alert("Недостаточно маны");
+                            return;
+                        } else {
+                            var coords = getCoords(card);
+                            var shiftX = e.pageX - coords.left;
+                            var shiftY = e.pageY - coords.top;
+
+                            card.style.position = 'absolute';
+                            moveAt(e);
+
+                            card.style.zIndex = 1000;
+
+                            function moveAt(e) {
+                                card.style.left = e.pageX - shiftX + 'px';
+                                card.style.top = e.pageY - shiftY + 'px';
+                                top = e.pageY - shiftY;
+                            }
+
+                            document.onmousemove = function (e) {
+                                moveAt(e);
+                            };
+
+                            card.onmouseup = function () {
+                                document.onmousemove = null;
+                                card.onmouseup = null;
+
+                                if (parseInt(card.style.top) < handLimits) {
+                                    let fieldEmpty = field.querySelector('.field__empty');
+                                    if (fieldEmpty) {
+                                        field.removeChild(fieldEmpty);
+                                    }
+                                    field.appendChild(card);
+                                    card.style.position = 'static';
+                                    card.classList.remove('cards__card');
+                                    card.classList.add('field__card');
+
+                                    card.classList.add('canAttack');
+
+                                    mana = mana - manaSelectedCard;
+
+                                    // if (mana >=2)
+                                    // {
+                                    //     selectedHeroPowerElement.classList.add('canAttack');
+                                    //     attack(selectedHeroPowerElement);
+                                    // }
+
+                                    attack(card);
+                                    manabarFilling();
+                                } else {
+                                    hand.appendChild(card);
+                                    card.style.position = 'static';
+                                }
+                                socket.send("card drag")
+                            }
+                        }
+                        ;
+                    }
+                };
+                card.ondragstart = function () {
+                    return false;
+                };
+            })(cards[i]);
+        }
+    }
+)
+
+function attack(card) {
+    if (card.classList.contains('canAttack')) {
+        card.addEventListener("mousedown", function (e) {
+            var xOrigin = e.clientX;
+            var yOrigin = e.clientY;
+            svg.style.display = "block";
+            document.getElementById("arrowcursor").style.visibility = "visible";
+            document.body.style.cursor = "none";
+
+            document.body.addEventListener('mousemove', function (e2) {
+                var xDest = e2.clientX;
+                var yDest = e2.clientY;
+                var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
+                var deg = angleDeg + 90;
+                document.getElementById("arrowcursor").style.left = xDest + 'px';
+                document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
+                document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
+                svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                // opponentHeroElement.addEventListener("mouseover", function () {
+                //     document.getElementById("innercursor").style.visibility = "visible";
+                //     document.getElementById("outercursor").style.visibility = "visible";
+                //     document.getElementById("innercursor").style.left = xDest + 'px';
+                //     document.getElementById("innercursor").style.top = yDest + 'px';
+                //     document.getElementById("outercursor").style.left = xDest + 'px';
+                //     document.getElementById("outercursor").style.top = yDest + 'px';
+                // });
+                opponentHeroElement.onclick = function () {
+                    if (svg.style.display == "block") {
+                        opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
+                        opponentheroHealthElement.style.color = '#c70d0d';
+                        setTimeout(function () {
+                            opponentheroHealthElement.style.color = '#FFFFFF';
+                        }, 2000);
+                    };
+                    svg.style.display = "none";
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    document.getElementById("arrowcursor").style.visibility = "hidden";
+                    document.getElementById("innercursor").style.visibility = "hidden";
+                    document.getElementById("outercursor").style.visibility = "hidden";
+                    card.classList.remove('canAttack');
+                };
+            });
+        })
+    }
+};
 
 selectedHeroElement.addEventListener("click", function () {
     player1HealthValue -= 10;
@@ -157,7 +299,7 @@ selectedHeroElement.addEventListener("click", function () {
     }
 });
 opponentHeroElement.addEventListener("click", function () {
-    player2HealthValue-=10;
+    player2HealthValue -= 10;
     console.log('player2 Health Value = ', player2HealthValue);
     if (player2HealthValue <= 0) {
         winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
@@ -191,7 +333,8 @@ endTurnButton.addEventListener("click", function () {
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
     endTurnButton.setAttribute('disabled', '');
-    enemyTurn();
+    socket.send("end turn")
+    enemyTurn()
 });
 
 function enemyTurn() {

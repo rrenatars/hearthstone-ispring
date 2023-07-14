@@ -1,65 +1,145 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <link href="../static/css/arena.css" rel="stylesheet">-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">-->
+<!--    <meta name="viewport" content="width=device-width">-->
+<!--    <meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+<!--    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">-->
+<!--    <title>Hearthstone</title>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="endbg" id="endbg"></div>-->
+<!--<div class="winimg" id="winimg"></div>-->
+<!--<div class="loseimg" id="loseimg"></div>-->
+<!--<div class="background">-->
+<!--    <div class="enemycards" id="enemycards">-->
+<!--        <div class="enemycard" style="&#45;&#45;i:0.7"></div>-->
+<!--        <div class="enemycard" style="&#45;&#45;i:0"></div>-->
+<!--        <div class="enemycard" id="enemycard" style="&#45;&#45;i:-0.7"></div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div class="opponenthero" id="opponenthero">-->
+<!--    <div class="opposingHeroHealthBackground">-->
+<!--        <div class="opposingHeroHealthValue" id="Player2HealthValue">30</div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div class="playerHero" id="selectedHero">-->
+<!--    <div class="playerHeroHealthBackground">-->
+<!--        <div class="playerHeroHealthValue" id="Player1HealthValue">30</div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<button id="endturn" class="endturn-button"></button>-->
+<!--<div id="block"></div>-->
+<!--<div class="playerHeroPower" id="heropower"></div>-->
+<!--<div class="playerManaValue" id="MyMana">10/10</div>-->
+<!--<div class="opponentManaValue" id="OpponentMana">1/1</div>-->
+<!--<div class="manabox"></div>-->
+<!--<div class="background__field">-->
+<!--    {{ range $index, $card := .Cards }}-->
+<!--    <div class="field__empty" id="{{ $index }}" style="background: url(&quot;{{ $card.Portrait }}&quot;);">-->
+<!--    </div>-->
+<!--    {{ end }}-->
+<!--</div>-->
+<!--<div class="background__hand-and-manabar">-->
+<!--    <div class="hand-and-manabar__hand hand-and-manabar__hand_start">-->
+<!--        <div class="hand__cards hand__cards_start">-->
+<!--            <p class="cards__header">Start hand</p>-->
+<!--            <div class="cards">-->
+<!--                {{ range $index, $card := .Player1.Hand }}-->
+<!--                <div class="cards__card cards__card_start" id="{{ $index }}" data-id="{{ $card.CardID}}"-->
+<!--                     style="z-index: 3000; background: url(&quot;{{ $card.Portrait }}&quot;); background-size: cover">-->
+<!--                    <span class="card__mana">{{ $card.Mana }}</span>-->
+<!--                </div>-->
+<!--                {{ end }}-->
+<!--            </div>-->
+<!--            <button class="cards__submit" id="StartSubmit">OK</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    <div class="hand-and-manabar__manabar" id="Manabar">-->
+<!--    </div>-->
+<!--</div>-->
+<!--<div id="innercursor"></div>-->
+<!--<div id="outercursor"></div>-->
+<!--<div id="arrowcursor"></div>-->
+<!--<svg class="svg" id="svg" width="100%" height="100%">-->
+<!--    <path id="svgpath" fill="none" stroke="#e82e12" stroke-width="40" stroke-dasharray="60,10" d="">-->
+<!--</svg>-->
+<!--</div>-->
+<!--<script src="../static/js/arena.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link href="../static/css/arena.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Hearthstone</title>
 </head>
+
 <body>
-<div class = "endbg" id = "endbg"></div>
-<div class = "winimg" id = "winimg"></div>
-<div class = "loseimg" id = "loseimg"></div>
+<div class="endbg" id="endbg"></div>
+<div class="winimg" id="winimg"></div>
+<div class="loseimg" id="loseimg"></div>
 <div class="background">
     <div class="enemycards" id="enemycards">
         <div class="enemycard" style="--i:0.7"></div>
         <div class="enemycard" style="--i:0"></div>
         <div class="enemycard" id="enemycard" style="--i:-0.7"></div>
     </div>
-</div>
-<div class="opponenthero" id = "opponenthero">
-    <div class="opposingHeroHealthBackground">
-        <div class="opposingHeroHealthValue" id = "Player2HealthValue">30</div>
-    </div>
-</div>
-<div class="playerHero" id = "selectedHero">
-    <div class="playerHeroHealthBackground">
-        <div class="playerHeroHealthValue" id = "Player1HealthValue">30</div>
-    </div>
-</div>
-<button id="endturn" class="endturn-button"></button>
-<div id="block"></div>
-<div class="playerHeroPower" id = "heropower"></div>
-<div class="playerManaValue" id="MyMana">10/10</div>
-<div class="opponentManaValue" id="OpponentMana">1/1</div>
-<div class="manabox"></div>
-<div class="background__field">
-    <div class="field__empty"></div>
-</div>
-<div class="background__hand-and-manabar">
-    <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
-        <div class="hand__cards">
-            <p class="cards__header">Start hand</p>
-            <div class="cards">
-                {{ range .Cards}}
-                <div class="cards__card cards__card_start" draggable="true"
-                     style="z-index: 3000; background: url(&quot;{{ .Portrait }}&quot;); background-size: cover">
-                    <span class="card__mana">{{ .Mana }}</span>
-                    <!--                <span class="card__name">{{ .Name }}</span>-->
-                </div>
-                {{ end }}
-            </div>
-            <button class="cards__submit" id="StartSubmit">OK</button>
+    <div class="opponentManaValue" id="OpponentMana">1/1</div>
+    <div class="opponenthero" id="opponenthero">
+        <div class="opposingHeroHealthBackground">
+            <div class="opposingHeroHealthValue" id="Player2HealthValue">30</div>
         </div>
     </div>
-    <div class="hand-and-manabar__manabar" id="Manabar">
+    <button id="endturn" class="endturn-button"></button>
+    <div class="background__field">
+        <div class="field__empty"></div>
     </div>
+    <div class="playerHero" id="selectedHero">
+        <div class="playerHeroHealthBackground">
+            <div class="playerHeroHealthValue" id="Player1HealthValue">30</div>
+        </div>
+    </div>
+    <div class="playerHeroPower" id="heropower"></div>
+    <div class="playerManaValue" id="MyMana">10/10</div>
+    <div class="background__hand-and-manabar">
+        <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
+            <div class="hand__cards hand__cards_start">
+                <p class="cards__header">Start hand</p>
+                <div class="cards">
+                    {{ range $index, $card := .Player1.Hand }}
+                    <div class="cards__card cards__card_start" id="{{ $index }}" data-id="{{ $card.CardID}}"
+                         style="z-index: 3000; background: url(&quot;{{ $card.Portrait }}&quot;); background-size: cover">
+                        <span class="card__mana">{{ $card.Mana }}</span>
+                    </div>
+                    {{ end }}
+                </div>
+                <button class="cards__submit" id="StartSubmit">OK</button>
+            </div>
+        </div>
+        <div class="hand-and-manabar__manabar" id="Manabar">
+        </div>
+    </div>
+    <div id="innercursor"></div>
+    <div id="outercursor"></div>
+    <div id="arrowcursor"></div>
+    <svg class="svg" id="svg" width="100%" height="100%">
+        <path id="svgpath" fill="none" stroke="#e82e12" stroke-width="40" stroke-dasharray="60,10" d="">
+    </svg>
 </div>
-</div>
+
 <script src="../static/js/arena.js"></script>
 </body>
+
 </html>
