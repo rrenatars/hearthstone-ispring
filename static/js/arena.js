@@ -1,5 +1,7 @@
 import { socket } from "./websocket.js";
 
+import { game, setGame, stateMachine } from "./game.js"
+
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
 const manabar = document.getElementById('Manabar');
@@ -70,6 +72,8 @@ Array.from(cards).forEach(function (card) {
         }
     });
 });
+
+
 
 startSubmit.addEventListener('click', (evt) => {
         hand.classList.remove('hand-and-manabar__hand_start');

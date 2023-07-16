@@ -14,30 +14,50 @@ socket.onmessage = function(event) {
         case "start game":
             console.log("start game")
             let game_ = ParseDataToGameTable(message.data)
+            setGame(game_)
             const cardsHand = document.getElementById('cards');
-                for(const cardInHand of game_.player1.hand)
-                {
-                    console.log(cardInHand)
-                    let newCardElement = document.createElement('div');
-                    newCardElement.className = "cards__card cards__card_start";
-                    newCardElement.style.width = '94px';
-                    newCardElement.style.height = '135px';
-                    newCardElement.id = `${cardInHand.cardID}`;
-                    newCardElement.style.background = `url(../..${cardInHand.portrait})`;
-                    newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
-                    newCardElement.style.backgroundColor = 'red';
-                    newCardElement.style.backgroundSize = `cover`;
-
-                    const manaElement = document.createElement('span');
-                    manaElement.className = "card__mana";
-                    manaElement.textContent = cardInHand.mana;
-                    newCardElement.appendChild(manaElement);
-                    cardsHand.appendChild(newCardElement);
-                }
+            for(const cardInHand of game.player1.hand)
+            {
+                console.log(game)
+                let newCardElement = document.createElement('div');
+                newCardElement.className = "cards__card cards__card_start";
+                newCardElement.style.width = '94px';
+                newCardElement.style.height = '135px';
+                newCardElement.id = `${cardInHand.cardID}`;
+                newCardElement.style.background = cardInHand.portrait;
+               // newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
+                newCardElement.style.backgroundColor = 'red';
+                newCardElement.style.backgroundSize = `cover`;
+            
+                const manaElement = document.createElement('span');
+                manaElement.className = "card__mana";
+                manaElement.textContent = cardInHand.mana;
+                newCardElement.appendChild(manaElement);
+                cardsHand.appendChild(newCardElement);
+            }
             stateMachine.processEvent("start game");
             break;
         case "turn":
-            console.log("turn")
+            console.log(message);
+            let game__ = ParseDataToGameTable(message.data);
+            setGame(game__)
+            const cardPlayer2 = document.getElementById('background__field_opp');
+            for(const cardOnTable of game.player2.cards)
+            {
+                console.log(cardOnTable)
+                let newCardElement = document.createElement('div');
+                newCardElement.className = "field__empty_opp";
+                newCardElement.style.width = '94px';
+                newCardElement.style.height = '135px';
+                newCardElement.id = `${cardOnTable.cardID}`;
+                newCardElement.style.background = cardOnTable.portrait;
+               // newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
+                newCardElement.style.backgroundColor = 'red';
+                newCardElement.style.backgroundSize = `cover`;
+            
+                cardPlayer2.appendChild(newCardElement);
+            }
+            stateMachine.processEvent("turn");
             break;
         default :
             break;

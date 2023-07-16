@@ -41,27 +41,26 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 
 		switch string(p) {
 		case "end turn":
+			var g = *gameTable
+			g.Player1.Turn = !g.Player1.Turn
+			g.Player2.Turn = !g.Player2.Turn
 
-			// gameTable.Player1.Turn = !gameTable.Player1.Turn
-			// gameTable.Player2.Turn = !gameTable.Player2.Turn
+			if g.Player1.Turn && len(g.Player1.Deck) > 0 {
+				g.Player1.Hand = append(g.Player1.Hand, g.Player1.Deck[0])
+				g.Player1.Deck = g.Player1.Deck[1:]
+			}
 
-			// if gameTable.Player1.Turn && len(gameTable.Player1.Deck) > 0 {
-			// 	gameTable.Player1.Hand = append(gameTable.Player1.Hand, gameTable.Player1.Deck[0])
-			// 	gameTable.Player1.Deck = gameTable.Player1.Deck[1:]
-			// }
+			if g.Player2.Turn && len(g.Player2.Deck) > 0 {
+				g.Player2.Hand = append(g.Player2.Hand, g.Player2.Deck[0])
+				g.Player2.Deck = g.Player2.Deck[1:]
+			}
 
-			// if gameTable.Player2.Turn && len(gameTable.Player2.Deck) > 0 {
-			// 	gameTable.Player2.Hand = append(gameTable.Player2.Hand, gameTable.Player2.Deck[0])
-			// 	gameTable.Player2.Deck = gameTable.Player2.Deck[1:]
-			// }
+			if g.Player2.Turn && len(g.Player2.Hand) > 0 {
+				g.Player2.Cards = append(g.Player2.Cards, g.Player2.Hand[0])
+				g.Player2.Hand = g.Player2.Hand[1:]
+			}
 
-			// if gameTable.Player2.Turn && len(gameTable.Player2.Hand) > 0 {
-			// 	gameTable.Cards = append(gameTable.Cards, gameTable.Player2.Hand[0])
-			// 	gameTable.Player2.Hand = gameTable.Player2.Hand[1:]
-			// 	gameTable.Player2.Deck = gameTable.Player2.Deck[1:]
-			// }
-
-			message := *NewMessage("turn", *gameTable)
+			message := *NewMessage("turn", g)
 
 			if err := conn.WriteJSON(message); err != nil {
 				log.Println("msg send err: ", err.Error())
