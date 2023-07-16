@@ -1,26 +1,4 @@
-const socket = new WebSocket("ws://localhost:3000/ws");
-
-socket.onmessage = function(event) {
-    const message = document.createElement("div");
-    message.className = "message";
-    message.textContent = event.data;
-    console.log('Получено сообщение от сервера:', event.data);
-};
-
-socket.onopen = () => {
-    console.log('Соединение установлено');
-
-    // Отправка сообщения на сервер
-    socket.send('Привет, сервер!');
-};
-
-socket.onclose = (event) => {
-    console.log('Соединение закрыто:', event.code, event.reason);
-};
-
-socket.onerror = (error) => {
-    console.error('Ошибка соединения:', error);
-};
+import { socket } from "./websocket.js";
 
 const manaElement = document.getElementById('MyMana');
 let mana = parseInt(manaElement.textContent);
@@ -72,7 +50,7 @@ function getCoords(elem) {
 }
 
 const startSubmit = document.getElementById('StartSubmit');
-cardsHeader = document.querySelector('.cards__header');
+let cardsHeader = document.querySelector('.cards__header');
 let cards = document.querySelectorAll('.cards__card_start');
 const handCards = document.querySelector('.hand__cards_start');
 
@@ -93,7 +71,7 @@ Array.from(cards).forEach(function (card) {
     });
 });
 
-startSubmit.addEventListener('click', () => {
+startSubmit.addEventListener('click', (evt) => {
         hand.classList.remove('hand-and-manabar__hand_start');
         for (i = 0; i < cards.length; i++) {
             cards[i].classList.remove('cards__card_start');
@@ -151,7 +129,7 @@ startSubmit.addEventListener('click', () => {
             card.draggable = true;
         }
         const handLimits = 420;
-        cards = document.getElementsByClassName('cards__card');
+        cards = document.getElementsByClassName('cards');
         for (var i = 0; i < cards.length; i++) {
             (function (card) {
                 card.onmousedown = function (e) {
@@ -327,9 +305,7 @@ opponentHeroElement.addEventListener("click", function () {
     }
 });
 
-
 endTurnButton.addEventListener("click", function () {
-    playerTurn = false;
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
     endTurnButton.setAttribute('disabled', '');

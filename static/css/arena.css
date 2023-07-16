@@ -168,6 +168,17 @@
     margin-top: 15%;
 }
 
+.field__card_opp
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: none;
+}
+
 .field__card
 {
     width: 94px;
@@ -183,11 +194,22 @@
     opacity: 0.6;
 }
 
-.background__field {
+.background__field_opp {
     display: flex;
     justify-content: center;
     margin-top: 26.5%;
 }
+
+.background__field {
+    display: flex;
+    justify-content: center;
+}
+
+.field__empty_opp {
+    width: 94px;
+    height: 135px;
+}
+
 
 .field__empty {
     width: 94px;

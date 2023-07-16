@@ -4,27 +4,63 @@ import (
 	"math/rand"
 	"time"
 
-	models "github.com/rrenatars/hearthstone-ispring/internal/models"
+	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
 
+func NewCard(name, portrait, cardId, specification string, mana, attack, def int) *models.CardData {
+	return &models.CardData{
+		Name:          name,
+		Portrait:      portrait,
+		CardID:        cardId,
+		Specification: specification,
+		Mana:          mana,
+		Attack:        attack,
+		Defense:       def,
+	}
+}
+
+func NewPlayer(name string, hand, deck, cards []models.CardData, turn bool, hp, def int) *models.Player {
+	return &models.Player{
+		Name:  name,
+		Hand:  hand,
+		Deck:  deck,
+		Cards: cards,
+		Turn:  turn,
+		HP:    hp,
+		Def:   def,
+	}
+}
+
+func NewGameTable(pl1, pl2 *models.Player, history []models.CardData) *models.GameTable {
+	return &models.GameTable{
+		Player1: pl1,
+		Player2: pl2,
+		History: history,
+	}
+}
+
+// Получение карты игроком в руку
 func PlayerGetCard(p *models.Player) *models.Player {
 	if len(p.Deck) == 0 {
 		return p // Возвращаем текущий объект Player, если колода пуста
 	}
 
-	newCard := p.Deck[0]        // Получаем первую карту из колоды
-	remainingDeck := p.Deck[1:] // Создаем новый срез колоды без первой карты
+	newCard := p.Deck[0]
+	// remainingDeck := p.Deck[1:]
+
+	remainingDeck := RemoveElemsFromSlice(p.Deck, 1)
 
 	return &models.Player{
 		Name: p.Name,
-		Hand: append(p.Hand, newCard), // Добавляем новую карту в руку
-		Deck: remainingDeck,           // Устанавливаем обновленный срез колоды
+		Hand: append(p.Hand, newCard),
+		Deck: remainingDeck,
 		Turn: p.Turn,
 		HP:   p.HP,
 		Def:  p.Def,
 	}
 }
 
+// Берерт рандомно несколько карт
 func GetRandomElementsFromDeck(arr []models.CardData, numElements int) []models.CardData {
 	rand.New(rand.NewSource(time.Now().UnixNano()))
 
@@ -42,11 +78,8 @@ func GetRandomElementsFromDeck(arr []models.CardData, numElements int) []models.
 	return result
 }
 
-type Data struct {
-	OppTurn bool `json:"oppTurn"`
-}
-
-func RemoveCardFromSlice(cards []models.CardData, index int) []models.CardData {
+// Удаляет элементы из слайса карт
+func RemoveElemsFromSlice(cards []models.CardData, index int) []models.CardData {
 	// Проверка допустимого индекса
 	if index < 0 || index >= len(cards) {
 		return cards // Индекс недопустим, возвращаем исходный срез

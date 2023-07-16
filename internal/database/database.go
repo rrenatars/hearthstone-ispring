@@ -1,11 +1,9 @@
 package database
 
 import (
-	"database/sql"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	models "github.com/rrenatars/hearthstone-ispring/internal/models"
+	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
 
 const (
@@ -13,20 +11,11 @@ const (
 	dbDriverName = "mysql"
 )
 
-func GetCards() ([]models.CardData, error) {
-	db, err := openDB()
-	if err != nil {
-		return []models.CardData{}, err
-	}
-	dbx := sqlx.NewDb(db, dbDriverName)
-	return getCardsFromMySqlDB(dbx)
+func OpenDB() (*sqlx.DB, error) {
+	return sqlx.Open(dbDriverName, "root:password@tcp(localhost:3306)/hearthstone?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true")
 }
 
-func openDB() (*sql.DB, error) {
-	return sql.Open(dbDriverName, "rrenatessa:sqlwebpassdata@tcp(localhost:3306)/hearthstone?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true")
-}
-
-func getCardsFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
+func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 	const query = `
 		SELECT
 			name,
