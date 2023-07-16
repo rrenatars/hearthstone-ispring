@@ -57,6 +57,10 @@ socket.onmessage = function(event) {
             
                 cardPlayer2.appendChild(newCardElement);
             }
+            if(!game.player1.turn)
+            {
+                socket.send("end turn")
+            }
             stateMachine.processEvent("turn");
             break;
         default :

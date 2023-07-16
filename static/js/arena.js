@@ -133,7 +133,7 @@ startSubmit.addEventListener('click', (evt) => {
             card.draggable = true;
         }
         const handLimits = 420;
-        cards = document.getElementsByClassName('cards');
+        cards = document.getElementsByClassName('cards__card');
         for (var i = 0; i < cards.length; i++) {
             (function (card) {
                 card.onmousedown = function (e) {
@@ -155,7 +155,6 @@ startSubmit.addEventListener('click', (evt) => {
                             function moveAt(e) {
                                 card.style.left = e.pageX - shiftX + 'px';
                                 card.style.top = e.pageY - shiftY + 'px';
-                                top = e.pageY - shiftY;
                             }
 
                             document.onmousemove = function (e) {
