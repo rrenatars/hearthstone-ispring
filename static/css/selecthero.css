@@ -1,0 +1,84 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #0c0c0c;
+    color: #ffffff;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 30px;
+    color: #ffd200;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+form {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: #5a646f;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #ffd200;
+}
+
+select,
+button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: #fff9de;
+    color: #000000;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-color: transparent;
+    background-image: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23ffd200" d="M5 7.55L10 12.55L15 7.55L17 9.45L10 16.45L3 9.45L5 7.55Z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 14px;
+    padding-right: 30px;
+    color: #000000;
+}
+
+select:focus,
+select:hover {
+    background-color: #fffdf5;
+    box-shadow: 0 0 5px rgba(255, 210, 0, 0.5);
+}
+
+button {
+    background-color: #ffd200;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+button:hover,
+button:focus {
+    background-color: #ffc000;
+    box-shadow: 0 0 5px rgba(255, 210, 0, 0.5);
+}
+
+/* Custom Styles for Hero Class Icons */
+.hero-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    vertical-align: middle;
+}

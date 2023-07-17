@@ -19,9 +19,10 @@ type GameTable struct {
 type CardData struct {
 	Name          string `db:"name"`
 	Portrait      string `db:"portrait"`
-	CardID        string `db:"card_id"`
+	CardID        int    `db:"card_id"`
 	Specification string `db:"specification"`
 	Mana          int    `db:"mana"`
 	Attack        int    `db:"attack"`
 	Defense       int    `db:"defense"`
+	HP            int    `db:"healthpoint"`
 }

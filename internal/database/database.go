@@ -12,12 +12,13 @@ const (
 )
 
 func OpenDB() (*sqlx.DB, error) {
-	return sqlx.Open(dbDriverName, "root:password@tcp(localhost:3306)/hearthstone?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true")
+	return sqlx.Open(dbDriverName, "rrenatessa:sqlwebpassdata@tcp(localhost:3306)/hearthstone?charset=utf8mb4&collation=utf8mb4_unicode_ci&parseTime=true")
 }
 
 func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 	const query = `
 		SELECT
+		    card_id,
 			name,
 			mana,
 			attack,

@@ -1,13 +1,15 @@
 package rest
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
-	"text/template"
-
 	"github.com/gorilla/websocket"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
+	"log"
+	"math/rand"
+	"net/http"
+	"text/template"
+	"time"
 )
 
 var upgrader = websocket.Upgrader{
@@ -21,6 +23,11 @@ type Message struct {
 	Data models.GameTable `json:"data"`
 }
 
+type AcceptMessage struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
+
 func NewMessage(t string, d models.GameTable) *Message {
 	return &Message{
 		Type: t,
@@ -30,7 +37,6 @@ func NewMessage(t string, d models.GameTable) *Message {
 
 func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 	for {
-
 		_, p, err := conn.ReadMessage()
 		if err != nil {
 			log.Println(err)
@@ -39,11 +45,51 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 
 		log.Println(string(p))
 
-		switch string(p) {
+		var message AcceptMessage
+		err = json.Unmarshal(p, &message)
+		if err != nil {
+			log.Println("Ошибка при декодировании JSON:", err)
+			continue
+		}
+
+		switch message.Type {
+		case "exchange cards":
+			var g = *gameTable
+
+			// Проверяем, что data содержит срез []interface{}
+			if sliceData, ok := message.Data.([]interface{}); ok {
+				// Если приведение типа успешно, перебираем элементы среза
+				replacedCardIds := make([]int, len(sliceData))
+				for i, val := range sliceData {
+					// Для примера приводим каждый элемент к типу int и записываем его в новый срез
+					if num, ok := val.(float64); ok {
+						replacedCardIds[i] = int(num)
+					} else {
+						fmt.Println("Элемент не является числом")
+					}
+				}
+				// Теперь у вас есть срез replacedCardIds с целочисленными значениями
+				// Вы можете использовать его для обработки данных
+				fmt.Println(replacedCardIds)
+				log.Println("консоль")
+				g.Player1.Hand = exchangeCards(g.Player1.Deck, g.Player1.Hand, replacedCardIds)
+			} else {
+				fmt.Println("Data не является срезом []interface{}")
+			}
+
+			message := *NewMessage("start game", g)
+
+			if err := conn.WriteJSON(message); err != nil {
+				log.Println("msg send err: ", err.Error())
+				return
+			}
 		case "end turn":
+			log.Println("зашли")
 			var g = *gameTable
 			g.Player1.Turn = !g.Player1.Turn
 			g.Player2.Turn = !g.Player2.Turn
+
+			log.Println(g.Player1.Hand[0].CardID, "id")
 
 			if g.Player1.Turn && len(g.Player1.Deck) > 0 {
 				g.Player1.Hand = append(g.Player1.Hand, g.Player1.Deck[0])
@@ -79,6 +125,75 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 		}
 
 	}
+}
+
+func exchangeCards(deck []models.CardData, hand []models.CardData, replacedCardIds []int) []models.CardData {
+	if len(replacedCardIds) != 0 {
+		log.Println("replacedCardIds", replacedCardIds)
+
+		randIndexes := generateRandIndexes(replacedCardIds, len(deck))
+
+		//log.Println("random indexes", randIndexes)
+
+		log.Println("hand before", hand)
+
+		rand.Seed(time.Now().UnixNano())
+		// Дополнительная логика обработки массива данных
+		for i, replacedCardId := range replacedCardIds {
+			log.Println("i", i)
+			log.Println("replacedCardId", replacedCardId)
+			randomIndex := randIndexes[i]
+			log.Println("randomIndex", randomIndex)
+			for j, card := range hand {
+				log.Println(j)
+				if card.CardID == replacedCardId {
+					//	log.Println("cardId", card.CardID)
+					log.Println(card)
+					log.Println("range card replace id", hand[j])
+					log.Println("range deck random", deck[randomIndex])
+					hand[j] = (deck)[randomIndex-1]
+					break
+				}
+			}
+		}
+	}
+	log.Println("hand after", hand)
+	return hand
+}
+
+// Функция для генерации среза случайных индексов
+func GetRandomIndexes(maxIndex, count int) []int {
+
+	indexes := make([]int, count)
+	for i := 0; i < count; i++ {
+		index := rand.Intn(maxIndex)
+		log.Println("index in func", index)
+		indexes[i] = index
+	}
+
+	return indexes
+}
+
+func generateRandIndexes(replacedCardIds []int, length int) []int {
+	randIndexes := GetRandomIndexes(length, len(replacedCardIds))
+	log.Println("randIndexes", randIndexes)
+	log.Println(len(replacedCardIds))
+	for containsAny(randIndexes, replacedCardIds) {
+		randIndexes = GetRandomIndexes(length, len(replacedCardIds))
+		log.Println("randIndexes", randIndexes)
+	}
+	return randIndexes
+}
+
+func containsAny(randIndexes []int, replacedCardIds []int) bool {
+	for _, index := range randIndexes {
+		for _, replacedCardId := range replacedCardIds {
+			if index == replacedCardId && index == 0 {
+				return true
+			}
+		}
+	}
+	return false
 }
 
 func Arena(w http.ResponseWriter, r *http.Request, gameTable *models.GameTable) {

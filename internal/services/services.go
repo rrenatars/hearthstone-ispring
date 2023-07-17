@@ -7,7 +7,7 @@ import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
 
-func NewCard(name, portrait, cardId, specification string, mana, attack, def int) *models.CardData {
+func NewCard(name, portrait, specification string, mana, cardId, attack, hp, def int) *models.CardData {
 	return &models.CardData{
 		Name:          name,
 		Portrait:      portrait,
@@ -16,6 +16,7 @@ func NewCard(name, portrait, cardId, specification string, mana, attack, def int
 		Mana:          mana,
 		Attack:        attack,
 		Defense:       def,
+		HP:            hp,
 	}
 }
 
