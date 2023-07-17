@@ -4,6 +4,8 @@ import {game, setGame, stateMachine} from "./game.js"
 
 export const socket = new WebSocket("ws://localhost:3000/ws");
 
+import { ViewCards } from "./view.js";
+
 const endTurnButton = document.getElementById('endturn');
 
 function manabarFilling(mana) {
@@ -46,6 +48,13 @@ function startBefore() {
     const field = document.querySelector('.background__field');
     const hand = document.querySelector('.hand-and-manabar__hand');
 
+    let cards = document.querySelectorAll('.cards__card')
+
+    for (let i = 0; i < cards.length; i++) {
+        cards[i].classList.add('cards__card_start');
+    }
+
+
     const startSubmit = document.getElementById('StartSubmit');
     let cardsHeader = document.querySelector('.cards__header');
     let cardsStart = document.querySelectorAll('.cards__card_start');
@@ -56,27 +65,29 @@ function startBefore() {
     let swapCardsId = [];
     let img
 
-    Array.from(cardsStart).forEach(function (card) {
-        let img = null; // Флаг для отслеживания состояния элемента img
-        card.addEventListener('click', function () {
-            if (card.classList.contains('cards__card_swap')) {
-                card.classList.remove('cards__card_swap');
-                if (img) {
-                    card.removeChild(img); // Удаляем img только если он был добавлен ранее
-                    img = null; // Сбрасываем флаг
-                }
-            } else {
-                if (card.classList.contains('cards__card_start')) {
-                    card.classList.add('cards__card_swap');
-                    if (!img) {
-                        img = document.createElement("img");
-                        img.src = "/static/images/cross.png";
-                        card.appendChild(img); // Добавляем img только если его еще нет
+    if (startSubmit) {
+        Array.from(cardsStart).forEach(function (card) {
+            let img = null; // Флаг для отслеживания состояния элемента img
+            card.addEventListener('click', function () {
+                if (card.classList.contains('cards__card_swap')) {
+                    card.classList.remove('cards__card_swap');
+                    if (img) {
+                        card.removeChild(img); // Удаляем img только если он был добавлен ранее
+                        img = null; // Сбрасываем флаг
+                    }
+                } else {
+                    if (card.classList.contains('cards__card_start')) {
+                        card.classList.add('cards__card_swap');
+                        if (!img) {
+                            img = document.createElement("img");
+                            img.src = "/static/images/cross.png";
+                            card.appendChild(img); // Добавляем img только если его еще нет
+                        }
                     }
                 }
-            }
+            });
         });
-    });
+    }
 }
 
 function start() {
@@ -90,13 +101,15 @@ function start() {
     const startSubmit = document.getElementById('StartSubmit');
     let cardsHeader = document.querySelector('.cards__header');
     let cards = document.querySelectorAll('.cards__card_start');
-    console.log(cards)
     const handCards = document.querySelector('.hand__cards_start');
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
             hand.classList.remove('hand-and-manabar__hand_start');
+            console.log("cards jfdjafjdfjfd", cards)
             for (let i = 0; i < cards.length; i++) {
-                cards[i].classList.remove('cards__card_start');
+                console.log("card[i] jfdjaf", cards[i])
+                cards[i].style.width = '94px'
+                cards[i].style.height = '134px'
             }
 
             handCards.removeChild(startSubmit);
@@ -317,7 +330,6 @@ function afterStart() {
                     document.getElementById("arrowcursor").style.visibility = "visible";
                     document.body.style.cursor = "none";
 
-
                     const cardAttack = card.querySelector('.card__attack').textContent
 
                     document.body.addEventListener('mousemove', function (e2) {
@@ -441,14 +453,19 @@ socket.onmessage = function (event) {
             console.log("start game")
             let game_ = ParseDataToGameTable(message.data)
             setGame(game_)
+            ViewCards(game.player1.cards,"background__field","field__empty","94px","135px")
+            ViewCards(game.player1.hand, "cards", "cards__card cards__card_start","94px","135px")
+            ViewCards(game.player2.cards, "background__field_opp","field__empty_opp","94px","135px")
+
             const cardsHand = document.getElementById('cards');
+
             while (cardsHand.firstElementChild) {
                 cardsHand.removeChild(cardsHand.firstElementChild)
             }
             for (const cardInHand of game.player1.hand) {
                 console.log(game)
                 let newCardElement = document.createElement('div');
-                newCardElement.className = "cards__card cards__card_start";
+                newCardElement.className = "cards__card";
                 newCardElement.style.width = '94px';
                 newCardElement.style.height = '135px';
                 newCardElement.id = `${cardInHand.cardID}`;
@@ -477,43 +494,49 @@ socket.onmessage = function (event) {
             console.log(message);
             let game__ = ParseDataToGameTable(message.data);
             setGame(game__)
+            // ViewCards(game.player1.hand, "cards", "cards__card cards__card_start","94px","135px")
             const cardPlayer2 = document.getElementById('background__field_opp');
-            while (cardPlayer2.firstElementChild) {
-                cardPlayer2.removeChild(cardPlayer2.firstElementChild)
-            }
-            for (const cardOnTable of game.player2.cards) {
-                console.log(cardOnTable)
-                let newCardElement = document.createElement('div');
-                newCardElement.className = "field__empty_opp";
-                newCardElement.style.width = '94px';
-                newCardElement.style.height = '135px';
-                newCardElement.id = `${cardOnTable.cardID}`;
-                newCardElement.style.backgroundImage = `url(../..${cardOnTable.portrait})`
-                newCardElement.style.backgroundSize = `cover`;
-
-                const hpElement = document.createElement("span")
-                hpElement.textContent = cardOnTable.hp
-                newCardElement.appendChild(hpElement)
-
-                cardPlayer2.appendChild(newCardElement);
-            }
-            // if (!game.player1.turn) {
-            //     const dataToSend = {
-            //         type: "end turn",
-            //         data: {}
-            //     }
-            //     socket.send(JSON.stringify(dataToSend));
-            // }
-            if (!game.player1.turn) {
-                endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
-                endTurnButton.removeAttribute('disabled');
-                const dataToSend = {
-                    type: "end turn",
-                    data: {}
+            setTimeout(function () {
+                while (cardPlayer2.firstElementChild) {
+                    cardPlayer2.removeChild(cardPlayer2.firstElementChild)
                 }
-                socket.send(JSON.stringify(dataToSend));
-            }
-            stateMachine.processEvent("turn");
+                for (const cardOnTable of game.player2.cards) {
+                    console.log(cardOnTable)
+                    let newCardElement = document.createElement('div');
+                    newCardElement.className = "field__empty_opp";
+                    newCardElement.style.width = '94px';
+                    newCardElement.style.height = '135px';
+                    newCardElement.id = `${cardOnTable.cardID}`;
+                    newCardElement.style.backgroundImage = `url(../..${cardOnTable.portrait})`
+                    newCardElement.style.backgroundSize = `cover`;
+
+                    const hpElement = document.createElement("span")
+                    hpElement.textContent = cardOnTable.hp
+                    newCardElement.appendChild(hpElement)
+
+                    cardPlayer2.appendChild(newCardElement);
+                }
+                // if (!game.player1.turn) {
+                //     const dataToSend = {
+                //         type: "end turn",
+                //         data: {}
+                //     }
+                //     socket.send(JSON.stringify(dataToSend));
+                // }
+                if (!game.player1.turn) {
+                    endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    endTurnButton.removeAttribute('disabled');
+                    manabarFilling(10)
+                    const dataToSend = {
+                        type: "end turn",
+                        data: {}
+                    }
+                    socket.send(JSON.stringify(dataToSend));
+                }
+                stateMachine.processEvent("turn");
+            }, 1500);
+
             break;
         default :
             break;

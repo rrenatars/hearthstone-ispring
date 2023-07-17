@@ -3,8 +3,6 @@ import {socket} from "./websocket.js";
 
 const endTurnButton = document.getElementById('endturn');
 
-
-
 endTurnButton.addEventListener("click", function () {
     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
     endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
