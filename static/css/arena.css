@@ -53,12 +53,13 @@
     width: 100%;
     height: 135px;
     gap: 5px;
-    margin-top: 12.7%;
+    margin-top: 9%;
     margin-right: 0.5%;
     z-index: 3;
 }
 
-.hand-and-manabar__hand_start {
+.hand-and-manabar__hand_start
+{
     position: absolute;
     top: 33%;
     left: 50%;
@@ -75,8 +76,7 @@
     height: 2000px;
     margin-top: -600px;
     margin-right: -800px;
-    background-color: rgba(0, 0, 0, 0.5);
-    /* Пример затемнения с помощью rgba */
+    background-color: rgba(0, 0, 0, 0.5); /* Пример затемнения с помощью rgba */
     z-index: -1;
 }
 
@@ -92,7 +92,7 @@
     background-repeat: no-repeat;
 }
 
-.cards__card:hover {
+.cards__card:hover{
     margin-bottom: 135px;
     transform: scale(2.3);
 }
@@ -103,18 +103,26 @@
     transform: none;
 }
 
-.cards__card_start {
+.cards__card_start
+{
     width: 217px;
     height: 309px;
     background-repeat: no-repeat;
 }
 
-.cards__card_start:hover {
+.cards__card_start:hover
+{
     margin-bottom: 0px;
     transform: scale(1.0);
 }
 
-.hand__cards {
+.cards__card_swap
+{
+
+}
+
+.hand__cards
+{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -124,13 +132,22 @@
     z-index: 3;
 }
 
-.cards__header {
+.hand__cards_start
+{
+    margin-bottom: 200px;
+}
+
+
+.cards__header
+{
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 50px;
+    margin-bottom: 100px;
 }
 
-.cards__submit {
+.cards__submit
+{
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 20px;
@@ -139,7 +156,8 @@
     border-radius: 10px;
 }
 
-.cards {
+.cards
+{
     align-items: flex-end;
     display: flex;
     justify-content: center;
@@ -150,7 +168,19 @@
     margin-top: 15%;
 }
 
-.field__card {
+.field__card_opp
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: none;
+}
+
+.field__card
+{
     width: 94px;
     height: 135px;
     display: flex;
@@ -164,11 +194,22 @@
     opacity: 0.6;
 }
 
+.background__field_opp {
+    display: flex;
+    justify-content: center;
+    margin-top: 20%;
+}
+
 .background__field {
     display: flex;
     justify-content: center;
-    margin-top: 26.5%;
 }
+
+.field__empty_opp {
+    width: 94px;
+    height: 135px;
+}
+
 
 .field__empty {
     width: 94px;
@@ -239,11 +280,11 @@ button:active {
 }
 
 .opposingHeroHealthValue {
-    margin-top: 50%;
-    margin-left: 3%;
-    font-size: 150%;
+    margin-top: 47%;
+    margin-left: 10%;
+    font-size: 26px;
     font-weight: bold;
-    color: #FFFFFF;
+    color: white;
     text-shadow: 1px 1px 3px #000000;
 }
 
@@ -251,17 +292,18 @@ button:active {
     position: absolute;
     width: 18%;
     height: 32%;
-    top: 69%;
-    left: 58%;
+    top: 67%;
+    left: 56.5%;
     background-image: url(../images/field/HP.png);
     background-size: cover;
     user-select: none;
+    /* visibility: hidden; */
 }
 
 .playerHeroHealthValue {
-    margin-top: 52%;
-    margin-left: 7%;
-    font-size: 150%;
+    margin-top: 49%;
+    margin-left: 10%;
+    font-size: 27px;
     font-weight: bold;
     color: white;
     text-shadow: 1px 1px 3px #000000;
@@ -286,9 +328,12 @@ button:active {
     left: 76.35%;
     top: 42.1%;
     user-select: none;
+    font-size: 16px;
+    font-weight: bold;
     background: url(../images/field/endturn1.png);
     background-repeat: no-repeat;
     background-size: contain;
+    font-family: BelweBdBTBold;
     border: none;
     z-index: 2;
 }
@@ -315,9 +360,20 @@ button:active {
     text-shadow: 1px 1px 2px #000000;
 }
 
+/* .manabox {
+    background-image: url(../images/field/mana.png);
+    position: absolute;
+    width: 29px;
+    height: 32px;
+    left: 65.9%;
+    top: 90.2%;
+    margin: 8.66px 0;
+    user-select: none;
+} */
+
 .enemycards {
     margin-right: 81px;
-    margin-top: -35px;
+    margin-top: -33px;
     display: flex;
     justify-content: center;
     gap: 4px;
@@ -338,7 +394,8 @@ button:active {
     transition: 0.5s;
 }
 
-.hand-and-manabar__manabar {
+.hand-and-manabar__manabar
+{
     position: absolute;
     display: flex;
     flex-direction: row;
