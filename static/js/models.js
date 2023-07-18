@@ -19,29 +19,6 @@ export class CardData {
     }
 }
 
-export class CreatureData {
-    /**
-     * @param {string} name
-     * @param {string} portrait
-     * @param {string} cardID
-     * @param {number} creatureID
-     * @param {string} specification
-     * @param {number} hp
-     * @param {number} attack
-     * @param {number} defense
-     */
-    constructor(name, portrait, cardID, creatureID, specification, hp, attack, defense) {
-        this.name = name;
-        this.portrait = portrait;
-        this.creatureID = creatureID;
-        this.cardID = cardID;
-        this.specification = specification;
-        this.hp = hp;
-        this.attack = attack;
-        this.defense = defense;
-    }
-}
-
 export class Player {
     /**
      * @param {string} name

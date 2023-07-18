@@ -1,4 +1,4 @@
-import {CardData, CreatureData, GameTable, Player} from "./models.js";
+import {CardData, GameTable, Player} from "./models.js";
 
 import {game, setGame, stateMachine} from "./game.js"
 import {ViewCards} from "./view.js";
@@ -195,12 +195,12 @@ function afterStart() {
                                     const manaElement = document.getElementById('MyMana');
                                     manabarFilling(mana, manaElement);
 
-                                    const draggedCardId = card.getAttribute("data-id")
-                                    const dataToSend = {
-                                        type: "card drag",
-                                        data: {draggedCardId}
-                                    }
-                                    socket.send(JSON.stringify(dataToSend))
+                                    let cardPortraitUrl = card.getAttribute('style').match(/background-image:\s?url\(['"]?([^'"]+?)['"]?\)/)[1];
+
+                                    let creaturePortraitUrl = cardPortraitUrl.replace('cards-in-hand', 'creatures');
+                                    card.style.backgroundImage = 'url(' + creaturePortraitUrl + ')'
+                                    card.style.width = '125px'
+                                    card.style.height = '168px'
                                 } else {
                                     cardsElement.appendChild(card);
                                     card.style.position = 'static';
@@ -389,23 +389,23 @@ socket.onmessage = function (event) {
             afterStart()
             stateMachine.processEvent("start game");
             break;
-        case "drag card":
-            let cardsInField = ParseDataToCreature(message.data);
-            let creatureId = cardsInField.creatureID;
-            let portraitUrl = cardsInField.portrait;
-
-            const field = document.getElementById("background__field");
-            let creaturesList = field.querySelectorAll(`[data-id="${creatureId}"]`);
-            creaturesList.forEach((creature) => {
-                // Применяем background-image к элементам с соответствующим data-id
-                if (creatureId == cardsInField.creatureID) {
-                    creature.style.backgroundImage = `url('${portraitUrl}')`;
-                    creature.style.width = '125px';
-                    creature.style.height = '168px'
-                }
-            });
-            console.log("cardsInField", cardsInField)
-            break
+        // case "drag card":
+        //     let cardsInField = ParseDataToCreature(message.data);
+        //     let creatureId = cardsInField.creatureID;
+        //     let portraitUrl = cardsInField.portrait;
+        //
+        //     const field = document.getElementById("background__field");
+        //     let creaturesList = field.querySelectorAll(`[data-id="${creatureId}"]`);
+        //     creaturesList.forEach((creature) => {
+        //         // Применяем background-image к элементам с соответствующим data-id
+        //         if (creatureId == cardsInField.creatureID) {
+        //             creature.style.backgroundImage = `url('${portraitUrl}')`;
+        //             creature.style.width = '125px';
+        //             creature.style.height = '168px'
+        //         }
+        //     });
+        //     console.log("cardsInField", cardsInField)
+        //     break
         case "turn":
             console.log(message);
             let game__ = ParseDataToGameTable(message.data);
