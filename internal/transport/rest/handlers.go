@@ -70,8 +70,6 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 				}
 				// Теперь у вас есть срез replacedCardIds с целочисленными значениями
 				// Вы можете использовать его для обработки данных
-				fmt.Println(replacedCardIds)
-				log.Println("консоль")
 				g.Player1.Hand = exchangeCards(g.Player1.Deck, g.Player1.Hand, replacedCardIds)
 			} else {
 				fmt.Println("Data не является срезом []interface{}")
@@ -84,7 +82,6 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 				return
 			}
 		case "end turn":
-			log.Println("зашли")
 			var g = *gameTable
 			g.Player1.Turn = !g.Player1.Turn
 			g.Player2.Turn = !g.Player2.Turn
@@ -129,45 +126,31 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 
 func exchangeCards(deck []models.CardData, hand []models.CardData, replacedCardIds []int) []models.CardData {
 	if len(replacedCardIds) != 0 {
-		log.Println("replacedCardIds", replacedCardIds)
-
 		randIndexes := generateRandIndexes(replacedCardIds, len(deck))
 
-		//log.Println("random indexes", randIndexes)
-
-		log.Println("hand before", hand)
+		//log.Println("hand before exchange", hand)
 
 		rand.Seed(time.Now().UnixNano())
 		// Дополнительная логика обработки массива данных
 		for i, replacedCardId := range replacedCardIds {
-			log.Println("i", i)
-			log.Println("replacedCardId", replacedCardId)
 			randomIndex := randIndexes[i]
-			log.Println("randomIndex", randomIndex)
 			for j, card := range hand {
-				log.Println(j)
 				if card.CardID == replacedCardId {
-					//	log.Println("cardId", card.CardID)
-					log.Println(card)
-					log.Println("range card replace id", hand[j])
-					log.Println("range deck random", deck[randomIndex])
 					hand[j] = (deck)[randomIndex-1]
 					break
 				}
 			}
 		}
 	}
-	log.Println("hand after", hand)
+	//log.Println("hand after exchange", hand)
 	return hand
 }
 
 // Функция для генерации среза случайных индексов
 func GetRandomIndexes(maxIndex, count int) []int {
-
 	indexes := make([]int, count)
 	for i := 0; i < count; i++ {
 		index := rand.Intn(maxIndex)
-		log.Println("index in func", index)
 		indexes[i] = index
 	}
 
@@ -176,11 +159,8 @@ func GetRandomIndexes(maxIndex, count int) []int {
 
 func generateRandIndexes(replacedCardIds []int, length int) []int {
 	randIndexes := GetRandomIndexes(length, len(replacedCardIds))
-	log.Println("randIndexes", randIndexes)
-	log.Println(len(replacedCardIds))
 	for containsAny(randIndexes, replacedCardIds) {
 		randIndexes = GetRandomIndexes(length, len(replacedCardIds))
-		log.Println("randIndexes", randIndexes)
 	}
 	return randIndexes
 }
@@ -188,7 +168,7 @@ func generateRandIndexes(replacedCardIds []int, length int) []int {
 func containsAny(randIndexes []int, replacedCardIds []int) bool {
 	for _, index := range randIndexes {
 		for _, replacedCardId := range replacedCardIds {
-			if index == replacedCardId && index == 0 {
+			if index == replacedCardId || index == 0 {
 				return true
 			}
 		}

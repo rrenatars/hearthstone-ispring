@@ -8,10 +8,9 @@ import { ViewCards } from "./view.js";
 
 const endTurnButton = document.getElementById('endturn');
 
-function manabarFilling(mana) {
+function manabarFilling(mana, manaElement) {
     const arrayOfCrystals = [];
 
-    const manaElement = document.getElementById('MyMana');
     const manabar = document.getElementById('Manabar');
 
     for (let i = 1; i <= mana; i++) {
@@ -41,29 +40,19 @@ function startBefore() {
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
 
-    const manaElement = document.getElementById('MyMana');
-    let mana = parseInt(manaElement.textContent);
-    const manabar = document.getElementById('Manabar');
-
-    const field = document.querySelector('.background__field');
-    const hand = document.querySelector('.hand-and-manabar__hand');
-
     let cards = document.querySelectorAll('.cards__card')
 
-    for (let i = 0; i < cards.length; i++) {
-        cards[i].classList.add('cards__card_start');
+    const startSubmit = document.getElementById('StartSubmit')
+    if (startSubmit) {
+        for (let i = 0; i < cards.length; i++) {
+            cards[i].classList.add('cards__card_start');
+        }
     }
 
-
-    const startSubmit = document.getElementById('StartSubmit');
-    let cardsHeader = document.querySelector('.cards__header');
     let cardsStart = document.querySelectorAll('.cards__card_start');
-    console.log(cardsStart)
-    const handCards = document.querySelector('.hand__cards_start');
-    manabarFilling(10);
 
-    let swapCardsId = [];
-    let img
+    const manaElement = document.getElementById("MyMana")
+    manabarFilling(10, manaElement);
 
     if (startSubmit) {
         Array.from(cardsStart).forEach(function (card) {
@@ -91,11 +80,6 @@ function startBefore() {
 }
 
 function start() {
-    const manaElement = document.getElementById('MyMana');
-    let mana = parseInt(manaElement.textContent);
-    const manabar = document.getElementById('Manabar');
-
-    const field = document.querySelector('.background__field');
     const hand = document.querySelector('.hand-and-manabar__hand');
 
     const startSubmit = document.getElementById('StartSubmit');
@@ -105,12 +89,6 @@ function start() {
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
             hand.classList.remove('hand-and-manabar__hand_start');
-            console.log("cards jfdjafjdfjfd", cards)
-            for (let i = 0; i < cards.length; i++) {
-                console.log("card[i] jfdjaf", cards[i])
-                cards[i].style.width = '94px'
-                cards[i].style.height = '134px'
-            }
 
             handCards.removeChild(startSubmit);
             handCards.removeChild(cardsHeader);
@@ -122,13 +100,10 @@ function start() {
                 if (card.classList.contains('cards__card_swap')) {
                     card.classList.remove('cards__card_swap');
                     if (card.lastChild.tagName === 'IMG') {
-                        console.log(card.lastChild)
                         card.removeChild(card.lastChild)
                     }
-                    console.log('card', card)
                     replacedCardIds.push(parseInt(card.getAttribute('id')));
                 }
-                console.log(replacedCardIds);
             });
 
             const dataToSend = {
@@ -143,73 +118,6 @@ function start() {
     }
 }
 
-// startSubmit.addEventListener('click', (evt) => {
-//         hand.classList.remove('hand-and-manabar__hand_start');
-//         for (i = 0; i < cards.length; i++) {
-//             cards[i].classList.remove('cards__card_start');
-//         }
-//
-//         handCards.removeChild(startSubmit);
-//         handCards.removeChild(cardsHeader);
-//         handCards.classList.remove('hand__cards_start');
-//
-//         let replacedCardIds = [];
-//
-//         Array.prototype.forEach.call(cards, function (card) {
-//             if (card.classList.contains('cards__card_swap')) {
-//                 card.classList.remove('cards__card_swap');
-//                 if (card.lastChild.tagName === 'IMG') {
-//                     console.log(card.lastChild)
-//                     card.removeChild(card.lastChild)
-//                 }
-//                 console.log('card', card)
-//                 replacedCardIds.push(parseInt(card.getAttribute('id')));
-//             }
-//             console.log(replacedCardIds);
-//         });
-//
-//         const dataToSend = {
-//             type: "exchange cards",
-//             data: replacedCardIds
-//         }
-//
-//         console.log(JSON.stringify(dataToSend))
-//
-//         socket.send(JSON.stringify(dataToSend))
-
-// const options = {
-//     method: 'POST',
-//     body: JSON.stringify(replacedCardIds),
-//     headers: {
-//         'Content-Type': 'application/json'
-//     }
-// };
-//
-// // Отправка данных на сервер и замена непригодных карточек на случайные
-// fetch("/api/post", options)
-//     .then(response => response.json())
-//     .then(data => {
-//         const cardsFromBack = data.cards;
-//         if (cardsFromBack.length > 0) {
-//             console.log(cards)
-//             console.log(cardsFromBack)
-//             for (i = 0; i < cardsFromBack.length; i++) {
-//                 console.log(cards[i])
-//                 console.log(cardsFromBack[i].Portrait)
-//                 // cards[i].style.background = ''
-//                 const encodedUrl = cardsFromBack[i].Portrait.replace(/ /g, "%20");
-//                 cards[i].style.background = `url(${encodedUrl})`;
-//                 // cards[i].style.backgroundSize = "cover"
-//                 cards[i].setAttribute("data-id", cardsFromBack[i].CardID)
-//             }
-//         }
-//
-//     })
-//     .catch(error => {
-//         console.log(error);
-//     });
-
-
 function afterStart() {
     function getCoords(elem) {
         var box = elem.getBoundingClientRect();
@@ -219,35 +127,25 @@ function afterStart() {
         };
     }
 
-    const manaElement = document.getElementById('MyMana');
-    console.log(manaElement, "manaElement")
-    let mana = parseInt(manaElement.textContent);
-    const manabar = document.getElementById('Manabar');
-
     const field = document.querySelector('.background__field');
-    const hand = document.querySelector('.hand-and-manabar__hand');
 
     const startSubmit = document.getElementById('StartSubmit');
-    let cardsHeader = document.querySelector('.cards__header');
-    let cards = document.querySelectorAll('.cards__card_start');
-    console.log(cards)
-    const handCards = document.querySelector('.hand__cards_start');
     const cardsElement = document.querySelector('.cards')
 
-    cards = document.getElementsByClassName('cards__card');
+    let cards = document.getElementsByClassName('cards__card');
     for (const card of cards) {
         card.draggable = true;
     }
+
     const handLimits = 520;
-    cards = document.getElementsByClassName('cards__card');
     if (!startSubmit) {
         for (var i = 0; i < cards.length; i++) {
             (function (card) {
                 card.onmousedown = function (e) {
                     if (card.classList.contains('cards__card')) {
+                        const manaElement = document.getElementById("MyMana")
+                        let mana = parseInt(manaElement.textContent)
                         let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
-                        console.log(manaSelectedCard, "manaSelecteCard")
-                        console.log(mana, "mana")
                         if ((mana - manaSelectedCard) < 0) {
                             alert("Недостаточно маны");
                             return;
@@ -295,7 +193,8 @@ function afterStart() {
                                     // }
 
                                     attack(card);
-                                    manabarFilling(mana);
+                                    const manaElement = document.getElementById('MyMana');
+                                    manabarFilling(mana, manaElement);
                                 } else {
                                     cardsElement.appendChild(card);
                                     card.style.position = 'static';
@@ -387,7 +286,6 @@ function afterStart() {
         const endbg = document.getElementById('endbg');
 
         selectedHeroElement.addEventListener("click", function () {
-            // player1HealthValue -= 10;
             console.log('player1 Health Value = ', player1HealthValue);
             if (player1HealthValue <= 0) {
                 loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
@@ -414,6 +312,7 @@ function afterStart() {
                 endbg.style.opacity = "0.95";
             }
         });
+
         function Victory() {
             winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
             winImage.style.width = "793px";
@@ -466,8 +365,6 @@ socket.onmessage = function (event) {
                 console.log(game)
                 let newCardElement = document.createElement('div');
                 newCardElement.className = "cards__card";
-                newCardElement.style.width = '94px';
-                newCardElement.style.height = '135px';
                 newCardElement.id = `${cardInHand.cardID}`;
                 newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
                 newCardElement.style.backgroundSize = `cover`;
@@ -475,16 +372,15 @@ socket.onmessage = function (event) {
                 const manaElement = document.createElement('span');
                 manaElement.className = "card__mana";
                 manaElement.textContent = cardInHand.mana;
+                newCardElement.appendChild(manaElement);
 
                 const attackElement = document.createElement('span')
                 attackElement.className = "card__attack"
                 attackElement.textContent = cardInHand.attack
-
-                newCardElement.appendChild(manaElement);
                 newCardElement.appendChild(attackElement)
+
                 cardsHand.appendChild(newCardElement);
             }
-            manabarFilling(10)
             startBefore()
             start()
             afterStart()
@@ -527,7 +423,8 @@ socket.onmessage = function (event) {
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.removeAttribute('disabled');
-                    manabarFilling(10)
+                    const manaElement = document.getElementById("MyMana")
+                    manabarFilling(10, manaElement)
                     const dataToSend = {
                         type: "end turn",
                         data: {}
