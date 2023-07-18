@@ -3,24 +3,37 @@ import {CardData, GameTable, Player} from "./models.js";
 import {game, setGame, stateMachine} from "./game.js"
 import {ViewCards} from "./view.js";
 
+import {dragNDrop} from "./dragndrop.js";
+import {manabarFilling} from "./manabarFilling.js";
+
 export const socket = new WebSocket("ws://localhost:3000/ws");
 
 const endTurnButton = document.getElementById('endturn');
 
-function manabarFilling(mana, manaElement) {
-    const arrayOfCrystals = [];
+function selectCardsToExchange() {
+    const cardsStart = document.querySelectorAll('.cards__card_start');
 
-    const manabar = document.getElementById('Manabar');
-
-    for (let i = 1; i <= mana; i++) {
-        const manaCrystalImage = document.createElement('img');
-        manaCrystalImage.src = '../static/images/field/mana.png';
-        manaCrystalImage.setAttribute('class', 'manabar__crystall');
-        arrayOfCrystals.push(manaCrystalImage);
-    }
-
-    manaElement.textContent = mana + '/10';
-    manabar.replaceChildren(...arrayOfCrystals);
+    Array.from(cardsStart).forEach(function (card) {
+        let img = null; // Флаг для отслеживания состояния элемента img
+        card.addEventListener('click', function () {
+            if (card.classList.contains('cards__card_swap')) {
+                card.classList.remove('cards__card_swap');
+                if (img) {
+                    card.removeChild(img); // Удаляем img только если он был добавлен ранее
+                    img = null; // Сбрасываем флаг
+                }
+            } else {
+                if (card.classList.contains('cards__card_start')) {
+                    card.classList.add('cards__card_swap');
+                    if (!img) {
+                        img = document.createElement("img");
+                        img.src = "/static/images/cross.png";
+                        card.appendChild(img); // Добавляем img только если его еще нет
+                    }
+                }
+            }
+        });
+    });
 }
 
 function startBefore() {
@@ -39,42 +52,18 @@ function startBefore() {
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
 
-    let cards = document.querySelectorAll('.cards__card')
+    const manaElement = document.getElementById("MyMana")
+    manabarFilling(10, manaElement);
 
+    let cards = document.querySelectorAll('.cards__card')
     const startSubmit = document.getElementById('StartSubmit')
+
     if (startSubmit) {
         for (let i = 0; i < cards.length; i++) {
             cards[i].classList.add('cards__card_start');
         }
-    }
 
-    let cardsStart = document.querySelectorAll('.cards__card_start');
-
-    const manaElement = document.getElementById("MyMana")
-    manabarFilling(10, manaElement);
-
-    if (startSubmit) {
-        Array.from(cardsStart).forEach(function (card) {
-            let img = null; // Флаг для отслеживания состояния элемента img
-            card.addEventListener('click', function () {
-                if (card.classList.contains('cards__card_swap')) {
-                    card.classList.remove('cards__card_swap');
-                    if (img) {
-                        card.removeChild(img); // Удаляем img только если он был добавлен ранее
-                        img = null; // Сбрасываем флаг
-                    }
-                } else {
-                    if (card.classList.contains('cards__card_start')) {
-                        card.classList.add('cards__card_swap');
-                        if (!img) {
-                            img = document.createElement("img");
-                            img.src = "/static/images/cross.png";
-                            card.appendChild(img); // Добавляем img только если его еще нет
-                        }
-                    }
-                }
-            });
-        });
+        selectCardsToExchange()
     }
 }
 
@@ -82,8 +71,8 @@ function start() {
     const hand = document.querySelector('.hand-and-manabar__hand');
 
     const startSubmit = document.getElementById('StartSubmit');
-    let cardsHeader = document.querySelector('.cards__header');
-    let cards = document.querySelectorAll('.cards__card_start');
+    const cardsHeader = document.querySelector('.cards__header');
+    const cards = document.querySelectorAll('.cards__card_start');
     const handCards = document.querySelector('.hand__cards_start');
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
@@ -109,169 +98,15 @@ function start() {
                 type: "exchange cards",
                 data: replacedCardIds
             }
-
-            console.log(JSON.stringify(dataToSend))
-
             socket.send(JSON.stringify(dataToSend))
         })
     }
 }
 
 function afterStart() {
-    function getCoords(elem) {
-        var box = elem.getBoundingClientRect();
-        return {
-            top: box.top + scrollY,
-            left: box.left + scrollX
-        };
-    }
-
-    const field = document.querySelector('.background__field');
-
     const startSubmit = document.getElementById('StartSubmit');
-    const cardsElement = document.querySelector('.cards')
-
-    let cards = document.getElementsByClassName('cards__card');
-    for (const card of cards) {
-        card.draggable = true;
-    }
-
-    const handLimits = 520;
     if (!startSubmit) {
-        for (var i = 0; i < cards.length; i++) {
-            (function (card) {
-                card.onmousedown = function (e) {
-                    if (card.classList.contains('cards__card')) {
-                        const manaElement = document.getElementById("MyMana")
-                        let mana = parseInt(manaElement.textContent)
-                        let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
-                        if ((mana - manaSelectedCard) < 0) {
-                            alert("Недостаточно маны");
-                            return;
-                        } else {
-                            var coords = getCoords(card);
-                            var shiftX = e.pageX - coords.left;
-                            var shiftY = e.pageY - coords.top;
-
-                            card.style.position = 'absolute';
-                            moveAt(e);
-
-                            card.style.zIndex = 1000;
-
-                            function moveAt(e) {
-                                card.style.left = e.pageX - shiftX + 'px';
-                                card.style.top = e.pageY - shiftY + 'px';
-                            }
-
-                            document.onmousemove = function (e) {
-                                moveAt(e);
-                            };
-
-                            card.onmouseup = function () {
-                                document.onmousemove = null;
-                                card.onmouseup = null;
-
-                                if (parseInt(card.style.top) < handLimits) {
-                                    let fieldEmpty = field.querySelector('.field__empty');
-                                    if (fieldEmpty) {
-                                        field.removeChild(fieldEmpty);
-                                    }
-                                    field.appendChild(card);
-                                    card.style.position = 'static';
-                                    card.classList.remove('cards__card');
-                                    card.classList.add('field__card');
-
-                                    card.classList.add('canAttack');
-
-                                    mana = mana - manaSelectedCard;
-
-                                    // if (mana >=2)
-                                    // {
-                                    //     selectedHeroPowerElement.classList.add('canAttack');
-                                    //     attack(selectedHeroPowerElement);
-                                    // }
-
-                                    attack(card);
-                                    const manaElement = document.getElementById('MyMana');
-                                    manabarFilling(mana, manaElement);
-
-                                    let cardPortraitUrl = card.getAttribute('style').match(/background-image:\s?url\(['"]?([^'"]+?)['"]?\)/)[1];
-
-                                    let creaturePortraitUrl = cardPortraitUrl.replace('cards-in-hand', 'creatures');
-                                    card.style.backgroundImage = 'url(' + creaturePortraitUrl + ')'
-                                    card.style.width = '125px'
-                                    card.style.height = '168px'
-                                } else {
-                                    cardsElement.appendChild(card);
-                                    card.style.position = 'static';
-                                }
-                            }
-                        }
-                        ;
-                    }
-                };
-                card.ondragstart = function () {
-                    return false;
-                };
-            })(cards[i]);
-        }
-
-
         var canAttack = new Boolean(false);
-
-        function attack(card) {
-            if (card.classList.contains('canAttack')) {
-                card.addEventListener("mousedown", function (e) {
-                    var svgField = document.getElementById('svg');
-                    var xOrigin = card.offsetLeft + card.offsetWidth / 2;
-                    var yOrigin = card.offsetTop + card.offsetHeight / 2;
-                    svg.style.display = "block";
-                    document.getElementById("arrowcursor").style.visibility = "visible";
-                    document.body.style.cursor = "none";
-
-                    const cardAttack = card.querySelector('.card__attack').textContent
-
-                    document.body.addEventListener('mousemove', function (e2) {
-                        var xDest = e2.clientX;
-                        var yDest = e2.clientY;
-                        var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
-                        var deg = angleDeg + 90;
-                        document.getElementById("arrowcursor").style.left = xDest + 'px';
-                        document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
-                        document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
-                        svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
-                        // opponentHeroElement.addEventListener("mouseover", function () {
-                        //     document.getElementById("innercursor").style.visibility = "visible";
-                        //     document.getElementById("outercursor").style.visibility = "visible";
-                        //     document.getElementById("innercursor").style.left = xDest + 'px';
-                        //     document.getElementById("innercursor").style.top = yDest + 'px';
-                        //     document.getElementById("outercursor").style.left = xDest + 'px';
-                        //     document.getElementById("outercursor").style.top = yDest + 'px';
-                        // });
-
-                        opponentHeroElement.onclick = function () {
-                            if (svg.style.display == "block") {
-                                opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - parseInt(cardAttack));
-                                opponentheroHealthElement.style.color = '#c70d0d';
-                                if (opponentheroHealthElement.textContent <= 0) {
-                                    Victory()
-                                }
-                                setTimeout(function () {
-                                    opponentheroHealthElement.style.color = '#FFFFFF';
-                                }, 2000);
-                            }
-                            ;
-                            svg.style.display = "none";
-                            document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                            document.getElementById("arrowcursor").style.visibility = "hidden";
-                            document.getElementById("innercursor").style.visibility = "hidden";
-                            document.getElementById("outercursor").style.visibility = "hidden";
-                            card.classList.remove('canAttack');
-                        };
-                    });
-                })
-            }
-        };
 
         const urlParams = new URLSearchParams(window.location.search);
         const heroClass = urlParams.get('heroclass');
@@ -315,31 +150,6 @@ function afterStart() {
                 endbg.style.opacity = "0.95";
             }
         });
-
-        function Victory() {
-            winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
-            winImage.style.width = "793px";
-            winImage.style.height = "704px";
-            winImage.style.zIndex = 9999;
-            winImage.style.position = "absolute";
-            winImage.style.top = "50%";
-            winImage.style.left = "50%";
-            winImage.style.marginRight = "-50%";
-            winImage.style.transform = "translate(-50%, -50%)";
-            endbg.style.zIndex = 999;
-            endbg.style.backdropFilter = "blur(3px)";
-            endbg.style.textAlign = "center";
-            endbg.style.margin = "0";
-            endbg.style.width = "100%";
-            endbg.style.height = "100%";
-            endbg.style.position = "absolute";
-            endbg.style.bottom = "0";
-            endbg.style.top = "0";
-            endbg.style.left = "0";
-            endbg.style.right = "0";
-            endbg.style.backgroundColor = "#666666";
-            endbg.style.opacity = "0.95";
-        }
     }
 }
 
@@ -387,6 +197,11 @@ socket.onmessage = function (event) {
             startBefore()
             start()
             afterStart()
+
+            const startSubmit = document.getElementById("StartSubmit")
+            if (!startSubmit) {
+                dragNDrop()
+            }
             stateMachine.processEvent("start game");
             break;
         // case "drag card":
@@ -429,6 +244,7 @@ socket.onmessage = function (event) {
                     const hpElement = document.createElement("span")
                     hpElement.textContent = cardOnTable.hp
                     newCardElement.appendChild(hpElement)
+                    newCardElement.style.zIndex = "2";
 
                     cardPlayer2.appendChild(newCardElement);
                 }
@@ -508,19 +324,6 @@ function ParseDataToCard(data) {
         data.Mana,
         data.Attack,
         data.Defense,
-    );
-}
-
-function ParseDataToCreature(data) {
-    return new CreatureData(
-        data.creatureData.Name,
-        data.creatureData.Portrait,
-        data.creatureData.CardID,
-        data.creatureData.CreatureID,
-        data.creatureData.Specification,
-        data.creatureData.HP,
-        data.creatureData.Attack,
-        data.creatureData.Defense,
     );
 }
 

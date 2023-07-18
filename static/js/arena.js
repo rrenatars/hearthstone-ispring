@@ -1,6 +1,5 @@
 import {socket} from "./websocket.js";
 
-
 const endTurnButton = document.getElementById('endturn');
 
 endTurnButton.addEventListener("click", function () {
