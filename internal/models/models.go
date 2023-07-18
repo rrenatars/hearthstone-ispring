@@ -26,3 +26,14 @@ type CardData struct {
 	Defense       int    `db:"defense"`
 	HP            int    `db:"healthpoint"`
 }
+
+type CreatureData struct {
+	Name          string `db:"name"`
+	Portrait      string `db:"portrait"`
+	CreatureID    int    `db:"creature_id"`
+	Specification string `db:"specification"`
+	Attack        int    `db:"attack"`
+	Defense       int    `db:"defense"`
+	HP            int    `db:"healthpoint"`
+	CardID        int    `db:"card_id"`
+}

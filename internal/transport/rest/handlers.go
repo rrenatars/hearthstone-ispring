@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/rrenatars/hearthstone-ispring/internal/database"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 	"log"
 	"math/rand"
 	"net/http"
+	"reflect"
+	"strconv"
 	"text/template"
 	"time"
 )
@@ -23,9 +26,25 @@ type Message struct {
 	Data models.GameTable `json:"data"`
 }
 
+type MessageCreatureCard struct {
+	Type string                 `json:"type"`
+	Data map[string]interface{} `json:"data"`
+}
+
 type AcceptMessage struct {
 	Type string      `json:"type"`
 	Data interface{} `json:"data"`
+}
+
+type AcceptMessageNumber struct {
+	DraggedCardID string `json:"draggedCardId"`
+}
+
+func NewMessageCreatureCard(t string, d map[string]interface{}) *MessageCreatureCard {
+	return &MessageCreatureCard{
+		Type: t,
+		Data: d,
+	}
 }
 
 func NewMessage(t string, d models.GameTable) *Message {
@@ -59,6 +78,7 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 			// Проверяем, что data содержит срез []interface{}
 			if sliceData, ok := message.Data.([]interface{}); ok {
 				// Если приведение типа успешно, перебираем элементы среза
+				log.Println(sliceData)
 				replacedCardIds := make([]int, len(sliceData))
 				for i, val := range sliceData {
 					// Для примера приводим каждый элемент к типу int и записываем его в новый срез
@@ -110,7 +130,55 @@ func reader(conn *websocket.Conn, gameTable *models.GameTable) {
 				return
 			}
 		case "card drag":
-			fmt.Println("two")
+			db, err := database.OpenDB()
+			if err != nil {
+				log.Println("data base err: ", err.Error())
+			}
+
+			var messageData AcceptMessageNumber
+			jsonData, err := json.Marshal(message.Data)
+			if err != nil {
+				fmt.Println("Ошибка при преобразовании данных в JSON:", err)
+				return
+			}
+
+			err = json.Unmarshal(jsonData, &messageData)
+			if err != nil {
+				fmt.Println("Ошибка при преобразовании JSON в структуру:", err)
+				return
+			}
+
+			creatureId, err := strconv.Atoi(messageData.DraggedCardID)
+			log.Println(reflect.TypeOf(creatureId), creatureId)
+
+			// Теперь у вас есть данные о карте из таблицы "deck"
+			// cardData содержит поля: card_id, name, mana, attack, defense, portrait, specification
+
+			// Получаем данные о соответствующем существе из таблицы "creature" по идентификатору существа (creature_id)
+			var creatureData models.CreatureData
+			err = db.Get(&creatureData, "SELECT * FROM creature WHERE creature_id = ?", creatureId)
+			if err != nil {
+				log.Println("Ошибка при получении данных о существе:", err)
+				continue
+			}
+
+			// Теперь у вас есть данные о существе из таблицы "creature"
+			// creatureData содержит поля: creature_id, name, ... (остальные поля существа)
+
+			// Создаем сообщение с данными о карте и существе
+			cardAndCreatureData := map[string]interface{}{
+				"creatureData": creatureData,
+			}
+
+			log.Println(reflect.TypeOf(cardAndCreatureData))
+			log.Println(cardAndCreatureData)
+
+			message := *NewMessageCreatureCard("drag card", cardAndCreatureData)
+
+			if err := conn.WriteJSON(message); err != nil {
+				log.Println("msg send err: ", err.Error())
+				return
+			}
 		case "":
 			fmt.Println("three")
 		default:

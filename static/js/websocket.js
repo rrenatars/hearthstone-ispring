@@ -1,10 +1,9 @@
-import {CardData, GameTable, Player} from "./models.js";
+import {CardData, CreatureData, GameTable, Player} from "./models.js";
 
 import {game, setGame, stateMachine} from "./game.js"
+import {ViewCards} from "./view.js";
 
 export const socket = new WebSocket("ws://localhost:3000/ws");
-
-import { ViewCards } from "./view.js";
 
 const endTurnButton = document.getElementById('endturn');
 
@@ -102,7 +101,7 @@ function start() {
                     if (card.lastChild.tagName === 'IMG') {
                         card.removeChild(card.lastChild)
                     }
-                    replacedCardIds.push(parseInt(card.getAttribute('id')));
+                    replacedCardIds.push(parseInt(card.getAttribute("data-id")));
                 }
             });
 
@@ -195,16 +194,17 @@ function afterStart() {
                                     attack(card);
                                     const manaElement = document.getElementById('MyMana');
                                     manabarFilling(mana, manaElement);
+
+                                    const draggedCardId = card.getAttribute("data-id")
+                                    const dataToSend = {
+                                        type: "card drag",
+                                        data: {draggedCardId}
+                                    }
+                                    socket.send(JSON.stringify(dataToSend))
                                 } else {
                                     cardsElement.appendChild(card);
                                     card.style.position = 'static';
                                 }
-
-                                const dataToSend = {
-                                    type: "card drag",
-                                    data: {}
-                                }
-                                socket.send(JSON.stringify(dataToSend))
                             }
                         }
                         ;
@@ -223,8 +223,8 @@ function afterStart() {
             if (card.classList.contains('canAttack')) {
                 card.addEventListener("mousedown", function (e) {
                     var svgField = document.getElementById('svg');
-                    var xOrigin = card.offsetLeft + card.offsetWidth/2;
-                    var yOrigin = card.offsetTop + card.offsetHeight/2;
+                    var xOrigin = card.offsetLeft + card.offsetWidth / 2;
+                    var yOrigin = card.offsetTop + card.offsetHeight / 2;
                     svg.style.display = "block";
                     document.getElementById("arrowcursor").style.visibility = "visible";
                     document.body.style.cursor = "none";
@@ -253,11 +253,14 @@ function afterStart() {
                             if (svg.style.display == "block") {
                                 opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - parseInt(cardAttack));
                                 opponentheroHealthElement.style.color = '#c70d0d';
-                                if (opponentheroHealthElement.textContent <= 0) { Victory() }
+                                if (opponentheroHealthElement.textContent <= 0) {
+                                    Victory()
+                                }
                                 setTimeout(function () {
                                     opponentheroHealthElement.style.color = '#FFFFFF';
                                 }, 2000);
-                            };
+                            }
+                            ;
                             svg.style.display = "none";
                             document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                             document.getElementById("arrowcursor").style.visibility = "hidden";
@@ -352,9 +355,9 @@ socket.onmessage = function (event) {
             console.log("start game")
             let game_ = ParseDataToGameTable(message.data)
             setGame(game_)
-            ViewCards(game.player1.cards,"background__field","field__empty","94px","135px")
-            ViewCards(game.player1.hand, "cards", "cards__card cards__card_start","94px","135px")
-            ViewCards(game.player2.cards, "background__field_opp","field__empty_opp","94px","135px")
+            ViewCards(game.player1.cards, "background__field", "field__empty", "94px", "135px")
+            ViewCards(game.player1.hand, "cards", "cards__card cards__card_start", "94px", "135px")
+            ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp", "94px", "135px")
 
             const cardsHand = document.getElementById('cards');
 
@@ -365,7 +368,7 @@ socket.onmessage = function (event) {
                 console.log(game)
                 let newCardElement = document.createElement('div');
                 newCardElement.className = "cards__card";
-                newCardElement.id = `${cardInHand.cardID}`;
+                newCardElement.setAttribute("data-id", `${cardInHand.cardID}`);
                 newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
                 newCardElement.style.backgroundSize = `cover`;
 
@@ -386,6 +389,23 @@ socket.onmessage = function (event) {
             afterStart()
             stateMachine.processEvent("start game");
             break;
+        case "drag card":
+            let cardsInField = ParseDataToCreature(message.data);
+            let creatureId = cardsInField.creatureID;
+            let portraitUrl = cardsInField.portrait;
+
+            const field = document.getElementById("background__field");
+            let creaturesList = field.querySelectorAll(`[data-id="${creatureId}"]`);
+            creaturesList.forEach((creature) => {
+                // Применяем background-image к элементам с соответствующим data-id
+                if (creatureId == cardsInField.creatureID) {
+                    creature.style.backgroundImage = `url('${portraitUrl}')`;
+                    creature.style.width = '125px';
+                    creature.style.height = '168px'
+                }
+            });
+            console.log("cardsInField", cardsInField)
+            break
         case "turn":
             console.log(message);
             let game__ = ParseDataToGameTable(message.data);
@@ -402,7 +422,7 @@ socket.onmessage = function (event) {
                     newCardElement.className = "field__empty_opp";
                     newCardElement.style.width = '94px';
                     newCardElement.style.height = '135px';
-                    newCardElement.id = `${cardOnTable.cardID}`;
+                    newCardElement.setAttribute("data-id", `${cardOnTable.cardID}`);
                     newCardElement.style.backgroundImage = `url(../..${cardOnTable.portrait})`
                     newCardElement.style.backgroundSize = `cover`;
 
@@ -488,6 +508,19 @@ function ParseDataToCard(data) {
         data.Mana,
         data.Attack,
         data.Defense,
+    );
+}
+
+function ParseDataToCreature(data) {
+    return new CreatureData(
+        data.creatureData.Name,
+        data.creatureData.Portrait,
+        data.creatureData.CardID,
+        data.creatureData.CreatureID,
+        data.creatureData.Specification,
+        data.creatureData.HP,
+        data.creatureData.Attack,
+        data.creatureData.Defense,
     );
 }
 

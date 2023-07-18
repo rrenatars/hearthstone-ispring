@@ -1,15 +1,30 @@
-INSERT INTO
-    creature
-    (
-        name,
-        healthpoint,
-        attack,
-        portrait
-    )
+INSERT INTO creature (name, healthpoint, attack, portrait)
 VALUES
-(
-    'Boulderfist Ogre',
-    '7',
-    '6',
-    '/static/images/creatures/boulderfist-ogre.png'
-);
+    ('Boulderfist Ogre', '7', '6', '/static/images/creatures/boulderfist-ogre.png'),
+    ('Pompous Actor', '2', '3', '/static/images/creatures/pompous-actor.png'),
+    ('Stoneskin Basilisk', '1', '1', '/static/images/creatures/stoneskin-basilisk.png'),
+    ('Boar Rocktusk', '1', '1', '/static/images/creatures/boar-rocktusk.png'),
+    ('Scarlet Crusader', '1', '3', '/static/images/creatures/scarlet-crusader.png'),
+    ('Rage Amgam', '5', '1', '/static/images/creatures/rage-amgam.png'),
+    ('Divine Fury', '1', '5', '/static/images/creatures/divine-fury.png'),
+    ('Goblin Bodyguard', '4', '5', '/static/images/creatures/goblin-bodyguard.png'),
+    ('Hippogriff', '6', '2', '/static/images/creatures/hippogriff.png'),
+    ('Living Monument', '10', '10', '/static/images/creatures/living-monument.png'),
+    ('Mexna', '8', '2', '/static/images/creatures/mexna.png'),
+    ('Evil Mocker', '4', '5', '/static/images/creatures/evil-mocker.png'),
+    ('Sharptooth Redgill', '1', '3', '/static/images/creatures/sharptooth-redgill.png'),
+    ('Arbiter Moshogg', '14', '2', '/static/images/creatures/arbiter-moshogg.png'),
+    ('Wolf Rider', '1', '3', '/static/images/creatures/wolf-rider.png'),
+    ('Sleeping Dragon', '12', '4', '/static/images/creatures/sleeping-dragon.png'),
+    ('Smart Gastropod', '2', '1', '/static/images/creatures/smart-gastropod.png'),
+    ('Goldshire Soldier', '2', '1', '/static/images/creatures/goldshire-soldier.png'),
+    ('Strong Shoveler', '9', '9', '/static/images/creatures/strong-shoveler.png'),
+    ('Grizzly Steelmech', '3', '3', '/static/images/creatures/grizzly-steelmech.png'),
+    ('Power Tank', '7', '7', '/static/images/creatures/power-tank.png'),
+    ('Wriggling Tentacles', '4', '2', '/static/images/creatures/wriggling-tentacles.png'),
+    ('Bluegill Warrior', '1', '2', '/static/images/creatures/bluegill-warrior.png'),
+    ('Lost Longleg', '4', '5', '/static/images/creatures/lost-longleg.png'),
+    ('Frostwolf Fighter', '2', '2', '/static/images/creatures/frostwolf-fighter.png'),
+    ('Arena Fighter', '2', '2', '/static/images/creatures/arena-fighter.png');
+
+
