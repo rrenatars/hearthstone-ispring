@@ -1,91 +1,261 @@
 package services
 
 import (
-	"math/rand"
-	"time"
+	"encoding/json"
+	"log"
 
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
 
-func NewCard(name, portrait, specification string, mana, cardId, attack, hp, def int) *models.CardData {
-	return &models.CardData{
-		Name:          name,
-		Portrait:      portrait,
-		CardID:        cardId,
-		Specification: specification,
-		Mana:          mana,
-		Attack:        attack,
-		Defense:       def,
-		HP:            hp,
+func SetupMessageTypes(message models.MessageRequest, gameTable *models.GameTable) *models.MessageResponse {
+	var msgResponse *models.MessageResponse
+	switch message.Type {
+	case "start game":
+		msgResponse = startGame(message.Data, gameTable)
+	case "exchange cards":
+		var data models.ExchangeCardsDataType
+		err := json.Unmarshal(message.Data, &data)
+		log.Println()
+		if err != nil {
+			log.Println("Error parsing exchange cards data:", err.Error())
+			return models.NewMessageResponse(err.Error(), *gameTable)
+		}
+
+		msgResponse = exchangeCardsRun(gameTable, data)
+	case "end turn":
+		msgResponse = endTurn(gameTable)
+	case "card drag":
+		var data models.CardDragDataType
+		err := json.Unmarshal(message.Data, &data)
+		if err != nil {
+			log.Println("Error parsing card drag data:", err.Error())
+			return models.NewMessageResponse(err.Error(), *gameTable)
+		}
+		log.Println(data.CardInHandId, " ", data.Player)
+		msgResponse = cardDrag(&data, gameTable)
+	case "end game":
+		msgResponse = endGame(message, gameTable)
+	default:
+		log.Panicln("i don't know this type of message: ", message.Type)
+		return models.NewMessageResponse("i don't know this type of message: ", *gameTable)
 	}
+	return msgResponse
 }
 
-func NewPlayer(name string, hand, deck, cards []models.CardData, turn bool, hp, def int) *models.Player {
-	return &models.Player{
-		Name:  name,
-		Hand:  hand,
-		Deck:  deck,
-		Cards: cards,
-		Turn:  turn,
-		HP:    hp,
-		Def:   def,
-	}
+func startGame(data any, gameTable *models.GameTable) *models.MessageResponse {
+	return &models.MessageResponse{}
 }
 
-func NewGameTable(pl1, pl2 *models.Player, history []models.CardData) *models.GameTable {
-	return &models.GameTable{
-		Player1: pl1,
-		Player2: pl2,
-		History: history,
+func endTurn(gameTable *models.GameTable) *models.MessageResponse {
+	if gameTable.Player1.Turn {
+		if len(gameTable.Player2.Hand) == 5 {
+			gameTable.UpdateGameTable(
+				models.NewGameTable(
+					models.NewPlayer(
+						gameTable.Player1.Name,
+						gameTable.Player1.Hand,
+						gameTable.Player1.Deck,
+						gameTable.Player1.Cards,
+						!gameTable.Player1.Turn,
+						gameTable.Player1.HP,
+						gameTable.Player1.Def,
+					),
+					models.NewPlayer(
+						gameTable.Player2.Name,
+						gameTable.Player2.Hand,
+						gameTable.Player2.Deck,
+						gameTable.Player2.Cards,
+						!gameTable.Player2.Turn,
+						gameTable.Player2.HP,
+						gameTable.Player2.Def,
+					),
+					gameTable.History,
+				))
+			return models.NewMessageResponse(
+				"turn",
+				*gameTable,
+			)
+		}
+		if len(gameTable.Player2.Deck) == 0 {
+			gameTable.UpdateGameTable(
+				models.NewGameTable(
+					models.NewPlayer(
+						gameTable.Player1.Name,
+						gameTable.Player1.Hand,
+						gameTable.Player1.Deck,
+						gameTable.Player1.Cards,
+						!gameTable.Player1.Turn,
+						gameTable.Player1.HP,
+						gameTable.Player1.Def,
+					),
+					models.NewPlayer(
+						gameTable.Player2.Name,
+						gameTable.Player2.Hand,
+						gameTable.Player2.Deck,
+						gameTable.Player2.Cards,
+						!gameTable.Player2.Turn,
+						gameTable.Player2.HP, //сделать минус хп
+						gameTable.Player2.Def,
+					),
+					gameTable.History,
+				))
+			return models.NewMessageResponse(
+				"turn",
+				*gameTable,
+			)
+		}
+		gameTable.UpdateGameTable(models.NewGameTable(
+			models.NewPlayer(
+				gameTable.Player1.Name,
+				gameTable.Player1.Hand,
+				gameTable.Player1.Deck,
+				gameTable.Player1.Cards,
+				!gameTable.Player1.Turn,
+				gameTable.Player1.HP,
+				gameTable.Player1.Def,
+			),
+			models.NewPlayer(
+				gameTable.Player2.Name,
+				append(gameTable.Player2.Hand, gameTable.Player2.Deck[0]),
+				gameTable.Player2.Deck[1:],
+				gameTable.Player2.Cards,
+				!gameTable.Player2.Turn,
+				gameTable.Player2.HP,
+				gameTable.Player2.Def,
+			),
+			gameTable.History,
+		))
+		return models.NewMessageResponse(
+			"turn",
+			*gameTable,
+		)
 	}
+	if len(gameTable.Player1.Hand) == 5 {
+		gameTable.UpdateGameTable(models.NewGameTable(
+			models.NewPlayer(
+				gameTable.Player1.Name,
+				gameTable.Player1.Hand,
+				gameTable.Player1.Deck,
+				gameTable.Player1.Cards,
+				!gameTable.Player1.Turn,
+				gameTable.Player1.HP,
+				gameTable.Player1.Def,
+			),
+			models.NewPlayer(
+				gameTable.Player2.Name,
+				gameTable.Player2.Hand,
+				gameTable.Player2.Deck,
+				gameTable.Player2.Cards,
+				!gameTable.Player2.Turn,
+				gameTable.Player2.HP,
+				gameTable.Player2.Def,
+			),
+			gameTable.History,
+		))
+		return models.NewMessageResponse(
+			"turn",
+			*gameTable,
+		)
+	}
+	if len(gameTable.Player1.Deck) == 0 {
+		gameTable.UpdateGameTable(
+			models.NewGameTable(
+				models.NewPlayer(
+					gameTable.Player1.Name,
+					gameTable.Player1.Hand,
+					gameTable.Player1.Deck,
+					gameTable.Player1.Cards,
+					!gameTable.Player1.Turn,
+					gameTable.Player1.HP,
+					gameTable.Player1.Def,
+				),
+				models.NewPlayer(
+					gameTable.Player2.Name,
+					gameTable.Player2.Hand,
+					gameTable.Player2.Deck,
+					gameTable.Player2.Cards,
+					!gameTable.Player2.Turn,
+					gameTable.Player2.HP, //сделать минус хп
+					gameTable.Player2.Def,
+				),
+				gameTable.History,
+			))
+		return models.NewMessageResponse(
+			"turn",
+			*gameTable,
+		)
+	}
+	gameTable.UpdateGameTable(
+		models.NewGameTable(
+			models.NewPlayer(
+				gameTable.Player1.Name,
+				append(gameTable.Player1.Hand, gameTable.Player1.Deck[0]),
+				gameTable.Player1.Deck[1:],
+				gameTable.Player1.Cards,
+				!gameTable.Player1.Turn,
+				gameTable.Player1.HP,
+				gameTable.Player1.Def,
+			),
+			models.NewPlayer(
+				gameTable.Player2.Name,
+				gameTable.Player2.Hand,
+				gameTable.Player2.Deck,
+				gameTable.Player2.Cards,
+				!gameTable.Player2.Turn,
+				gameTable.Player2.HP,
+				gameTable.Player2.Def,
+			),
+			gameTable.History,
+		))
+	return models.NewMessageResponse(
+		"turn",
+		*gameTable,
+	)
 }
 
-// Получение карты игроком в руку
-func PlayerGetCard(p *models.Player) *models.Player {
-	if len(p.Deck) == 0 {
-		return p // Возвращаем текущий объект Player, если колода пуста
+func cardDrag(message *models.CardDragDataType, gameTable *models.GameTable) *models.MessageResponse {
+	if message.Player {
+		// Ход первого игрока
+		newPlayer1, err := playerMadeMove(message.CardInHandId, gameTable.Player1)
+		if err != nil {
+			log.Println(err.Error(), message.CardInHandId, gameTable.Player1.Hand)
+			return models.NewMessageResponse(
+				err.Error(),
+				*gameTable,
+			)
+		}
+		gameTable.UpdateGameTable(
+			models.NewGameTable(
+				newPlayer1,
+				gameTable.Player2,
+				gameTable.History,
+			))
+		return models.NewMessageResponse(
+			"card drag",
+			*gameTable,
+		)
 	}
-
-	newCard := p.Deck[0]
-	// remainingDeck := p.Deck[1:]
-
-	remainingDeck := RemoveElemsFromSlice(p.Deck, 1)
-
-	return &models.Player{
-		Name: p.Name,
-		Hand: append(p.Hand, newCard),
-		Deck: remainingDeck,
-		Turn: p.Turn,
-		HP:   p.HP,
-		Def:  p.Def,
+	// Ход второго игрока
+	newPlayer2, err := playerMadeMove(message.CardInHandId, gameTable.Player2)
+	if err != nil {
+		log.Println(err.Error())
+		return models.NewMessageResponse(
+			err.Error(),
+			*gameTable,
+		)
 	}
+	gameTable.UpdateGameTable(
+		models.NewGameTable(
+			gameTable.Player1,
+			newPlayer2,
+			gameTable.History,
+		))
+	return models.NewMessageResponse(
+		"card drag",
+		*gameTable,
+	)
 }
 
-// Берерт рандомно несколько карт
-func GetRandomElementsFromDeck(arr []models.CardData, numElements int) []models.CardData {
-	rand.New(rand.NewSource(time.Now().UnixNano()))
-
-	if numElements > len(arr) {
-		numElements = len(arr)
-	}
-
-	result := make([]models.CardData, numElements)
-
-	for i := 0; i < numElements; i++ {
-		randomIndex := rand.Intn(len(arr))
-		result[i] = arr[randomIndex]
-	}
-
-	return result
-}
-
-// Удаляет элементы из слайса карт
-func RemoveElemsFromSlice(cards []models.CardData, index int) []models.CardData {
-	// Проверка допустимого индекса
-	if index < 0 || index >= len(cards) {
-		return cards // Индекс недопустим, возвращаем исходный срез
-	}
-
-	// Удаление элемента из среза
-	return append(cards[:index], cards[index+1:]...)
+func endGame(message models.MessageRequest, gameTable *models.GameTable) *models.MessageResponse {
+	return &models.MessageResponse{}
 }

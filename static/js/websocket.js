@@ -6,10 +6,6 @@ import {ViewCards} from "./view.js";
 import {dragNDrop} from "./dragndrop.js";
 import {manabarFilling} from "./manabarFilling.js";
 
-export const socket = new WebSocket("ws://localhost:3000/ws");
-
-const endTurnButton = document.getElementById('endturn');
-
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
 
@@ -90,13 +86,15 @@ function start() {
                     if (card.lastChild.tagName === 'IMG') {
                         card.removeChild(card.lastChild)
                     }
-                    replacedCardIds.push(parseInt(card.getAttribute("data-id")));
+                    replacedCardIds.push(card.id);
                 }
             });
 
             const dataToSend = {
                 type: "exchange cards",
-                data: replacedCardIds
+                data: {
+                    replacedCardIds : replacedCardIds
+                }
             }
             socket.send(JSON.stringify(dataToSend))
         })
@@ -153,147 +151,54 @@ function afterStart() {
     }
 }
 
+export const socket = new WebSocket("ws://localhost:3000/ws");
 
-socket.onmessage = function (event) {
-    const message = JSON.parse(event.data);
+export function socketInit() {
+    socket.onmessage = function (event) {
+        const endTurnButton = document.getElementById('endturn');
 
-    //console.log(message.data)
-    //console.log(message.type)
+        const { type, data } = JSON.parse(event.data);
+        console.log(data)
+        setGame(ParseDataToGameTable(data));
+        ViewCards(game.player1.cards,"background__field","field__empty");
+        ViewCards(game.player1.hand, "cards", "cards__card");
+        ViewCards(game.player2.cards, "background__field_opp","field__empty_opp");
 
-    switch (message.type) {
-        case "start game":
-            console.log("start game")
-            let game_ = ParseDataToGameTable(message.data)
-            setGame(game_)
-            ViewCards(game.player1.cards, "background__field", "field__empty", "94px", "135px")
-            ViewCards(game.player1.hand, "cards", "cards__card cards__card_start", "94px", "135px")
-            ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp", "94px", "135px")
-
-            const cardsHand = document.getElementById('cards');
-
-            while (cardsHand.firstElementChild) {
-                cardsHand.removeChild(cardsHand.firstElementChild)
-            }
-            for (const cardInHand of game.player1.hand) {
-                console.log(game)
-                let newCardElement = document.createElement('div');
-                newCardElement.className = "cards__card";
-                newCardElement.setAttribute("data-id", `${cardInHand.cardID}`);
-                newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`
-                newCardElement.style.backgroundSize = `cover`;
-
-                const manaElement = document.createElement('span');
-                manaElement.className = "card__mana";
-                manaElement.textContent = cardInHand.mana;
-                newCardElement.appendChild(manaElement);
-
-                const attackElement = document.createElement('span')
-                attackElement.className = "card__attack"
-                attackElement.textContent = cardInHand.attack
-                newCardElement.appendChild(attackElement)
-
-                cardsHand.appendChild(newCardElement);
-            }
-            startBefore()
-            start()
-            afterStart()
-
-            const startSubmit = document.getElementById("StartSubmit")
-            if (!startSubmit) {
+        switch (type) {
+            case "start game":
+                startBefore()
+                start()
+                break;
+            case "exchange cards":
+                afterStart()
                 dragNDrop()
-            }
-            stateMachine.processEvent("start game");
-            break;
-        // case "drag card":
-        //     let cardsInField = ParseDataToCreature(message.data);
-        //     let creatureId = cardsInField.creatureID;
-        //     let portraitUrl = cardsInField.portrait;
-        //
-        //     const field = document.getElementById("background__field");
-        //     let creaturesList = field.querySelectorAll(`[data-id="${creatureId}"]`);
-        //     creaturesList.forEach((creature) => {
-        //         // Применяем background-image к элементам с соответствующим data-id
-        //         if (creatureId == cardsInField.creatureID) {
-        //             creature.style.backgroundImage = `url('${portraitUrl}')`;
-        //             creature.style.width = '125px';
-        //             creature.style.height = '168px'
-        //         }
-        //     });
-        //     console.log("cardsInField", cardsInField)
-        //     break
-        case "turn":
-            console.log(message);
-            let game__ = ParseDataToGameTable(message.data);
-            setGame(game__)
-            // ViewCards(game.player1.hand, "cards", "cards__card cards__card_start","94px","135px")
-            const cardPlayer2 = document.getElementById('background__field_opp');
-            setTimeout(function () {
-                while (cardPlayer2.firstElementChild) {
-                    cardPlayer2.removeChild(cardPlayer2.firstElementChild)
-                }
-                for (const cardOnTable of game.player2.cards) {
-                    console.log(cardOnTable)
-                    let newCardElement = document.createElement('div');
-                    newCardElement.className = "field__empty_opp";
-                    newCardElement.style.width = '94px';
-                    newCardElement.style.height = '135px';
-                    newCardElement.setAttribute("data-id", `${cardOnTable.cardID}`);
-                    newCardElement.style.backgroundImage = `url(../..${cardOnTable.portrait})`
-                    newCardElement.style.backgroundSize = `cover`;
-
-                    const hpElement = document.createElement("span")
-                    hpElement.textContent = cardOnTable.hp
-                    newCardElement.appendChild(hpElement)
-                    newCardElement.style.zIndex = "2";
-
-                    cardPlayer2.appendChild(newCardElement);
-                }
-                // if (!game.player1.turn) {
-                //     const dataToSend = {
-                //         type: "end turn",
-                //         data: {}
-                //     }
-                //     socket.send(JSON.stringify(dataToSend));
-                // }
-                if (!game.player1.turn) {
+                break
+            case "turn":
+                dragNDrop()
+                if(game.player1.turn)
+                {
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
-                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.removeAttribute('disabled');
-                    const manaElement = document.getElementById("MyMana")
-                    manabarFilling(10, manaElement)
-                    const dataToSend = {
-                        type: "end turn",
-                        data: {}
-                    }
-                    socket.send(JSON.stringify(dataToSend));
+                    //socket.send("end turn")
                 }
-                stateMachine.processEvent("turn");
-            }, 1500);
+                break
+            default :
+                break;
+        }
+    };
 
-            break;
-        default :
-            break;
-    }
-};
+    socket.onopen = () => {
+        console.log('Соединение установлено');
+    };
 
-socket.onopen = () => {
-    console.log('Соединение установлено');
+    socket.onclose = (event) => {
+        console.log('Соединение закрыто:', event.code, event.reason);
+    };
 
-    // Отправка сообщения на сервер
-    const dataToSend = {
-        type: "Привет, сервер",
-        data: {}
-    }
-    socket.send(JSON.stringify(dataToSend));
-};
-
-socket.onclose = (event) => {
-    console.log('Соединение закрыто:', event.code, event.reason);
-};
-
-socket.onerror = (error) => {
-    console.error('Ошибка соединения:', error);
-};
+    socket.onerror = (error) => {
+        console.error('Ошибка соединения:', error);
+    };
+}
 
 function ParseDataToGameTable(data) {
     return new GameTable(

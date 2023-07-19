@@ -1,6 +1,6 @@
 import { setGame } from "./game.js";
 
-export function ViewCards(cards, parentId, childClassName, childWidth, childHeight) {
+export function ViewCards(cards, parentId, childClassName) {
     const cardsHand = document.getElementById(parentId);
     while (cardsHand.firstChild) {
         cardsHand.removeChild(cardsHand.firstChild);
@@ -11,8 +11,8 @@ export function ViewCards(cards, parentId, childClassName, childWidth, childHeig
 
         newCardElement.className = childClassName;
         
-        newCardElement.style.width = childWidth;
-        newCardElement.style.height = childHeight;
+        // newCardElement.style.width = childWidth;
+        // newCardElement.style.height = childHeight;
         
         newCardElement.id = `${cardInHand.cardID}`;
         

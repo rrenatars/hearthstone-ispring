@@ -1,5 +1,7 @@
 import {attack} from "./attack.js";
 import {manabarFilling} from "./manabarFilling.js";
+import {game} from "./game.js";
+import {socket} from "./websocket.js";
 
 export function dragNDrop() {
     function getCoords(elem) {
@@ -84,6 +86,14 @@ export function dragNDrop() {
                                 card.style.backgroundImage = 'url(' + creaturePortraitUrl + ')'
                                 card.style.width = '125px'
                                 card.style.height = '168px'
+
+                                socket.send(JSON.stringify({
+                                    type : "card drag",
+                                    data : {
+                                        idCardInHand: card.id,
+                                        player: (game.player1.turn ? true : false)
+                                    },
+                                }))
                             } else {
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';

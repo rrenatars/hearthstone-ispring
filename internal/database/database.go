@@ -18,7 +18,7 @@ func OpenDB() (*sqlx.DB, error) {
 func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 	const query = `
 		SELECT
-		    card_id,
+			card_id,
 			name,
 			mana,
 			attack,
