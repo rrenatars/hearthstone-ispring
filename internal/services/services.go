@@ -32,6 +32,7 @@ func SetupMessageTypes(message models.MessageRequest, gameTable *models.GameTabl
 			return models.NewMessageResponse(err.Error(), *gameTable)
 		}
 		log.Println(data.CardInHandId, " ", data.Player)
+
 		msgResponse = cardDrag(&data, gameTable)
 	case "end game":
 		msgResponse = endGame(message, gameTable)

@@ -25,7 +25,6 @@ export function attack() {
                 document.getElementById("arrowcursor").style.visibility = "visible";
                 document.body.style.cursor = "none";
 
-
                 const cardAttack = e.querySelector('.card__attack').textContent
 
                 document.body.addEventListener('mousemove', function (e2) {
@@ -72,7 +71,6 @@ export function attack() {
                         document.getElementById("innercursor").style.visibility = "hidden";
                         document.getElementById("outercursor").style.visibility = "hidden";
                         e.classList.remove('canAttack');
-
                     });
 
                     const botCards = document.querySelectorAll(".field__empty_opp");
@@ -102,4 +100,29 @@ export function attack() {
 
         }
     })
+}
+
+function Victory() {
+    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+    winImage.style.width = "793px";
+    winImage.style.height = "704px";
+    winImage.style.zIndex = 9999;
+    winImage.style.position = "absolute";
+    winImage.style.top = "50%";
+    winImage.style.left = "50%";
+    winImage.style.marginRight = "-50%";
+    winImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
 }
