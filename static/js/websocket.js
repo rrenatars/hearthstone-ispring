@@ -158,9 +158,9 @@ export function socketInit() {
         const endTurnButton = document.getElementById('endturn');
 
         const { type, data } = JSON.parse(event.data);
-        console.log(data)
         setGame(ParseDataToGameTable(data));
-        ViewCards(game.player1.cards,"background__field","field__empty");
+        console.log("game player1", game.player1)
+        ViewCards(game.player1.cards,"background__field","field__card");
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp","field__empty_opp");
 
@@ -226,6 +226,7 @@ function ParseDataToCard(data) {
         data.Portrait,
         data.CardID,
         data.Specification,
+        data.HP,
         data.Mana,
         data.Attack,
         data.Defense,

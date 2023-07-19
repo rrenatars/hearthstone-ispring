@@ -4,6 +4,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
+	"log"
 )
 
 const (
@@ -24,7 +25,8 @@ func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 			attack,
 			defense,
 			portrait,
-			specification
+			specification,
+			healthpoint
 		FROM
 			deck
 	`
@@ -32,6 +34,8 @@ func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 	var deck []models.CardData
 
 	err := db.Select(&deck, query)
+
+	log.Println(deck)
 	if err != nil {
 		return nil, err
 	}

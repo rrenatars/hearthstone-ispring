@@ -4,15 +4,17 @@ export class CardData {
      * @param {string} portrait
      * @param {string} cardID
      * @param {string} specification
+     * @param {number} hp
      * @param {number} mana
      * @param {number} attack
      * @param {number} defense
      */
-    constructor(name, portrait, cardID, specification, mana, attack, defense) {
+    constructor(name, portrait, cardID, specification, hp, mana, attack, defense) {
         this.name = name;
         this.portrait = portrait;
         this.cardID = cardID;
         this.specification = specification;
+        this.hp = hp;
         this.mana = mana;
         this.attack = attack;
         this.defense = defense;
