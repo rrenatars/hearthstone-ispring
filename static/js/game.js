@@ -1,4 +1,4 @@
-import {GameTable} from "./models.js";
+import { GameTable } from "./models.js";
 
 export function createStateMachine(game) {
     let state = 'no-state';

@@ -58,8 +58,7 @@
     z-index: 3;
 }
 
-.hand-and-manabar__hand_start
-{
+.hand-and-manabar__hand_start {
     position: absolute;
     top: 33%;
     left: 50%;
@@ -76,7 +75,8 @@
     height: 2000px;
     margin-top: -600px;
     margin-right: -800px;
-    background-color: rgba(0, 0, 0, 0.5); /* Пример затемнения с помощью rgba */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Пример затемнения с помощью rgba */
     z-index: -1;
 }
 
@@ -92,7 +92,7 @@
     background-repeat: no-repeat;
 }
 
-.cards__card:hover{
+.cards__card:hover {
     margin-bottom: 135px;
     transform: scale(2.3);
 }
@@ -103,26 +103,18 @@
     transform: none;
 }
 
-.cards__card_start
-{
+.cards__card_start {
     width: 217px;
     height: 309px;
     background-repeat: no-repeat;
 }
 
-.cards__card_start:hover
-{
+.cards__card_start:hover {
     margin-bottom: 0px;
     transform: scale(1.0);
 }
 
-.cards__card_swap
-{
-
-}
-
-.hand__cards
-{
+.hand__cards {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -132,22 +124,19 @@
     z-index: 3;
 }
 
-.hand__cards_start
-{
+.hand__cards_start {
     margin-bottom: 200px;
 }
 
 
-.cards__header
-{
+.cards__header {
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 50px;
     margin-bottom: 100px;
 }
 
-.cards__submit
-{
+.cards__submit {
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 20px;
@@ -156,8 +145,7 @@
     border-radius: 10px;
 }
 
-.cards
-{
+.cards {
     align-items: flex-end;
     display: flex;
     justify-content: center;
@@ -168,8 +156,7 @@
     margin-top: 15%;
 }
 
-.field__card_opp
-{
+.field__card_opp {
     width: 94px;
     height: 135px;
     display: flex;
@@ -179,8 +166,7 @@
     box-shadow: none;
 }
 
-.field__card
-{
+.field__card {
     width: 94px;
     height: 135px;
     display: flex;
@@ -394,8 +380,7 @@ button:active {
     transition: 0.5s;
 }
 
-.hand-and-manabar__manabar
-{
+.hand-and-manabar__manabar {
     position: absolute;
     display: flex;
     flex-direction: row;

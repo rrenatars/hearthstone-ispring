@@ -15,8 +15,7 @@ button:active {
     cursor: url(../images/cursor/click.png) 10 2, auto;
 }
 
-.main
-{
+.main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -57,7 +56,6 @@ a {
 }
 
 
-a:hover
-{
+a:hover {
     cursor: url(../images/cursor/cursor.png) 10 2, auto;
 }

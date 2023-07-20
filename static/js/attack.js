@@ -3,19 +3,11 @@ export function attack() {
     const heroClass = urlParams.get('heroclass');
     const selectedHeroElement = document.getElementById('selectedHero');
     selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
-    const selectedHeroPowerElement = document.getElementById('heropower');
-    selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
-    const heroHealthElement = document.getElementById('Player1HealthValue');
-    let player1HealthValue = parseInt(heroHealthElement.textContent);
     const opponentHeroElement = document.getElementById('opponenthero');
     const opponentheroHealthElement = document.getElementById('Player2HealthValue');
-    let player2HealthValue = parseInt(opponentheroHealthElement.textContent);
-    const winImage = document.getElementById('winimg');
-    const loseImage = document.getElementById('loseimg');
-    const endbg = document.getElementById('endbg');
     const fightCards = document.querySelectorAll(".field__card");
 
-    fightCards.forEach(function (e){
+    fightCards.forEach(function (e) {
         if (e.classList.contains('canAttack')) {
             e.addEventListener("mousedown", function () {
                 var svgField = document.getElementById('svg');
@@ -101,8 +93,35 @@ export function attack() {
         }
     })
 }
-
+function Lose() {
+    const loseImage = document.getElementById('loseimg');
+    const endbg = document.getElementById('endbg');
+    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
+    loseImage.style.width = "863px";
+    loseImage.style.height = "818px";
+    loseImage.style.zIndex = 9999;
+    loseImage.style.position = "absolute";
+    loseImage.style.top = "50%";
+    loseImage.style.left = "50%";
+    loseImage.style.marginRight = "-50%";
+    loseImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
+}
 function Victory() {
+    const winImage = document.getElementById('winimg');
+    const endbg = document.getElementById('endbg');
     winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
     winImage.style.width = "793px";
     winImage.style.height = "704px";

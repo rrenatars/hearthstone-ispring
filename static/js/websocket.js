@@ -1,10 +1,10 @@
-import {CardData, GameTable, Player} from "./models.js";
+import { CardData, GameTable, Player } from "./models.js";
 
-import {game, setGame, stateMachine} from "./game.js"
-import {ViewCards} from "./view.js";
+import { game, setGame, stateMachine } from "./game.js"
+import { ViewCards } from "./view.js";
 
-import {dragNDrop} from "./dragndrop.js";
-import {manabarFilling} from "./manabarFilling.js";
+import { dragNDrop } from "./dragndrop.js";
+import { manabarFilling } from "./manabarFilling.js";
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -31,6 +31,58 @@ function selectCardsToExchange() {
         });
     });
 }
+function Lose() {
+    const loseImage = document.getElementById('loseimg');
+    const endbg = document.getElementById('endbg');
+    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
+    loseImage.style.width = "863px";
+    loseImage.style.height = "818px";
+    loseImage.style.zIndex = 9999;
+    loseImage.style.position = "absolute";
+    loseImage.style.top = "50%";
+    loseImage.style.left = "50%";
+    loseImage.style.marginRight = "-50%";
+    loseImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
+}
+function Victory() {
+    const winImage = document.getElementById('winimg');
+    const endbg = document.getElementById('endbg');
+    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+    winImage.style.width = "793px";
+    winImage.style.height = "704px";
+    winImage.style.zIndex = 9999;
+    winImage.style.position = "absolute";
+    winImage.style.top = "50%";
+    winImage.style.left = "50%";
+    winImage.style.marginRight = "-50%";
+    winImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
+}
 
 function startBefore() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,13 +92,6 @@ function startBefore() {
     const selectedHeroPowerElement = document.getElementById('heropower');
     selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
     const heroHealthElement = document.getElementById('Player1HealthValue');
-    let player1HealthValue = parseInt(heroHealthElement.textContent);
-    const opponentHeroElement = document.getElementById('opponenthero');
-    const opponentheroHealthElement = document.getElementById('Player2HealthValue');
-    let player2HealthValue = parseInt(opponentheroHealthElement.textContent);
-    const winImage = document.getElementById('winimg');
-    const loseImage = document.getElementById('loseimg');
-    const endbg = document.getElementById('endbg');
 
     const manaElement = document.getElementById("MyMana")
     manabarFilling(10, manaElement);
@@ -93,7 +138,7 @@ function start() {
             const dataToSend = {
                 type: "exchange cards",
                 data: {
-                    replacedCardIds : replacedCardIds
+                    replacedCardIds: replacedCardIds
                 }
             }
             socket.send(JSON.stringify(dataToSend))
@@ -113,40 +158,71 @@ function afterStart() {
         const selectedHeroPowerElement = document.getElementById('heropower');
         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
         const heroHealthElement = document.getElementById('Player1HealthValue');
-        let player1HealthValue = parseInt(heroHealthElement.textContent);
         const opponentHeroElement = document.getElementById('opponenthero');
         const opponentheroHealthElement = document.getElementById('Player2HealthValue');
-        let player2HealthValue = parseInt(opponentheroHealthElement.textContent);
-        const winImage = document.getElementById('winimg');
-        const loseImage = document.getElementById('loseimg');
-        const endbg = document.getElementById('endbg');
+        selectedHeroPowerElement.addEventListener("click", function () {
+            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                switch (heroClass) {
+                    case 'Hunter':
+                        opponentheroHealthElement.textContent -= 2;
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        if (opponentheroHealthElement.textContent <= 0) Victory()
+                        break;
+                    case 'Mage':
+                        selectedHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                                heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        }, { once: true });
+                        opponentHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                                opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        }, { once: true });
+                        break;
+                    case 'Warlock':
+                        heroHealthElement.textContent -= 2;
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        // const dataToSend = {
+                        //     type: "card drag",
+                        //     data: {}
+                        // }
+                        // socket.send(JSON.stringify(dataToSend))
+                        if (heroHealthElement.textContent <= 0) Lose()
+                        break;
+                    case 'Paladin':
+                        let recruit = document.createElement('div');
+                        recruit.className = "field__empty";
+                        recruit.style.width = '90px';
+                        recruit.style.height = '120px';
+                        recruit.id = 'silver-hand-recruit';
+                        recruit.style.backgroundImage = 'url(../static/images/creatures/silver-hand-recruit.png'
+                        recruit.style.backgroundSize = `cover`;
+                        const attackElement = document.createElement('span')
+                        attackElement.className = "card__attack"
+                        attackElement.textContent = '1'
+                        recruit.appendChild(attackElement)
+                        const hpElement = document.createElement("span")
+                        hpElement.textContent = '1'
+                        recruit.appendChild(hpElement)
+                        const cardPlayer1 = document.getElementById('background__field');
+                        cardPlayer1.appendChild(recruit);
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        break;
+                    case 'Priest':
+                        selectedHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                                heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        }, { once: true });
+                        opponentHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                                opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        }, { once: true });
+                        break;
+                }
 
-        selectedHeroElement.addEventListener("click", function () {
-            console.log('player1 Health Value = ', player1HealthValue);
-            if (player1HealthValue <= 0) {
-                loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
-                loseImage.style.width = "863px";
-                loseImage.style.height = "818px";
-                loseImage.style.zIndex = 9999;
-                loseImage.style.position = "absolute";
-                loseImage.style.top = "50%";
-                loseImage.style.left = "50%";
-                loseImage.style.marginRight = "-50%";
-                loseImage.style.transform = "translate(-50%, -50%)";
-                endbg.style.zIndex = 999;
-                endbg.style.backdropFilter = "blur(3px)";
-                endbg.style.textAlign = "center";
-                endbg.style.margin = "0";
-                endbg.style.width = "100%";
-                endbg.style.height = "100%";
-                endbg.style.position = "absolute";
-                endbg.style.bottom = "0";
-                endbg.style.top = "0";
-                endbg.style.left = "0";
-                endbg.style.right = "0";
-                endbg.style.backgroundColor = "#666666";
-                endbg.style.opacity = "0.95";
-            }
         });
     }
 }
@@ -159,9 +235,9 @@ export function socketInit() {
 
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
-        ViewCards(game.player1.cards,"background__field","field__card");
+        ViewCards(game.player1.cards, "background__field", "field__card");
         ViewCards(game.player1.hand, "cards", "cards__card");
-        ViewCards(game.player2.cards, "background__field_opp","field__empty_opp");
+        ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
         dragNDrop()
         switch (type) {
             case "start game":
@@ -174,14 +250,13 @@ export function socketInit() {
                 break
             case "turn":
                 dragNDrop()
-                if(game.player1.turn)
-                {
+                if (game.player1.turn) {
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');
                     //socket.send("end turn")
                 }
                 break
-            default :
+            default:
                 break;
         }
     };

@@ -1,8 +1,9 @@
-import {socket} from "./websocket.js";
+import { socket } from "./websocket.js";
+import { manabarFilling } from "./manabarFilling.js";
 
 export function enemyTurnRun() {
     const endTurnButton = document.getElementById('endturn');
-
+    const manaElement = document.getElementById("MyMana")
     endTurnButton.addEventListener("click", function () {
         document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
         endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
@@ -16,9 +17,25 @@ export function enemyTurnRun() {
     });
 
     function enemyTurn() {
-        newEnemyCard()
+        newEnemyCard();
+        manabarFilling(10, manaElement);
+        const urlParams = new URLSearchParams(window.location.search);
+        const heroClass = urlParams.get('heroclass');
+        const selectedHeroPowerElement = document.getElementById('heropower');
+        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+        const card = document.getElementsByClassName("enemycard");
+        if (card.length < 5) newEnemyCard();
+        setTimeout(() => {
+            removeEnemyCard();
+        }, "1000");
     };
-
+    function removeEnemyCard() {
+        const card = document.getElementsByClassName("enemycard");
+        if (card.length > 0) {
+            const lastCard = card[0];
+            lastCard.remove();
+        }
+    }
     function newEnemyCard() {
         const cardSet = document.getElementById("enemycards");
         const card = document.getElementsByClassName("enemycard");

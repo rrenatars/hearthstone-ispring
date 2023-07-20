@@ -7,64 +7,65 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>
+    <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Hearthstone</title>
 </head>
 
 <body>
-<div class="endbg" id="endbg"></div>
-<div class="winimg" id="winimg"></div>
-<div class="loseimg" id="loseimg"></div>
-<div class="background">
-    <div class="enemycards" id="enemycards">
-        <div class="enemycard" style="--i:0.7"></div>
-        <div class="enemycard" style="--i:0"></div>
-        <div class="enemycard" id="enemycard" style="--i:-0.7"></div>
-    </div>
-    <div class="opponentManaValue" id="OpponentMana">1/1</div>
-    <div class="opponenthero" id="opponenthero">
-        <div class="opposingHeroHealthBackground">
-            <div class="opposingHeroHealthValue" id="Player2HealthValue">30</div>
+    <div class="endbg" id="endbg"></div>
+    <div class="winimg" id="winimg"></div>
+    <div class="loseimg" id="loseimg"></div>
+    <div class="background">
+        <div class="enemycards" id="enemycards">
+            <div class="enemycard" style="--i:0.7"></div>
+            <div class="enemycard" style="--i:0"></div>
+            <div class="enemycard" id="enemycard" style="--i:-0.7"></div>
         </div>
-    </div>
-    <button id="endturn" class="endturn-button"></button>
-    <div class="background__field_opp" id="background__field_opp"  >
-        <div class="field__empty_opp"></div>
-    </div>
-    <div class="background__field" id="background__field">
-        <div class="field__empty"></div>
-    </div>
-    <div class="playerHero" id="selectedHero">
-        <div class="playerHeroHealthBackground">
-            <div class="playerHeroHealthValue" id="Player1HealthValue">30</div>
-        </div>
-    </div>
-    <div class="playerHeroPower" id="heropower"></div>
-    <div class="playerManaValue" id="MyMana">10/10</div>
-    <div class="background__hand-and-manabar">
-        <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
-            <div class="hand__cards hand__cards_start">
-                <p class="cards__header">Start hand</p>
-                <div class="cards" id="cards">
-                </div>
-                <button class="cards__submit" id="StartSubmit">OK</button>
+        <div class="opponentManaValue" id="OpponentMana">1/1</div>
+        <div class="opponenthero" id="opponenthero">
+            <div class="opposingHeroHealthBackground">
+                <div class="opposingHeroHealthValue" id="Player2HealthValue">30</div>
             </div>
         </div>
-        <div class="hand-and-manabar__manabar" id="Manabar">
+        <button id="endturn" class="endturn-button"></button>
+        <div class="background__field_opp" id="background__field_opp">
+            <div class="field__empty_opp"></div>
         </div>
+        <div class="background__field" id="background__field">
+            <div class="field__empty"></div>
+        </div>
+        <div class="playerHero" id="selectedHero">
+            <div class="playerHeroHealthBackground">
+                <div class="playerHeroHealthValue" id="Player1HealthValue">30</div>
+            </div>
+        </div>
+        <div class="playerHeroPower" id="heropower"></div>
+        <div class="playerManaValue" id="MyMana">10/10</div>
+        <div class="background__hand-and-manabar">
+            <div class="hand-and-manabar__hand hand-and-manabar__hand_start">
+                <div class="hand__cards hand__cards_start">
+                    <p class="cards__header">Start hand</p>
+                    <div class="cards" id="cards">
+                    </div>
+                    <button class="cards__submit" id="StartSubmit">OK</button>
+                </div>
+            </div>
+            <div class="hand-and-manabar__manabar" id="Manabar">
+            </div>
+        </div>
+        <div id="innercursor"></div>
+        <div id="outercursor"></div>
+        <div id="arrowcursor"></div>
+        <svg class="svg" id="svg" width="100%" height="100%">
+            <path id="svgpath" fill="none" stroke="#e82e12" stroke-width="40" stroke-dasharray="60,10" d="">
+        </svg>
     </div>
-    <div id="innercursor"></div>
-    <div id="outercursor"></div>
-    <div id="arrowcursor"></div>
-    <svg class="svg" id="svg" width="100%" height="100%">
-        <path id="svgpath" fill="none" stroke="#e82e12" stroke-width="40" stroke-dasharray="60,10" d="">
-    </svg>
-</div>
 </body>
 <script src="../static/js/game.js" type="module"></script>
 <script src="../static/js/models.js" type="module"></script>
 <script src="../static/js/arena.js" type="module"></script>
 <script src="../static/js/websocket.js" type="module"></script>
 <script src="../static/js/view.js" type="module"></script>
+
 </html>

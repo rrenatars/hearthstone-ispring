@@ -1,8 +1,8 @@
-import {socket} from "./websocket.js";
-import {socketInit} from "./websocket.js";
+import { socket } from "./websocket.js";
+import { socketInit } from "./websocket.js";
 
-import {enemyTurnRun} from "./enemyTurn.js";
-import {dragNDrop} from "./dragndrop.js";
+import { enemyTurnRun } from "./enemyTurn.js";
+import { dragNDrop } from "./dragndrop.js";
 
 enemyTurnRun()
 
