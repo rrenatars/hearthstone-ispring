@@ -6,10 +6,14 @@ export function attack() {
     const opponentHeroElement = document.getElementById('opponenthero');
     const opponentheroHealthElement = document.getElementById('Player2HealthValue');
     const fightCards = document.querySelectorAll(".field__card");
+    console.log(fightCards, "fightCards")
 
     fightCards.forEach(function (e) {
+        console.log("зашло в первый")
         if (e.classList.contains('canAttack')) {
+            e.style.zIndex = 10000;
             e.addEventListener("mousedown", function () {
+                console.log("зашел в третий")
                 var svgField = document.getElementById('svg');
                 var xOrigin = e.offsetLeft + e.offsetWidth / 2;
                 var yOrigin = e.offsetTop + e.offsetHeight / 2;
@@ -45,6 +49,7 @@ export function attack() {
                         document.getElementById("innercursor").style.visibility = "hidden";
                         document.getElementById("outercursor").style.visibility = "hidden";
                         e.classList.remove('canAttack');
+                        e.style.removeProperty("zIndex")
                     });
 
                     opponentHeroElement.addEventListener("click", function () {
@@ -63,6 +68,7 @@ export function attack() {
                         document.getElementById("innercursor").style.visibility = "hidden";
                         document.getElementById("outercursor").style.visibility = "hidden";
                         e.classList.remove('canAttack');
+                        e.style.removeProperty("zIndex")
                     });
 
                     const botCards = document.querySelectorAll(".field__empty_opp");
@@ -82,18 +88,17 @@ export function attack() {
                             document.getElementById("innercursor").style.visibility = "hidden";
                             document.getElementById("outercursor").style.visibility = "hidden";
                             e.classList.remove('canAttack');
-
+                            e.style.removeProperty("zIndex")
                         });
                     })
-
-
                 })
             })
-
         }
     })
 }
 function Lose() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const heroClass = urlParams.get('heroclass');
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
     loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
@@ -120,6 +125,8 @@ function Lose() {
     endbg.style.opacity = "0.95";
 }
 function Victory() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const heroClass = urlParams.get('heroclass');
     const winImage = document.getElementById('winimg');
     const endbg = document.getElementById('endbg');
     winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";

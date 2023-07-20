@@ -236,7 +236,8 @@ export function socketInit() {
 
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
-        ViewCards(game.player1.cards, "background__field", "field__card");
+        console.log(game.player1.hand)
+        ViewCards(game.player1.cards, "background__field", "field__card canAttack");
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
 
@@ -256,6 +257,7 @@ export function socketInit() {
                 break
             case "turn":
                 dragNDrop()
+                attack()
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {

@@ -10,9 +10,6 @@ export function ViewCards(cards, parentId, childClassName) {
 
         newCardElement.className = childClassName;
 
-        // newCardElement.style.width = childWidth;
-        // newCardElement.style.height = childHeight;
-
         newCardElement.id = `${cardInHand.cardID}`;
 
         newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`;
@@ -24,15 +21,15 @@ export function ViewCards(cards, parentId, childClassName) {
         manaElement.textContent = cardInHand.mana;
         newCardElement.appendChild(manaElement);
 
+        const hpElement = document.createElement('span')
+        hpElement.className = "card__hp"
+        hpElement.textContent = cardInHand.hp
+        newCardElement.appendChild(hpElement)
+
         const attackElement = document.createElement('span')
         attackElement.className = "card__attack"
         attackElement.textContent = cardInHand.attack
         newCardElement.appendChild(attackElement)
-
-        const hpElement = document.createElement('span')
-        attackElement.className = "card__hp"
-        attackElement.textContent = cardInHand.hp
-        newCardElement.appendChild(hpElement)
 
         cardsHand.appendChild(newCardElement);
     }
