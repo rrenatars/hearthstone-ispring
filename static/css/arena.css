@@ -157,18 +157,8 @@
 }
 
 .field__card_opp {
-    width: 94px;
-    height: 135px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    font-family: 'Roboto', sans-serif;
-    box-shadow: none;
-}
-
-.field__card {
-    width: 94px;
-    height: 135px;
+    width: 125px;
+    height: 168px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -183,7 +173,7 @@
 .background__field_opp {
     display: flex;
     justify-content: center;
-    margin-top: 20%;
+    margin-top: 17%;
 }
 
 .background__field {
@@ -192,8 +182,13 @@
 }
 
 .field__empty_opp {
-    width: 94px;
-    height: 135px;
+    width: 125px;
+    height: 168px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: none;
 }
 
 
@@ -203,12 +198,13 @@
 }
 
 .field__card {
-    width: 94px;
-    height: 135px;
+    width: 125px;
+    height: 168px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     font-family: 'Roboto', sans-serif;
+    box-shadow: none;
 }
 
 body {

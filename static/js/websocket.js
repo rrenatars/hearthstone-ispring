@@ -5,6 +5,7 @@ import { ViewCards } from "./view.js";
 
 import { dragNDrop } from "./dragndrop.js";
 import { manabarFilling } from "./manabarFilling.js";
+import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -238,7 +239,7 @@ export function socketInit() {
         ViewCards(game.player1.cards, "background__field", "field__card");
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
-        dragNDrop()
+
         switch (type) {
             case "start game":
                 startBefore()
@@ -247,9 +248,16 @@ export function socketInit() {
             case "exchange cards":
                 afterStart()
                 dragNDrop()
+                attack()
+                break
+            case "card drag":
+                dragNDrop()
+                attack();
                 break
             case "turn":
                 dragNDrop()
+                const manaElement = document.getElementById('MyMana');
+                manabarFilling(10, manaElement)
                 if (game.player1.turn) {
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');

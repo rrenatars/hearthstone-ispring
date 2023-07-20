@@ -3,6 +3,7 @@ package services
 import (
 	"errors"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
@@ -41,6 +42,7 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 	if err != nil {
 		return pl, err
 	}
+	pl.Hand[index].Portrait = strings.Replace(pl.Hand[index].Portrait, "cards-in-hand", "creatures", 1)
 	newCards := append(pl.Cards, pl.Hand[index])
 	newHand := removeElemsFromSlice(pl.Hand, index)
 	return models.NewPlayer(

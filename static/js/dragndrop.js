@@ -75,8 +75,6 @@ export function dragNDrop() {
                                 //     attack(selectedHeroPowerElement);
                                 // }
 
-                                attack();
-
                                 const manaElement = document.getElementById('MyMana');
                                 manabarFilling(mana, manaElement);
 
