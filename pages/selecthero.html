@@ -7,6 +7,8 @@
 </head>
 
 <body>
+    <button id="openSignInPageButton">SignIn</button>
+    <button id="openSignUpPageButton">SignUp</button>
     <h1>Выберите настройки Hearthstone</h1>
     <form id="GameForm" onsubmit="submitForm(event)">
         <label for="gamemode">Режим игры:</label>
@@ -40,5 +42,35 @@
 
     <script src="../static/js/selecthero.js"></script>
 </body>
-
+<script>
+    document.getElementById("openSignInPageButton").addEventListener("click", 
+    function() {
+        window.location.href = "/auth/sign-in"
+        // Perform the GET request when the button is clicked
+        fetch("/auth/sign-in", {
+            method: "GET"
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Redirect to the response URL
+            window.location.href = data;
+        })
+        .catch(error => console.error("Error:", error));
+    });
+    
+    document.getElementById("openSignUpPageButton").addEventListener("click",
+    function() {
+        window.location.href = "/auth/sign-up"
+        // Perform the GET request when the button is clicked
+        fetch("/auth/sign-up", {
+            method: "GET"
+        })
+        .then(response => response.text())
+        .then(data => {
+            // Redirect to the response URL
+            window.location.href = data;
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
 </html>

@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
+	"github.com/rrenatars/hearthstone-ispring/internal/tools"
 )
 
 func exchangeCardsRun(g *models.GameTable, exCardIds models.ExchangeCardsDataType) *models.MessageResponse {
@@ -32,7 +33,7 @@ func exchangeCards(g *models.GameTable, exCardIds models.ExchangeCardsDataType) 
 		return g.Player1.Hand
 	}
 
-	newCards := GetRandomElementsFromDeck(g.Player1.Deck, len(exCardIds.ReplacedCardIds))
+	newCards := tools.GetRandomElementsFromDeck(g.Player1.Deck, len(exCardIds.ReplacedCardIds))
 
 	for _, c := range g.Player1.Hand {
 		f := false

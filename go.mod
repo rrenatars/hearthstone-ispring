@@ -12,10 +12,12 @@ go 1.20
 require github.com/go-sql-driver/mysql v1.7.1
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/multitemplate v0.0.0-20230212012517-45920c92c271
 	github.com/gin-gonic/gin v1.9.1
 	github.com/gorilla/websocket v1.5.0
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/sirupsen/logrus v1.9.3
 )
 
 require (
