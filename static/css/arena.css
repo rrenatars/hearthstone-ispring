@@ -3,6 +3,11 @@
     src: url(../fonts/BelweBdBTBold.ttf);
 }
 
+@font-face {
+    font-family: 'Hearthstone';
+    src: local('Hearthstone'), url(../fonts/LHFUncialCaps.ttf);
+}
+
 .heading {
     min-height: 10vh;
     display: flex;
@@ -53,7 +58,7 @@
     width: 100%;
     height: 135px;
     gap: 5px;
-    margin-top: 9%;
+    margin-top: 11.5%;
     margin-right: 0.5%;
     z-index: 3;
 }
@@ -133,7 +138,7 @@
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 50px;
-    margin-bottom: 100px;
+    margin-bottom: 180px;
 }
 
 .cards__submit {
@@ -153,12 +158,12 @@
     height: 135px;
     gap: 5px;
     z-index: 3;
-    margin-top: 15%;
+    /*margin-top: 15%;*/
 }
 
 .field__card_opp {
-    width: 125px;
-    height: 168px;
+    /*width: 125px;*/
+    /*height: 175px;*/
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -173,7 +178,8 @@
 .background__field_opp {
     display: flex;
     justify-content: center;
-    margin-top: 17%;
+    margin-top: 19.5%;
+    margin-bottom: 13px;
 }
 
 .background__field {
@@ -182,8 +188,11 @@
 }
 
 .field__empty_opp {
-    width: 125px;
-    height: 168px;
+    width: 100px;
+    height: 134px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    /*background-position: center;*/
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
@@ -194,13 +203,20 @@
 
 
 .field__empty {
-    width: 125px;
-    height: 168px;
+    width: 100px;
+    height: 134px;
 }
 
 .field__card {
-    width: 125px;
-    height: 168px;
+    width: 100px;
+    height: 134px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* Ограничьте размеры div, чтобы они не зависели от размеров содержимого */
+    /*width: 200px; !* Например, вы можете задать фиксированную ширину *!*/
+    /*height: 150px; !* Например, вы можете задать фиксированную высоту *!*/
+    /* Другие стили для внешнего вида div */
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
@@ -221,7 +237,7 @@
             -1px 1px 0 #000,
             1px 1px 0 #000;
     margin-bottom: 19%;
-    margin-right: 47%;
+    margin-right: 45%;
     user-select: none;
 }
 

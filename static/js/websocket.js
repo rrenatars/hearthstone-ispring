@@ -258,7 +258,7 @@ export function socketInit() {
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {
-                    document.body.style.cursor = "url(../images/cursor/cursor.png) 10 2, auto";
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');
 
