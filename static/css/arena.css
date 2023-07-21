@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Hearthstone';
-    src: local('Hearthstone'), url(../fonts/LHFUncialCaps.ttf);
+    font-family: BelweBdBTBold;
+    src: url(../fonts/BelweBdBTBold.ttf);
 }
 
 .heading {
@@ -185,10 +185,11 @@
     width: 125px;
     height: 168px;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-around;
+    align-items: flex-end;
     font-family: 'Roboto', sans-serif;
-    box-shadow: none;
+    user-select: none;
+    /*z-index: 14;*/
 }
 
 
@@ -201,10 +202,43 @@
     width: 125px;
     height: 168px;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    justify-content: space-around;
+    align-items: flex-end;
     font-family: 'Roboto', sans-serif;
-    box-shadow: none;
+    user-select: none;
+    /*z-index: 12;*/
+}
+
+.card__attack
+{
+    font-family: BelweBdBTBold;
+    font-size: 130%;
+    font-weight: bold;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    margin-bottom: 19%;
+    margin-right: 47%;
+    user-select: none;
+}
+
+.card__hp
+{
+    font-family: BelweBdBTBold;
+    font-weight: bold;
+    font-size: 130%;
+    color: white;
+    text-shadow:
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
+    margin-bottom: 19%;
+    margin-right: 11%;
+    user-select: none;
 }
 
 body {

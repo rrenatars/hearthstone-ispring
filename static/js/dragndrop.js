@@ -65,7 +65,6 @@ export function dragNDrop() {
                                 card.classList.remove('cards__card');
                                 card.classList.add('field__card');
 
-                                card.classList.add('canAttack');
 
                                 mana = mana - manaSelectedCard;
 

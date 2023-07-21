@@ -19,9 +19,9 @@ export function attack() {
                 document.getElementById("arrowcursor").style.visibility = "visible";
                 document.body.style.cursor = "none";
 
-                const cardAttack = e.querySelector('.card__attack').textContent
-
                 document.body.addEventListener('mousemove', function (e2) {
+                    const cardAttack = e.getElementsByClassName('card__attack')[0].innerHTML;
+                    console.log(e.getElementsByClassName('card__attack')[0].innerHTML);
                     var xDest = e2.clientX;
                     var yDest = e2.clientY;
                     var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
@@ -29,7 +29,14 @@ export function attack() {
                     document.getElementById("arrowcursor").style.left = xDest + 'px';
                     document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
                     document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
-                    svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                    // for (;  ; xDest++, yDest++)
+                    // {
+
+                    //     setTimeout(function () {
+                    svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 60) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                    // }, 1000);
+
+                    // }
                     // opponentHeroElement.addEventListener("mouseover", function () {
                     //     document.getElementById("innercursor").style.visibility = "visible";
                     //     document.getElementById("outercursor").style.visibility = "visible";
@@ -52,7 +59,7 @@ export function attack() {
 
                     opponentHeroElement.addEventListener("click", function () {
                         if (svg.style.display == "block") {
-                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - parseInt(cardAttack));
+                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack);
                             opponentheroHealthElement.style.color = '#c70d0d';
                             if (opponentheroHealthElement.textContent <= 0) { Victory() }
                             setTimeout(function () {
@@ -73,11 +80,11 @@ export function attack() {
                     botCards.forEach(function (e3) {
                         e3.addEventListener("click", function () {
                             if (svg.style.display == "block") {
-                                opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - parseInt(cardAttack));
-                                opponentheroHealthElement.style.color = '#c70d0d';
-                                if (opponentheroHealthElement.textContent <= 0) { Victory() }
+                                const botCardHP = botCards.querySelector(".card__hp");
+                                botCardHP -= cardAttack;
+                                botCardHP.style.color = '#c70d0d';
                                 setTimeout(function () {
-                                    opponentheroHealthElement.style.color = '#FFFFFF';
+                                    botCardHP.style.color = '#FFFFFF';
                                 }, 2000);
                             };
                             svg.style.display = "none";
@@ -90,7 +97,7 @@ export function attack() {
                         });
                     })
                 })
-            })
+            }, {once:true})
         }
     })
 }

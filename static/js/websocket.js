@@ -237,7 +237,7 @@ export function socketInit() {
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
         console.log(game.player1.hand)
-        ViewCards(game.player1.cards, "background__field", "field__card canAttack");
+        ViewCards(game.player1.cards, "background__field", "field__card");
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
 
@@ -249,20 +249,26 @@ export function socketInit() {
             case "exchange cards":
                 afterStart()
                 dragNDrop()
-                attack()
                 break
             case "card drag":
                 dragNDrop()
-                attack();
                 break
             case "turn":
                 dragNDrop()
-                attack()
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {
+                    document.body.style.cursor = "url(../images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');
+
+                    const fightCards = document.querySelectorAll(".field__card")
+                    fightCards.forEach(function (e) {
+                        e.classList.add("canAttack");
+                    })
+
+                    attack()
+
                     //socket.send("end turn")
                 }
                 break

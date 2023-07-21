@@ -20,7 +20,7 @@ export function enemyTurnRun() {
             const card = document.getElementsByClassName("enemycard");
             cardSet.removeChild(card[0]);
             for (var i = 0; i < card.length; i++) {
-                card[i].style = "--i: " + String(Math.min(0.7 * (card.length - 2), 1.75) * (1 - i * 2 / (card.length - 1))) + ";";
+                card[i].style = "--i: " + String(Math.min(0.525 * (card.length - 2), 1.75) * (1 - i * 2 / (card.length - 1))) + ";";
             }
         }, 400);
     });
@@ -39,9 +39,9 @@ export function enemyTurnRun() {
         const card = document.getElementsByClassName("enemycard");
         const newCard = document.createElement('div');
         for (var i = 0; i < card.length; i++) {
-            card[i].style = "--i: " + String(Math.min(0.7 * (card.length - 1), 1.75) * (1 - i * 2 / (card.length))) + ";";
+            card[i].style = "--i: " + String(Math.min(0.525 * (card.length - 1), 1.75) * (1 - i * 2 / (card.length))) + ";";
         }
-        newCard.style = "--i: " + String(-Math.min(0.7 * (card.length - 1), 1.75)) + ";";
+        newCard.style = "--i: " + String(-Math.min(0.525 * (card.length - 1), 1.75)) + ";";
         newCard.classList.add("enemycard");
         cardSet.appendChild(newCard);
     };
