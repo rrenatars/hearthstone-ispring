@@ -9,11 +9,9 @@ export function attack() {
     console.log(fightCards, "fightCards")
 
     fightCards.forEach(function (e) {
-        console.log("зашло в первый")
         if (e.classList.contains('canAttack')) {
             e.style.zIndex = 10000;
             e.addEventListener("mousedown", function () {
-                console.log("зашел в третий")
                 var svgField = document.getElementById('svg');
                 var xOrigin = e.offsetLeft + e.offsetWidth / 2;
                 var yOrigin = e.offsetTop + e.offsetHeight / 2;
