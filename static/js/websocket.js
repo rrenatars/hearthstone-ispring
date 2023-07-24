@@ -94,6 +94,23 @@ function startBefore() {
     selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
     const heroHealthElement = document.getElementById('Player1HealthValue');
 
+    const hand = document.querySelector('.hand-and-manabar__hand')
+    hand.classList.add('hand-and-manabar__hand_start')
+
+    const handCards = document.querySelector('.hand__cards')
+    handCards.classList.add('hand__cards_start')
+
+    const cardsHeader = document.createElement('p')
+    cardsHeader.className = 'cards__header'
+    cardsHeader.textContent = 'Start hand'
+    handCards.prepend(cardsHeader)
+
+    const startButton = document.createElement('button')
+    startButton.className = 'cards__submit'
+    startButton.id = 'StartSubmit'
+    startButton.textContent = 'OK'
+    handCards.appendChild(startButton)
+
     const manaElement = document.getElementById("MyMana")
     manabarFilling(10, manaElement);
 
@@ -243,14 +260,14 @@ export function socketInit() {
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
 
-        // let i = 0;
+        let i = 0;
 
         document.querySelectorAll(".field__card").forEach(function (e) {
-            // i++
-            // if (i <= attackCardsLength)
-            //     e.classList.add("canAttack")
-            for (let i = 0; i <= attackCardsLength; i++) {
+            i++
+            if (i <= attackCardsLength) {
                 e.classList.add("canAttack")
+            // for (let i = 0; i <= attackCardsLength; i++) {
+            //     e.classList.add("canAttack")
             }
         });
 

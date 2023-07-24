@@ -7,6 +7,16 @@ export function ViewCards(cards, parentId, childClassName) {
         }
     }
 
+    console.log(cards)
+
+    // let emptyElement = document.createElement("div")
+    // emptyElement.classList.add('field__empty')
+
+    // if ((!cards[0]) && ((parentId === 'background__field') || (parentId === 'background__field_opp'))) {
+    //     console.log("empty", cards[0])
+    //     cardsHand.appendChild(emptyElement)
+    // }
+
     for (const cardInHand of cards) {
         let newCardElement = document.createElement('div');
 

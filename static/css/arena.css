@@ -198,7 +198,6 @@
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
-    /*z-index: 14;*/
 }
 
 .field__empty {
@@ -212,16 +211,11 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    /* Ограничьте размеры div, чтобы они не зависели от размеров содержимого */
-    /*width: 200px; !* Например, вы можете задать фиксированную ширину *!*/
-    /*height: 150px; !* Например, вы можете задать фиксированную высоту *!*/
-    /* Другие стили для внешнего вида div */
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
-    /*z-index: 12;*/
 }
 
 .card__attack

@@ -75,7 +75,11 @@ export function attack() {
                 };
 
                 const botCards = document.querySelectorAll(".field__empty_opp");
+                const botCardsField = document.getElementById('background__field_opp')
+                let emptyElement = document.createElement("div")
+                emptyElement.classList.add('field__empty')
                 botCards.forEach(function (e3) {
+                    e3.style.zIndex = '14'
                     e3.onclick = function () {
                         if (svg.style.display == "block") {
                             e3.classList.add("activeTarget");
@@ -85,6 +89,9 @@ export function attack() {
                             if (botCardHP.textContent <= 0)
                             {
                                 e3.remove()
+                                if (!botCardsField.firstChild) {
+                                    botCardsField.appendChild(emptyElement)
+                                }
                             }
                             botCardHP.style.color = '#c70d0d';
                             setTimeout(function () {
@@ -101,6 +108,7 @@ export function attack() {
                         e3.classList.remove("activeTarget");
                         e.classList.remove("activeCard");
                     };
+                    e3.style.removeProperty("zIndex");
                 });
 
             }, { once: true })
