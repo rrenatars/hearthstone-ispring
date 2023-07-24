@@ -22,7 +22,7 @@ export function enemyTurnRun() {
             for (var i = 0; i < card.length; i++) {
                 card[i].style = "--i: " + String(Math.min(0.525 * (card.length - 2), 1.75) * (1 - i * 2 / (card.length - 1))) + ";";
             }
-        }, 400);
+        }, 900);
     });
 
     function enemyTurn() {
@@ -43,6 +43,8 @@ export function enemyTurnRun() {
         }
         newCard.style = "--i: " + String(-Math.min(0.525 * (card.length - 1), 1.75)) + ";";
         newCard.classList.add("enemycard");
-        cardSet.appendChild(newCard);
+        setTimeout(() => {
+            cardSet.appendChild(newCard);
+        }, 200);
     };
 }

@@ -201,7 +201,6 @@
     /*z-index: 14;*/
 }
 
-
 .field__empty {
     width: 100px;
     height: 134px;
@@ -241,6 +240,18 @@
     user-select: none;
 }
 
+.card__attack_provocation
+{
+    margin-bottom: 28%;
+    margin-right: 37%;
+}
+
+.card__attack_poison
+{
+    margin-bottom: 23%;
+    margin-right: 46%;
+}
+
 .card__hp
 {
     font-family: BelweBdBTBold;
@@ -255,6 +266,18 @@
     margin-bottom: 19%;
     margin-right: 11%;
     user-select: none;
+}
+
+.card__hp_provocation
+{
+    margin-bottom: 28%;
+    margin-right: 16%;
+}
+
+.card__hp_poison
+{
+    margin-bottom: 22%;
+    margin-right: 14%;
 }
 
 body {
