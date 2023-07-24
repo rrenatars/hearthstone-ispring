@@ -44,7 +44,7 @@ export function enemyTurnRun() {
         newCard.style = "--i: " + String(-Math.min(0.525 * (card.length - 1), 1.75)) + ";";
         newCard.classList.add("enemycard");
         setTimeout(() => {
-        cardSet.appendChild(newCard);
+            cardSet.appendChild(newCard);
         }, 200);
     };
 }

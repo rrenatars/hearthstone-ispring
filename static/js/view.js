@@ -30,12 +30,25 @@ export function ViewCards(cards, parentId, childClassName) {
         if (!(parentId === 'cards')) {
             const attackElement = document.createElement('span')
             attackElement.className = "card__attack"
+            newCardElement.setAttribute("data-specification", cardInHand.specification)
+            if ((cardInHand.specification === "provocation") && (parentId != "cards")) {
+                attackElement.classList.add("card__attack_provocation")
+            } else if ((cardInHand.specification === "poison") && (parentId != "cards")) {
+                attackElement.classList.add("card__attack_poison")
+            }
+
             attackElement.style.display = "inline-block"
             attackElement.textContent = cardInHand.attack
             newCardElement.appendChild(attackElement)
 
             const hpElement = document.createElement('span')
             hpElement.className = "card__hp"
+            newCardElement.setAttribute("data-specification", cardInHand.specification)
+            if ((cardInHand.specification === "provocation") && (parentId != "cards")) {
+                hpElement.classList.add("card__hp_provocation")
+            } else if ((cardInHand.specification === "poison") && (parentId != "cards")) {
+                hpElement.classList.add("card__hp_poison")
+            }
             hpElement.style.display = "inline-block"
             hpElement.textContent = cardInHand.hp
             newCardElement.appendChild(hpElement)

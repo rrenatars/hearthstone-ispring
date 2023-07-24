@@ -5,7 +5,7 @@ import { ViewCards } from "./view.js";
 
 import { dragNDrop } from "./dragndrop.js";
 import { manabarFilling } from "./manabarFilling.js";
-import { attack } from "./attack.js";
+import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -238,7 +238,6 @@ export function socketInit() {
 
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
-        console.log(game.player1.hand);
 
         ViewCards(game.player1.cards, "background__field", "field__card")
         ViewCards(game.player1.hand, "cards", "cards__card");
@@ -248,9 +247,16 @@ export function socketInit() {
 
         document.querySelectorAll(".field__card").forEach(function (e) {
             i++
-            if (i <= attackCardsLength)
+            if ((i <= attackCardsLength) && (e.id != "heropower"))
+            {
                 e.classList.add("canAttack")
+            }
+            if (e.getAttribute("data-specification") === "burst") {
+                e.classList.add("canAttack")
+            }
         });
+
+        
 
         switch (type) {
             case "start game":
@@ -278,7 +284,10 @@ export function socketInit() {
 
                     const fightCards = document.querySelectorAll(".field__card")
                     fightCards.forEach(function (e) {
-                        e.classList.add("canAttack");
+                        if (e.id != "heropower")
+                        {
+                        e.classList.add("canAttack")
+                        }
                     })
 
                     attack()

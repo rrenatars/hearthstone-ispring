@@ -1,3 +1,6 @@
+import { socket } from "./websocket.js";
+import { game } from "./game.js";
+
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');
@@ -5,8 +8,12 @@ export function attack() {
     selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
     const opponentHeroElement = document.getElementById('opponenthero');
     const opponentheroHealthElement = document.getElementById('Player2HealthValue');
+    const selectedHeroPowerElement = document.getElementById('heropower');
+    selectedHeroPowerElement.classList.add('field__card');
     const fightCards = document.querySelectorAll(".field__card");
     console.log(fightCards, "fightCards")
+
+
 
     fightCards.forEach(function (e) {
         if (e.classList.contains('canAttack')) {
@@ -31,32 +38,37 @@ export function attack() {
                     document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
                     svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
 
-                    // }
+
                     // opponentHeroElement.addEventListener("mouseover", function () {
                     //     document.getElementById("innercursor").style.visibility = "visible";
                     //     document.getElementById("outercursor").style.visibility = "visible";
-                    //     document.getElementById("innercursor").style.left = xDest + 'px';
-                    //     document.getElementById("innercursor").style.top = yDest + 'px';
-                    //     document.getElementById("outercursor").style.left = xDest + 'px';
-                    //     document.getElementById("outercursor").style.top = yDest + 'px';
-                    // });                  
+                    //     document.getElementById("innercursor").style.left = opponentHeroElement.offsetLeft + opponentHeroElement.offsetWidth / 2 + "px";
+                    //     document.getElementById("innercursor").style.top = opponentHeroElement.offsetTop + opponentHeroElement.offsetHeight / 2 + "px";
+                    //     document.getElementById("outercursor").style.left = opponentHeroElement.offsetLeft + opponentHeroElement.offsetWidth / 2 + "px";
+                    //     document.getElementById("outercursor").style.top = opponentHeroElement.offsetTop + opponentHeroElement.offsetHeight / 2 + "px";
+                    // });
 
                 });
 
-                e.addEventListener("click", function () {
-                    svg.style.display = "none";
-                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                    document.getElementById("arrowcursor").style.visibility = "hidden";
-                    document.getElementById("innercursor").style.visibility = "hidden";
-                    document.getElementById("outercursor").style.visibility = "hidden";
-                    e.classList.remove('canAttack');
-                    e.style.removeProperty("zIndex")
-                });
+                // e.addEventListener("click", function () {
+                //     svg.style.display = "none";
+                //     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                //     document.getElementById("arrowcursor").style.visibility = "hidden";
+                //     document.getElementById("innercursor").style.visibility = "hidden";
+                //     document.getElementById("outercursor").style.visibility = "hidden";
+                //     // e.classList.remove('canAttack');
+                //     e.style.removeProperty("zIndex");
+                // });
 
-                opponentHeroElement.onclick = function () {             
+                opponentHeroElement.onclick = function () {
                     if (svg.style.display == "block") {
-                        const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
-                        opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack);
+                        if (e.id != "heropower") {
+                            const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
+                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack)
+                        }
+                        else {
+                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
+                        }
                         opponentheroHealthElement.style.color = '#c70d0d';
                         if (opponentheroHealthElement.textContent <= 0) { Victory() }
                         setTimeout(function () {
@@ -79,13 +91,19 @@ export function attack() {
                     e3.onclick = function () {
                         if (svg.style.display == "block") {
                             e3.classList.add("activeTarget");
-                            const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
                             const botCardHP = document.querySelector(".activeTarget").childNodes[2];
-                            botCardHP.textContent -= cardAttack;
-                            if (botCardHP.textContent <= 0)
-                            {
+                            if (e.id != "heropower") {
+                                const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
+                                botCardHP.textContent -= cardAttack
+                            }
+                            else {
+                                botCardHP.textContent -= 2
+                            }
+                            
+                            if (botCardHP.textContent <= 0) {
                                 e3.remove()
                             }
+
                             botCardHP.style.color = '#c70d0d';
                             setTimeout(function () {
                                 botCardHP.style.color = '#FFFFFF';
@@ -100,13 +118,18 @@ export function attack() {
                         e.style.removeProperty("zIndex");
                         e3.classList.remove("activeTarget");
                         e.classList.remove("activeCard");
+                        socket.send(JSON.stringify({
+                            type: "attack",
+                            data: {
+                                player: (game.player1.turn ? true : false),
+                                idAttack: e.id,
+                                idDefense: e3.id,
+                            }
+                        }))
                     };
                 });
 
             }, { once: true })
-
-
-
 
         }
     })
@@ -140,6 +163,7 @@ function Lose() {
     endbg.style.backgroundColor = "#666666";
     endbg.style.opacity = "0.95";
 }
+
 function Victory() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');

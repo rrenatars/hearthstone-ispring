@@ -29,6 +29,17 @@ export function dragNDrop() {
                     const manaElement = document.getElementById("MyMana")
                     let mana = parseInt(manaElement.textContent)
                     let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
+
+                    const selectedHeroPowerElement = document.getElementById('heropower');
+                    if (mana >=2)
+                    {
+                        selectedHeroPowerElement.classList.add('canAttack')
+                    }
+                    else
+                    {
+                        selectedHeroPowerElement.classList.remove('canAttack')
+                    }
+
                     if ((mana - manaSelectedCard) < 0) {
                         alert("Недостаточно маны");
                         return;
@@ -67,12 +78,6 @@ export function dragNDrop() {
 
 
                                 mana = mana - manaSelectedCard;
-
-                                // if (mana >=2)
-                                // {
-                                //     selectedHeroPowerElement.classList.add('canAttack');
-                                //     attack(selectedHeroPowerElement);
-                                // }
 
                                 const manaElement = document.getElementById('MyMana');
                                 manabarFilling(mana, manaElement);
