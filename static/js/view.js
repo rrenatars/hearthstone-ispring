@@ -1,10 +1,12 @@
-import { setGame } from "./game.js";
-
 export function ViewCards(cards, parentId, childClassName) {
     const cardsHand = document.getElementById(parentId);
-    while (cardsHand.firstChild) {
-        cardsHand.removeChild(cardsHand.firstChild);
+
+    if ((parentId != 'background__field' || parentId != 'background__field_opp') && (cards.length > 0)) {
+        while (cardsHand.firstChild) {
+            cardsHand.removeChild(cardsHand.firstChild)
+        }
     }
+
     for (const cardInHand of cards) {
         let newCardElement = document.createElement('div');
 
@@ -13,26 +15,31 @@ export function ViewCards(cards, parentId, childClassName) {
         newCardElement.id = `${cardInHand.cardID}`;
 
         newCardElement.style.backgroundImage = `url(../..${cardInHand.portrait})`;
+        // newCardElement.style.backgroundSize = "auto auto";
 
-        newCardElement.style.backgroundSize = `cover`;
-
+        if (parentId === 'cards') {
+            newCardElement.style.backgroundSize = `cover`;
+        }
         const manaElement = document.createElement('span');
         manaElement.className = "card__mana";
         manaElement.textContent = cardInHand.mana;
+        manaElement.style.display = "inline-block"
         manaElement.style.visibility = "hidden"
         newCardElement.appendChild(manaElement);
-        
-        const attackElement = document.createElement('span')
-        attackElement.className = "card__attack"
-        attackElement.textContent = cardInHand.attack
-        newCardElement.appendChild(attackElement)
 
-        const hpElement = document.createElement('span')
-        hpElement.className = "card__hp"
-        hpElement.textContent = cardInHand.hp
-        newCardElement.appendChild(hpElement)
+        if (!(parentId === 'cards')) {
+            const attackElement = document.createElement('span')
+            attackElement.className = "card__attack"
+            attackElement.style.display = "inline-block"
+            attackElement.textContent = cardInHand.attack
+            newCardElement.appendChild(attackElement)
 
-        
+            const hpElement = document.createElement('span')
+            hpElement.className = "card__hp"
+            hpElement.style.display = "inline-block"
+            hpElement.textContent = cardInHand.hp
+            newCardElement.appendChild(hpElement)
+        }
 
         cardsHand.appendChild(newCardElement);
     }

@@ -231,15 +231,26 @@ function afterStart() {
 export const socket = new WebSocket("ws://localhost:3000/ws");
 
 export function socketInit() {
+    let attackCardsLength = 0;
+
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
-        console.log(game.player1.hand)
-        ViewCards(game.player1.cards, "background__field", "field__card");
+        console.log(game.player1.hand);
+
+        ViewCards(game.player1.cards, "background__field", "field__card")
         ViewCards(game.player1.hand, "cards", "cards__card");
         ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+
+        let i = 0;
+
+        document.querySelectorAll(".field__card").forEach(function (e) {
+            i++
+            if (i <= attackCardsLength)
+                e.classList.add("canAttack")
+        });
 
         switch (type) {
             case "start game":
@@ -249,19 +260,21 @@ export function socketInit() {
             case "exchange cards":
                 afterStart()
                 dragNDrop()
+                attack()
                 break
             case "card drag":
                 dragNDrop()
+                attack()
                 break
             case "turn":
                 dragNDrop()
-
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');
+                    attackCardsLength = game.player1.cards.length
 
                     const fightCards = document.querySelectorAll(".field__card")
                     fightCards.forEach(function (e) {

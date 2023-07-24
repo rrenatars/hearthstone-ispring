@@ -65,6 +65,7 @@ export function dragNDrop() {
                                 card.classList.remove('cards__card');
                                 card.classList.add('field__card');
 
+
                                 mana = mana - manaSelectedCard;
 
                                 // if (mana >=2)

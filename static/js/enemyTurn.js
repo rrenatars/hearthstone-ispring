@@ -1,42 +1,50 @@
 import { socket } from "./websocket.js";
-import {attack} from "./attack.js";
+import { manabarFilling } from "./manabarFilling.js";
 
 export function enemyTurnRun() {
     const endTurnButton = document.getElementById('endturn');
-
+    const manaElement = document.getElementById("MyMana")
     endTurnButton.addEventListener("click", function () {
         document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
         endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
         endTurnButton.setAttribute('disabled', '');
-
         const dataToSend = {
             type: "end turn",
             data: {}
         }
-        socket.send(JSON.stringify(dataToSend))
-        newEnemyCard()
+        newEnemyCard();
+        setTimeout(() => {
+            socket.send(JSON.stringify(dataToSend))
+            enemyTurn();
+            const cardSet = document.getElementById("enemycards");
+            const card = document.getElementsByClassName("enemycard");
+            cardSet.removeChild(card[0]);
+            for (var i = 0; i < card.length; i++) {
+                card[i].style = "--i: " + String(Math.min(0.525 * (card.length - 2), 1.75) * (1 - i * 2 / (card.length - 1))) + ";";
+            }
+        }, 900);
     });
 
+    function enemyTurn() {
+        manabarFilling(10, manaElement);
+        const urlParams = new URLSearchParams(window.location.search);
+        const heroClass = urlParams.get('heroclass');
+        const selectedHeroPowerElement = document.getElementById('heropower');
+        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+        const card = document.getElementsByClassName("enemycard");
+
+    };
     function newEnemyCard() {
         const cardSet = document.getElementById("enemycards");
         const card = document.getElementsByClassName("enemycard");
         const newCard = document.createElement('div');
-        let iValue;
         for (var i = 0; i < card.length; i++) {
-            iValue = card[i].style.cssText;
-            iValue = iValue.split(':').pop();
-            iValue = iValue.replace(';', '');
-            iValue = Number(iValue) + 0.35;
-            card[i].style = "--i:" + String(iValue);
+            card[i].style = "--i: " + String(Math.min(0.525 * (card.length - 1), 1.75) * (1 - i * 2 / (card.length))) + ";";
         }
-        iValue = card[i - 1].style.cssText;
-        iValue = iValue.split(':').pop();
-        iValue = iValue.replace(';', '');
-        iValue = Number(iValue) - 0.7;
-        newCard.style = "--i:" + String(iValue);
+        newCard.style = "--i: " + String(-Math.min(0.525 * (card.length - 1), 1.75)) + ";";
         newCard.classList.add("enemycard");
         setTimeout(() => {
-            cardSet.appendChild(newCard);
-        }, 400);
+        cardSet.appendChild(newCard);
+        }, 200);
     };
 }
