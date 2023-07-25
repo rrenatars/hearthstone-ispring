@@ -31,7 +31,6 @@ func SetupMessageTypes(message models.MessageRequest, gameTable *models.GameTabl
 			log.Println("Error parsing card drag data:", err.Error())
 			return models.NewMessageResponse(err.Error(), *gameTable)
 		}
-		log.Println(data.CardInHandId, " ", data.Player)
 
 		msgResponse = cardDrag(&data, gameTable)
 	case "end game":

@@ -1,8 +1,6 @@
 package database
 
 import (
-	"log"
-
 	"github.com/jmoiron/sqlx"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
@@ -26,7 +24,6 @@ func GetDeckFromMySqlDB(db *sqlx.DB) ([]models.CardData, error) {
 
 	err := db.Select(&deck, query)
 
-	log.Println(deck)
 	if err != nil {
 		return nil, err
 	}

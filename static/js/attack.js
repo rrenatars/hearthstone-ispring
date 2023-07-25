@@ -32,14 +32,14 @@ export function attack() {
                     svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
 
                     // }
-                    // opponentHeroElement.addEventListener("mouseover", function () {
-                    //     document.getElementById("innercursor").style.visibility = "visible";
-                    //     document.getElementById("outercursor").style.visibility = "visible";
-                    //     document.getElementById("innercursor").style.left = xDest + 'px';
-                    //     document.getElementById("innercursor").style.top = yDest + 'px';
-                    //     document.getElementById("outercursor").style.left = xDest + 'px';
-                    //     document.getElementById("outercursor").style.top = yDest + 'px';
-                    // });
+                    opponentHeroElement.addEventListener("mouseover", function () {
+                        document.getElementById("innercursor").style.visibility = "visible";
+                        document.getElementById("outercursor").style.visibility = "visible";
+                        document.getElementById("innercursor").style.left = xDest + 'px';
+                        document.getElementById("innercursor").style.top = yDest + 'px';
+                        document.getElementById("outercursor").style.left = xDest + 'px';
+                        document.getElementById("outercursor").style.top = yDest + 'px';
+                    });
 
                 });
 
