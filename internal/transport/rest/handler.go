@@ -81,12 +81,10 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 	})
 	router.Static("/static", "./static")
 	// Добавление middleware для аутентификации пользователя
-	protected := router.Group("/protected")
+	protected := router.Group("/protected", h.userIdentity)
 	{
-		protected.Use(h.userIdentity)
-
 		// Обработчик защищенной страницы selectHero
-		protected.GET("/menu", h.selectHero) // Изменил здесь на h.selectHero
+		protected.POST("/menu", h.selectHero) // Изменил здесь на h.selectHero
 	}
 
 	// protected GET маршрут с middleware аутентификации

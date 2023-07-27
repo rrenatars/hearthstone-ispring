@@ -1,3 +1,5 @@
+import {fetchProtectedMenu} from "./checkAccess.js";
+
 document.getElementById("signinForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
@@ -25,7 +27,8 @@ document.getElementById("signinForm").addEventListener("submit", function (event
             document.cookie = `token=${data.token}; path=/`; // Установка cookie со значением токена
 
             // Переход на другую страницу после успешного входа
-            window.location.href = "/menu"; // Укажите URL страницы, на которую хотите перенаправить пользователя после успешного входа
+            fetchProtectedMenu()
+            // window.location.href = "/protected/menu"; // Укажите URL страницы, на которую хотите перенаправить пользователя после успешного входа
         })
         .catch(error => {
             document.getElementById("errorMessage").innerText = "Sign-in failed. Please check your credentials.";
