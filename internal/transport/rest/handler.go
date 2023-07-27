@@ -40,46 +40,67 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 	router.Use(SetGameTableContext(gameTable))
 	//router.Use(SetRenderContext(htmlRender))
 
+	router.GET("/", authPage)
+
+	// auth группа маршрутов без middleware аутентификации
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
 		auth.POST("/sign-in", h.signIn)
-
-		auth.GET("/sign-up", func(c *gin.Context) {
-			ts, err := template.ParseFiles("pages/signUp.html")
-			if err != nil {
-				c.String(http.StatusInternalServerError, "Internal Server Error")
-				log.Println(err)
-				return
-			}
-			err = ts.Execute(c.Writer, 1)
-			if err != nil {
-				c.String(http.StatusInternalServerError, "Internal Server Error")
-				log.Println(err)
-				return
-			}
-		})
-		auth.GET("/sign-in", func(c *gin.Context) {
-			ts, err := template.ParseFiles("pages/signIn.html")
-			if err != nil {
-				c.String(http.StatusInternalServerError, "Internal Server Error")
-				log.Println(err)
-				return
-			}
-			err = ts.Execute(c.Writer, 1)
-			if err != nil {
-				c.String(http.StatusInternalServerError, "Internal Server Error")
-				log.Println(err)
-				return
-			}
-		})
 	}
 
-	router.GET("/", selectHero)
+	// auth GET маршруты без middleware аутентификации
+	router.GET("/auth/sign-up", func(c *gin.Context) {
+		ts, err := template.ParseFiles("pages/signUp.html")
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Internal Server Error")
+			log.Println(err)
+			return
+		}
+		err = ts.Execute(c.Writer, 1)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Internal Server Error")
+			log.Println(err)
+			return
+		}
+	})
+
+	router.GET("/auth/sign-in", func(c *gin.Context) {
+		ts, err := template.ParseFiles("pages/signIn.html")
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Internal Server Error")
+			log.Println(err)
+			return
+		}
+		err = ts.Execute(c.Writer, 1)
+		if err != nil {
+			c.String(http.StatusInternalServerError, "Internal Server Error")
+			log.Println(err)
+			return
+		}
+	})
+	router.Static("/static", "./static")
+	// Добавление middleware для аутентификации пользователя
+	protected := router.Group("/protected")
+	{
+		protected.Use(h.userIdentity)
+
+		// Обработчик защищенной страницы selectHero
+		protected.GET("/menu", h.selectHero) // Изменил здесь на h.selectHero
+	}
+
+	// protected GET маршрут с middleware аутентификации
+	protected.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "You have access to the protected endpoint!",
+		})
+	})
+
+	//router.GET("/menu", selectHero)
+	// Остальные маршруты без middleware аутентификации
 	router.GET("/ws", wsEndpoint)
 	router.GET("/arena", arena)
 	router.GET("/bot", BotHandler)
-	router.Static("/static", "./static")
 	//router.NoRoute(notFoundHandler)
 
 	err := router.Run(":3000")
@@ -99,6 +120,15 @@ func SetGameTableContext(g *models.GameTable) gin.HandlerFunc {
 	}
 }
 
+func SetUserIdContext(userId int) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if userId != 0 {
+			c.Set("userId", userId)
+		}
+		c.Next()
+	}
+}
+
 func SetRenderContext(htmlRender multitemplate.Renderer) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Set("render", htmlRender)
@@ -108,6 +138,42 @@ func SetRenderContext(htmlRender multitemplate.Renderer) gin.HandlerFunc {
 
 func notFoundHandler(c *gin.Context) {
 	c.HTML(http.StatusNotFound, "../pages/404.html", gin.H{})
+}
+
+func (h *Handler) selectHero(c *gin.Context) {
+	// Получите userId из контекста
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	// Теперь у вас есть userId и вы можете использовать его для получения имени пользователя из базы данных.
+	// Ваша логика здесь.
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Вы получили доступ к защищенной странице selectHero!",
+		"userId":  userId,
+	})
+
+	log.Println(userId, "select hero")
+
+	ts, err := template.ParseFiles("pages/selecthero.html")
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error")
+		log.Println(err)
+		return
+	}
+
+	f := 1
+	err = ts.Execute(c.Writer, f)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error")
+		log.Println(err)
+		return
+	}
+
+	log.Println("Request completed successfully : selectHero")
 }
 
 func RealClientIPMiddleware() gin.HandlerFunc {

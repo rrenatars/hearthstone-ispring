@@ -2,6 +2,7 @@ package rest
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"strings"
 
@@ -15,6 +16,7 @@ const (
 
 func (h *Handler) userIdentity(c *gin.Context) {
 	header := c.GetHeader(authorizationHeader)
+	log.Println(header, "header")
 	if header == "" {
 		newErrorResponse(c, http.StatusUnauthorized, "empty auth header")
 		return
@@ -37,10 +39,14 @@ func (h *Handler) userIdentity(c *gin.Context) {
 		return
 	}
 
+	// Установите userId в контексте
 	c.Set(userCtx, userId)
+	c.Next()
+	log.Println(c)
 }
 
 func getUserId(c *gin.Context) (int, error) {
+	log.Println(c)
 	id, ok := c.Get(userCtx)
 	if !ok {
 		return 0, errors.New("user id not found")
@@ -50,6 +56,6 @@ func getUserId(c *gin.Context) (int, error) {
 	if !ok {
 		return 0, errors.New("user id is of invalid type")
 	}
-
+	log.Println(idInt)
 	return idInt, nil
 }

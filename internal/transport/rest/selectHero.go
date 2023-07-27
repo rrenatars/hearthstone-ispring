@@ -9,6 +9,15 @@ import (
 )
 
 func selectHero(c *gin.Context) {
+	//// Получите userId из контекста
+	//userId, err := getUserId(c)
+	//if err != nil {
+	//	newErrorResponse(c, http.StatusInternalServerError, err.Error())
+	//	return
+	//}
+	//
+	//log.Println(userId, "select hero")
+
 	ts, err := template.ParseFiles("pages/selecthero.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -25,4 +34,15 @@ func selectHero(c *gin.Context) {
 	}
 
 	log.Println("Request completed successfully : selectHero")
+}
+
+func selectHeroPost(c *gin.Context) {
+	// Получите userId из контекста
+	userId, err := getUserId(c)
+	if err != nil {
+		newErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	log.Println(userId, "select hero")
 }
