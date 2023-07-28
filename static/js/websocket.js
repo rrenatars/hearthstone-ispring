@@ -1,10 +1,10 @@
-import { CardData, GameTable, Player } from "./models.js";
+import {CardData, GameTable, Player} from "./models.js";
 
-import { game, setGame, stateMachine } from "./game.js"
-import { ViewCards } from "./view.js";
+import {game, setGame} from "./game.js"
+import {ViewCards} from "./view.js";
 
-import { dragNDrop } from "./dragndrop.js";
-import { manabarFilling } from "./manabarFilling.js";
+import {dragNDrop} from "./dragndrop.js";
+import {manabarFilling} from "./manabarFilling.js";
 import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
@@ -32,6 +32,7 @@ function selectCardsToExchange() {
         });
     });
 }
+
 function Lose() {
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
@@ -58,6 +59,7 @@ function Lose() {
     endbg.style.backgroundColor = "#666666";
     endbg.style.opacity = "0.95";
 }
+
 function Victory() {
     const winImage = document.getElementById('winimg');
     const endbg = document.getElementById('endbg');
@@ -191,12 +193,12 @@ function afterStart() {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
-                        }, { once: true });
+                        }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
-                        }, { once: true });
+                        }, {once: true});
                         break;
                     case 'Warlock':
                         heroHealthElement.textContent -= 2;
@@ -232,12 +234,12 @@ function afterStart() {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
                                 heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
-                        }, { once: true });
+                        }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
                                 opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
-                        }, { once: true });
+                        }, {once: true});
                         break;
                 }
 
@@ -253,7 +255,7 @@ export function socketInit() {
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
-        const { type, data } = JSON.parse(event.data);
+        const {type, data} = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
 
         ViewCards(game.player1.cards, "background__field", "field__card")
@@ -266,8 +268,8 @@ export function socketInit() {
             i++
             if (i <= attackCardsLength) {
                 e.classList.add("canAttack")
-            // for (let i = 0; i <= attackCardsLength; i++) {
-            //     e.classList.add("canAttack")
+                // for (let i = 0; i <= attackCardsLength; i++) {
+                //     e.classList.add("canAttack")
             }
         });
 

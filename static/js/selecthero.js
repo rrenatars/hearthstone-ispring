@@ -12,6 +12,8 @@ function handleGameModeChange() {
     }
 }
 
+console.log(localStorage.getItem('id'))
+
 function submitForm(event) {
     event.preventDefault();
 

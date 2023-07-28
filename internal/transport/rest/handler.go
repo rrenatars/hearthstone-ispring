@@ -83,8 +83,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 	// Добавление middleware для аутентификации пользователя
 	protected := router.Group("/protected", h.userIdentity)
 	{
-		// Обработчик защищенной страницы selectHero
-		protected.POST("/menu", h.selectHero) // Изменил здесь на h.selectHero
+
 	}
 
 	// protected GET маршрут с middleware аутентификации
@@ -94,7 +93,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 		})
 	})
 
-	//router.GET("/menu", selectHero)
+	router.GET("/menu", h.selectHero)
 	// Остальные маршруты без middleware аутентификации
 	router.GET("/ws", wsEndpoint)
 	router.GET("/arena", arena)
@@ -139,23 +138,6 @@ func notFoundHandler(c *gin.Context) {
 }
 
 func (h *Handler) selectHero(c *gin.Context) {
-	// Получите userId из контекста
-	userId, err := getUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	// Теперь у вас есть userId и вы можете использовать его для получения имени пользователя из базы данных.
-	// Ваша логика здесь.
-
-	c.JSON(http.StatusOK, gin.H{
-		"message": "Вы получили доступ к защищенной странице selectHero!",
-		"userId":  userId,
-	})
-
-	log.Println(userId, "select hero")
-
 	ts, err := template.ParseFiles("pages/selecthero.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
@@ -163,15 +145,15 @@ func (h *Handler) selectHero(c *gin.Context) {
 		return
 	}
 
-	f := 1
-	err = ts.Execute(c.Writer, f)
+	// Передайте userId в шаблон
+	err = ts.Execute(c.Writer, gin.H{})
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)
 		return
 	}
 
-	log.Println("Request completed successfully : selectHero")
+	log.Println("Request completed successfully: selectHero")
 }
 
 func RealClientIPMiddleware() gin.HandlerFunc {
