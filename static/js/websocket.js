@@ -4,7 +4,7 @@ import {game, setGame} from "./game.js"
 import {ViewCards} from "./view.js";
 
 import {dragNDrop} from "./dragndrop.js";
-import {manabarFilling} from "./manabarFilling.js";
+import {manabarFilling} from "./manabar-filling.js";
 import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
@@ -36,7 +36,7 @@ function selectCardsToExchange() {
 function Lose() {
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
-    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
+    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-lose-game.png)";
     loseImage.style.width = "863px";
     loseImage.style.height = "818px";
     loseImage.style.zIndex = 9999;
@@ -63,7 +63,7 @@ function Lose() {
 function Victory() {
     const winImage = document.getElementById('winimg');
     const endbg = document.getElementById('endbg');
-    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-win-game.png)";
     winImage.style.width = "793px";
     winImage.style.height = "704px";
     winImage.style.zIndex = 9999;
@@ -93,7 +93,7 @@ function startBefore() {
     const selectedHeroElement = document.getElementById('selectedHero');
     selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
     const selectedHeroPowerElement = document.getElementById('heropower');
-    selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+    selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '-power.png)';
     const heroHealthElement = document.getElementById('Player1HealthValue');
 
     const hand = document.querySelector('.hand-and-manabar__hand')
@@ -176,33 +176,33 @@ function afterStart() {
         const selectedHeroElement = document.getElementById('selectedHero');
         selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
         const selectedHeroPowerElement = document.getElementById('heropower');
-        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + 'power.png)';
+        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '-power.png)';
         const heroHealthElement = document.getElementById('Player1HealthValue');
         const opponentHeroElement = document.getElementById('opponenthero');
         const opponentheroHealthElement = document.getElementById('Player2HealthValue');
         selectedHeroPowerElement.addEventListener("click", function () {
-            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
                     case 'Hunter':
                         opponentheroHealthElement.textContent -= 2;
-                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         if (opponentheroHealthElement.textContent <= 0) Victory()
                         break;
                     case 'Mage':
                         selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         break;
                     case 'Warlock':
                         heroHealthElement.textContent -= 2;
-                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         // const dataToSend = {
                         //     type: "card drag",
                         //     data: {}
@@ -227,18 +227,18 @@ function afterStart() {
                         recruit.appendChild(hpElement)
                         const cardPlayer1 = document.getElementById('background__field');
                         cardPlayer1.appendChild(recruit);
-                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                        selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         break;
                     case 'Priest':
                         selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + 'power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/usedpower.png)';
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         break;
                 }
@@ -311,7 +311,7 @@ export function socketInit() {
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
+                    endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
                     attackCardsLength = game.player1.cards.length
 

@@ -41,10 +41,10 @@ export function ViewCards(cards, parentId, childClassName) {
             const attackElement = document.createElement('span')
             attackElement.className = "card__attack"
             newCardElement.setAttribute("data-specification", cardInHand.specification)
-            if ((cardInHand.specification === "provocation") && (parentId != "cards")) {
-                attackElement.classList.add("card__attack_provocation")
-            } else if ((cardInHand.specification === "poison") && (parentId != "cards")) {
-                attackElement.classList.add("card__attack_poison")
+            if ((cardInHand.specification === "taunt") && (parentId != "cards")) {
+                attackElement.classList.add("card__attack_taunt")
+            } else if ((cardInHand.specification === "poisonous") && (parentId != "cards")) {
+                attackElement.classList.add("card__attack_poisonous")
             }
 
             attackElement.style.display = "inline-block"
@@ -54,10 +54,10 @@ export function ViewCards(cards, parentId, childClassName) {
             const hpElement = document.createElement('span')
             hpElement.className = "card__hp"
             newCardElement.setAttribute("data-specification", cardInHand.specification)
-            if ((cardInHand.specification === "provocation") && (parentId != "cards")) {
-                hpElement.classList.add("card__hp_provocation")
-            } else if ((cardInHand.specification === "poison") && (parentId != "cards")) {
-                hpElement.classList.add("card__hp_poison")
+            if ((cardInHand.specification === "taunt") && (parentId != "cards")) {
+                hpElement.classList.add("card__hp_taunt")
+            } else if ((cardInHand.specification === "poisonous") && (parentId != "cards")) {
+                hpElement.classList.add("card__hp_poisonous")
             }
             hpElement.style.display = "inline-block"
             hpElement.textContent = cardInHand.hp

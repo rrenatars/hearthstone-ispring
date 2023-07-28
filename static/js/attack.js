@@ -11,7 +11,8 @@ export function attack() {
     fightCards.forEach(function (e) {
         if (e.classList.contains('canAttack')) {
             e.style.zIndex = 10000;
-
+            let newbg  = 'url("../../static/images/creatures-attack/' + e.style.backgroundImage.slice(35);
+            e.style.backgroundImage = newbg;
             e.addEventListener("mousedown", function () {
                 var svgField = document.getElementById('svg');
                 var xOrigin = e.offsetLeft + e.offsetWidth / 2;
@@ -49,6 +50,10 @@ export function attack() {
                     document.getElementById("arrowcursor").style.visibility = "hidden";
                     document.getElementById("innercursor").style.visibility = "hidden";
                     document.getElementById("outercursor").style.visibility = "hidden";
+                    if (e.classList.contains('canAttack')) {
+                        let newbg = 'url("../../static/images/creatures/' + e.style.backgroundImage.slice(42);
+                        e.style.backgroundImage = newbg;
+                    }
                     e.classList.remove('canAttack');
                     e.style.removeProperty("zIndex")
                 });
@@ -69,6 +74,10 @@ export function attack() {
                     document.getElementById("arrowcursor").style.visibility = "hidden";
                     document.getElementById("innercursor").style.visibility = "hidden";
                     document.getElementById("outercursor").style.visibility = "hidden";
+                    if (e.classList.contains('canAttack')) {
+                        let newbg = 'url("../../static/images/creatures/' + e.style.backgroundImage.slice(42);
+                        e.style.backgroundImage = newbg;
+                    }
                     e.classList.remove('canAttack');
                     e.style.removeProperty("zIndex");
                     e.classList.remove("activeCard");
@@ -103,6 +112,10 @@ export function attack() {
                         document.getElementById("arrowcursor").style.visibility = "hidden";
                         document.getElementById("innercursor").style.visibility = "hidden";
                         document.getElementById("outercursor").style.visibility = "hidden";
+                        if (e.classList.contains('canAttack')) {
+                            let newbg = 'url("../../static/images/creatures/' + e.style.backgroundImage.slice(42);
+                            e.style.backgroundImage = newbg;
+                        }
                         e.classList.remove('canAttack');
                         e.style.removeProperty("zIndex");
                         e3.classList.remove("activeTarget");
@@ -112,10 +125,6 @@ export function attack() {
                 });
 
             }, { once: true })
-
-
-
-
         }
     })
 }
@@ -125,7 +134,7 @@ function Lose() {
     const heroClass = urlParams.get('heroclass');
     const loseImage = document.getElementById('loseimg');
     const endbg = document.getElementById('endbg');
-    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
+    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-lose-game.png)";
     loseImage.style.width = "863px";
     loseImage.style.height = "818px";
     loseImage.style.zIndex = 9999;
@@ -153,7 +162,7 @@ function Victory() {
     const heroClass = urlParams.get('heroclass');
     const winImage = document.getElementById('winimg');
     const endbg = document.getElementById('endbg');
-    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
+    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-win-game.png)";
     winImage.style.width = "793px";
     winImage.style.height = "704px";
     winImage.style.zIndex = 9999;

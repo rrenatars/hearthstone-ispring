@@ -9,7 +9,7 @@ import (
 )
 
 func selectHero(c *gin.Context) {
-	ts, err := template.ParseFiles("pages/selecthero.html")
+	ts, err := template.ParseFiles("pages/select-hero.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)

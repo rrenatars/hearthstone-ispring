@@ -1,5 +1,5 @@
 import { attack } from "./attack.js";
-import { manabarFilling } from "./manabarFilling.js";
+import { manabarFilling } from "./manabar-filling.js";
 import { game } from "./game.js";
 import { socket } from "./websocket.js";
 

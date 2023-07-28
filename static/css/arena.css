@@ -234,13 +234,13 @@
     user-select: none;
 }
 
-.card__attack_provocation
+.card__attack_taunt
 {
     margin-bottom: 28%;
     margin-right: 37%;
 }
 
-.card__attack_poison
+.card__attack_poisonous
 {
     margin-bottom: 23%;
     margin-right: 46%;
@@ -262,13 +262,13 @@
     user-select: none;
 }
 
-.card__hp_provocation
+.card__hp_taunt
 {
     margin-bottom: 28%;
     margin-right: 16%;
 }
 
-.card__hp_poison
+.card__hp_poisonous
 {
     margin-bottom: 22%;
     margin-right: 14%;
@@ -299,7 +299,7 @@ button:active {
     left: 45.55%;
     top: 9.75%;
     z-index: 11;
-    background-image: url(../images/field/medivh.gif);
+    background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
     user-select: none;
@@ -312,7 +312,7 @@ button:active {
     left: 45.05%;
     top: 67.45%;
     z-index: 2;
-    background-image: url(../images/field/Mage.png);
+    background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -365,7 +365,7 @@ button:active {
     top: 70.5%;
     left: 54%;
     z-index: 2;
-    background-image: url(../images/field/playerpower.png);
+    background-image: url(../images/field/mage-power.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -379,7 +379,7 @@ button:active {
     user-select: none;
     font-size: 16px;
     font-weight: bold;
-    background: url(../images/field/endturn1.png);
+    background: url(../images/field/end-turn1.png);
     background-repeat: no-repeat;
     background-size: contain;
     font-family: BelweBdBTBold;
@@ -432,7 +432,7 @@ button:active {
 .enemycard:before {
     content: '';
     position: absolute;
-    background-image: url(../images/field/cardBackSide.png);
+    background-image: url(../images/field/card-back-side.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 70px;

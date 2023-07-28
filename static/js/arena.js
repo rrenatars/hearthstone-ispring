@@ -1,7 +1,7 @@
 import { socket } from "./websocket.js";
 import { socketInit } from "./websocket.js";
 
-import { enemyTurnRun } from "./enemyTurn.js";
+import { enemyTurnRun } from "./enemy-turn.js";
 import { dragNDrop } from "./dragndrop.js";
 
 enemyTurnRun()

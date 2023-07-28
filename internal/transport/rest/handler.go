@@ -60,7 +60,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 
 	// auth GET маршруты без middleware аутентификации
 	router.GET("/auth/sign-up", func(c *gin.Context) {
-		ts, err := template.ParseFiles("pages/signUp.html")
+		ts, err := template.ParseFiles("pages/sign-up.html")
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Internal Server Error")
 			log.Println(err)
@@ -75,7 +75,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 	})
 
 	router.GET("/auth/sign-in", func(c *gin.Context) {
-		ts, err := template.ParseFiles("pages/signIn.html")
+		ts, err := template.ParseFiles("pages/sign-in.html")
 		if err != nil {
 			c.String(http.StatusInternalServerError, "Internal Server Error")
 			log.Println(err)
@@ -147,7 +147,7 @@ func notFoundHandler(c *gin.Context) {
 }
 
 func (h *Handler) selectHero(c *gin.Context) {
-	ts, err := template.ParseFiles("pages/selecthero.html")
+	ts, err := template.ParseFiles("pages/select-hero.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)
