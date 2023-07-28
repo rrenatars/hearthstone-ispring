@@ -16,39 +16,13 @@ func selectHero(c *gin.Context) {
 		return
 	}
 
-	data := struct {
-		F int
-		//UserId int
-	}{
-		F: 1,
-		//UserId: userId,
-	}
-
-	err = ts.Execute(c.Writer, data)
+	f := 1
+	err = ts.Execute(c.Writer, f)
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)
 		return
 	}
 
-	userId, err := getUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	log.Println(userId, "select hero")
-
 	log.Println("Request completed successfully : selectHero")
-}
-
-func selectHeroPost(c *gin.Context) {
-	// Получите userId из контекста
-	userId, err := getUserId(c)
-	if err != nil {
-		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-		return
-	}
-
-	log.Println(userId, "select hero")
 }

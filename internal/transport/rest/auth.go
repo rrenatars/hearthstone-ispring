@@ -1,16 +1,17 @@
 package rest
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
-	"net/http"
 )
 
 func (h *Handler) signUp(c *gin.Context) {
 	var input models.User
 
 	if err := c.BindJSON(&input); err != nil {
-		newErrorResponse(c, http.StatusBadRequest, err.Error())
+		newErrorResponse(c, http.StatusBadRequest, "invalid input body")
 		return
 	}
 
@@ -23,6 +24,7 @@ func (h *Handler) signUp(c *gin.Context) {
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"id": id,
 	})
+
 }
 
 type signInInput struct {

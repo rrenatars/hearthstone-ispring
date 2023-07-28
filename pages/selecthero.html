@@ -11,7 +11,7 @@
 <script src="../static/js/logOut.js" type="module"></script>
 <button id="openLogOutPageButton">LogOut</button>
 <h1>Выберите настройки Hearthstone</h1>
-<form id="GameForm" onsubmit="submitForm(event)">
+<form id="GameForm">
     <label for="gamemode">Режим игры:</label>
     <select id="gamemode" name="gamemode" onchange="handleGameModeChange()" class="animated-select">
         <option value="singleplayer">Одиночная игра</option>
@@ -40,6 +40,7 @@
     </select>
     <button type="submit">Отправить</button>
 </form>
-<script src="../static/js/selecthero.js"></script>
+<script src="../static/js/websocket.js" type="module"></script>
+<script src="../static/js/selecthero.js" type="module"></script>
 </body>
 </html>

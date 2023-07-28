@@ -14,6 +14,7 @@ document.getElementById("signupForm").addEventListener("submit",
             .then(data => {
                 // Handle the response from the backend (e.g., show a success message or redirect to a new page)
                 console.log("User registered successfully:", data);
+                localStorage.setItem('id', data.id);
                 window.location.href = "/auth/sign-in"
             })
             .catch(error => {

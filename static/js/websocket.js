@@ -247,20 +247,40 @@ function afterStart() {
     }
 }
 
-export const socket = new WebSocket("ws://localhost:3000/ws");
+let url = new URL(window.location.href)
+var room = url.searchParams.get("room")
+
+if(room === "" || room === null) {
+    // room = localStorage.getItem("room")
+    room = "default"
+} else {
+    console.log(room)
+    // localStorage.setItem("room", room)
+}
+let clientId = localStorage.getItem('id')
+if (clientId == undefined || clientId == null) {
+    clientId = 0
+}
+
+export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
 
 export function socketInit() {
     let attackCardsLength = 0;
-
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
-        const {type, data} = JSON.parse(event.data);
+        const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
-
-        ViewCards(game.player1.cards, "background__field", "field__card")
-        ViewCards(game.player1.hand, "cards", "cards__card");
-        ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+        if(clientId == game.player1.name) {
+            ViewCards(game.player1.cards, "background__field", "field__card")
+            ViewCards(game.player1.hand, "cards", "cards__card");
+            ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+        }
+        else {
+            ViewCards(game.player2.cards, "background__field", "field__card")
+            ViewCards(game.player2.hand, "cards", "cards__card");
+            ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
+        }
 
         let i = 0;
 
@@ -268,8 +288,6 @@ export function socketInit() {
             i++
             if (i <= attackCardsLength) {
                 e.classList.add("canAttack")
-                // for (let i = 0; i <= attackCardsLength; i++) {
-                //     e.classList.add("canAttack")
             }
         });
 
@@ -307,7 +325,13 @@ export function socketInit() {
                     //socket.send("end turn")
                 }
                 break
+            case "take a game":
+                dragNDrop()
+                attack()
+                console.log(type, game)
+                break
             default:
+                console.log("undefined type",type)
                 break;
         }
     };
@@ -325,7 +349,7 @@ export function socketInit() {
     };
 }
 
-function ParseDataToGameTable(data) {
+export function ParseDataToGameTable(data) {
     return new GameTable(
         ParseDataToPlayer(data.Player1),
         ParseDataToPlayer(data.Player2),

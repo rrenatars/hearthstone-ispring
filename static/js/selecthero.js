@@ -1,18 +1,6 @@
-function handleGameModeChange() {
-    const heroClassSelect = document.getElementById('heroclass');
-    const gameModeSelect = document.getElementById('gamemode');
-    const difficultyDiv = document.getElementById('difficulty');
-    const difficultyLabel = document.querySelector('#difficulties label');
-    if (gameModeSelect.value === 'singleplayer') {
-        difficultyLabel.style.visibility = 'visible';
-        difficultyDiv.style.display = 'block';
-    } else {
-        difficultyDiv.style.display = 'none';
-        difficultyLabel.style.visibility = 'hidden';
-    }
-}
-
-console.log(localStorage.getItem('id'))
+import { socket, socketInit, ParseDataToGameTable } from "./websocket.js";
+import { game, setGame, stateMachine } from "./game.js"
+socketInit()
 
 function submitForm(event) {
     event.preventDefault();
@@ -30,6 +18,73 @@ function submitForm(event) {
     } else {
         url = 'multiplayer?heroclass=' + encodeURIComponent(heroClass);
     }
+    console.log(localStorage.getItem('id'))
+    socket.send(JSON.stringify({
+        type: "create game",
+        data : {
+            clientID: localStorage.getItem('id')
+        }
+    }))
 
-    window.location.href = url;
+    socket.onmessage = event =>{
+        const data = JSON.parse(event.data);
+
+        console.log(data.Type);
+        console.log(data.Data.RoomID);
+        console.log(data.Data.Game);
+        // console.log(e.data,'\n', idRoom)
+        url += "&room="+ data.Data.RoomID
+        console.log(url)
+        setGame(ParseDataToGameTable(data.Data.Game))
+        window.location.href = url;
+    }
+}
+
+document.getElementById("GameForm").addEventListener("submit", function(e){
+    submitForm(e)
+})
+
+document.getElementById("openSignInPageButton").addEventListener("click",
+    function() {
+        window.location.href = "/auth/sign-in"
+        // Perform the GET request when the button is clicked
+        fetch("/auth/sign-in", {
+            method: "GET"
+        })
+            .then(response => response.text())
+            .then(data => {
+                // Redirect to the response URL
+                window.location.href = data;
+            })
+            .catch(error => console.error("Error:", error));
+    });
+
+document.getElementById("openSignUpPageButton").addEventListener("click",
+    function() {
+        window.location.href = "/auth/sign-up"
+        // Perform the GET request when the button is clicked
+        fetch("/auth/sign-up", {
+            method: "GET"
+        })
+            .then(response => response.text())
+            .then(data => {
+                // Redirect to the response URL
+                window.location.href = data;
+            })
+            .catch(error => console.error("Error:", error));
+    });
+
+// socketInit()
+function handleGameModeChange() {
+    const heroClassSelect = document.getElementById('heroclass');
+    const gameModeSelect = document.getElementById('gamemode');
+    const difficultyDiv = document.getElementById('difficulty');
+    const difficultyLabel = document.querySelector('#difficulties label');
+    if (gameModeSelect.value === 'singleplayer') {
+        difficultyLabel.style.visibility = 'visible';
+        difficultyDiv.style.display = 'block';
+    } else {
+        difficultyDiv.style.display = 'none';
+        difficultyLabel.style.visibility = 'hidden';
+    }
 }

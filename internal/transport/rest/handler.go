@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"github.com/rrenatars/hearthstone-ispring/internal/transport/server"
 	"log"
 	"net/http"
 	"strings"
@@ -28,7 +29,15 @@ func NewHandler(services *services.Service) *Handler {
 	return &Handler{services: services, upgrader: upgrader}
 }
 
+func ginWsServe(hub *server.Hub) gin.HandlerFunc {
+	return gin.HandlerFunc(func(c *gin.Context) {
+		server.ServeWs(hub, c.Writer, c.Request)
+	})
+}
+
 func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
+	hub := server.NewHub()
+	go hub.Run()
 	router := gin.New()
 
 	// htmlRender := multitemplate.NewRenderer()
@@ -95,7 +104,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 
 	router.GET("/menu", h.selectHero)
 	// Остальные маршруты без middleware аутентификации
-	router.GET("/ws", wsEndpoint)
+	router.GET("/ws", ginWsServe(hub))
 	router.GET("/arena", arena)
 	router.GET("/bot", BotHandler)
 	//router.NoRoute(notFoundHandler)
