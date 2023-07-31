@@ -1,11 +1,12 @@
 package rest
 
 import (
-	"github.com/rrenatars/hearthstone-ispring/internal/transport/server"
 	"log"
 	"net/http"
 	"strings"
 	"text/template"
+
+	"github.com/rrenatars/hearthstone-ispring/internal/transport/server"
 
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -102,7 +103,7 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 		})
 	})
 
-	router.GET("/menu", h.selectHero)
+	router.GET("/menu", h.menu)
 	// Остальные маршруты без middleware аутентификации
 	router.GET("/ws", ginWsServe(hub))
 	router.GET("/arena", arena)
@@ -146,8 +147,8 @@ func notFoundHandler(c *gin.Context) {
 	c.HTML(http.StatusNotFound, "../pages/404.html", gin.H{})
 }
 
-func (h *Handler) selectHero(c *gin.Context) {
-	ts, err := template.ParseFiles("pages/select-hero.html")
+func (h *Handler) menu(c *gin.Context) {
+	ts, err := template.ParseFiles("pages/menu.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)
@@ -162,7 +163,7 @@ func (h *Handler) selectHero(c *gin.Context) {
 		return
 	}
 
-	log.Println("Request completed successfully: selectHero")
+	log.Println("Request completed successfully: menu")
 }
 
 func RealClientIPMiddleware() gin.HandlerFunc {

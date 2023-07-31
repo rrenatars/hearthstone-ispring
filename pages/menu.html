@@ -1,34 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
-    <title>Menu</title>
-    <link href="../static/css/menu.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>menu</title>
+    <link rel="stylesheet" href="../static/css/menu.css">
 </head>
 
 <body>
-    <div class="main">
-        <div class="main__modes">
-            <a href="arena">
-                <div class="modes__mode">
-                    <div class="mode__content">
-                        Single Player
-                    </div>
-                </div>
-            </a>
-            <div class="modes__mode">
-                <div class="mode__content">
-                    <a href="#">Multi Player</a>
-                </div>
-            </div>
-            <div class="modes__mode">
-                <div class="mode__content">
-                    <a href="#">Выберите персонажа</a>
-                </div>
+    <div class="menu__bg" id = "black-bg">
+        <div class="menu__img" id = "bg">
+            <div class="buttons-place" id = "buttons">
+                <div class="button" id="select-game-mode">Режимы</div>
+                <div class="button" id='select-bot-difficulty'>Сложность бота</div>
+                <div class="button" id='select-class'>Класс персонажа</div>
+                <div class="button" id='start-game'>Начать игру</div>
             </div>
         </div>
     </div>
+    <script src="../static/js/websocket.js" type="module"></script>
+    <script src="../static/js/menu.js" type="module"></script>
 </body>
 
 </html>

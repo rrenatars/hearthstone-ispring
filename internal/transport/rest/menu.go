@@ -8,8 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func selectHero(c *gin.Context) {
-	ts, err := template.ParseFiles("pages/select-hero.html")
+func menu(c *gin.Context) {
+	ts, err := template.ParseFiles("pages/menu.html")
 	if err != nil {
 		c.String(http.StatusInternalServerError, "Internal Server Error")
 		log.Println(err)
@@ -24,5 +24,5 @@ func selectHero(c *gin.Context) {
 		return
 	}
 
-	log.Println("Request completed successfully : selectHero")
+	log.Println("Request completed successfully : menu")
 }
