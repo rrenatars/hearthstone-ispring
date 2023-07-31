@@ -35,7 +35,7 @@ type Client struct {
 	hub  *Hub
 	room *Room
 	conn *websocket.Conn
-	send chan string
+	send chan []byte
 	mu   sync.Mutex
 }
 
@@ -45,7 +45,7 @@ func newClient(i string, h *Hub, r *Room, c *websocket.Conn) *Client {
 		hub:  h,
 		room: r,
 		conn: c,
-		send: make(chan string),
+		send: make(chan []byte),
 	}
 }
 
@@ -107,7 +107,7 @@ func (c *Client) writePump() {
 				log.Print("error write message conn")
 				return
 			}
-			if err := c.conn.WriteJSON(message); err != nil {
+			if err := c.conn.WriteMessage(1, message); err != nil {
 				log.Println("msg send err:", err.Error())
 			}
 			log.Println("send a message")

@@ -28,15 +28,14 @@ function submitForm(event) {
 
     socket.onmessage = event =>{
         const data = JSON.parse(event.data);
+        console.log(data.type);  
+        console.log(data.data);
 
-        console.log(data.Type);
-        console.log(data.Data.RoomID);
-        console.log(data.Data.Game);
-        // console.log(e.data,'\n', idRoom)
-        url += "&room="+ data.Data.RoomID
+        setGame(ParseDataToGameTable(data.data))
+        url += "&room="+ game.id
         console.log(url)
-        setGame(ParseDataToGameTable(data.Data.Game))
-        window.location.href = url;
+        
+       window.location.href = url;
     }
 }
 

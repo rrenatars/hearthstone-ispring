@@ -26,13 +26,13 @@ func GetRandomElementsFromDeck(arr []models.CardData, numElements int) []models.
 	return result
 }
 
-func CreateNewGameTable() *models.GameTable {
+func CreateNewGameTable(id_ string) *models.GameTable {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:         "localhost",
 		Port:         "3306",
-		Username:     "rrenatessa",
+		Username:     "root",
 		DBName:       "hearthstone",
-		Password:     "sqlwebpassdata",
+		Password:     "password",
 		DbDriverName: "mysql",
 	})
 	if err != nil {
@@ -48,5 +48,5 @@ func CreateNewGameTable() *models.GameTable {
 	pl1 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, true, 100, 100)
 	pl2 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 100, 100)
 
-	return models.NewGameTable(pl1, pl2, []models.CardData{})
+	return models.NewGameTable(pl1, pl2, []models.CardData{}, id_)
 }

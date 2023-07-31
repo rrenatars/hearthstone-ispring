@@ -1,7 +1,6 @@
 package server
 
 import (
-	"log"
 	"sync"
 
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
@@ -12,7 +11,7 @@ type Hub struct {
 	rooms          map[string]*Room
 	clients        map[string]*Client
 	clientsHistory map[string]bool
-	broadcast      chan string
+	broadcast      chan []byte
 	register       chan *Client
 	unregister     chan *Client
 	mu             sync.Mutex
@@ -21,7 +20,7 @@ type Hub struct {
 func NewHub() *Hub {
 	return &Hub{
 		rooms:          make(map[string]*Room),
-		broadcast:      make(chan string),
+		broadcast:      make(chan []byte),
 		register:       make(chan *Client),
 		unregister:     make(chan *Client),
 		clients:        make(map[string]*Client),
@@ -50,19 +49,19 @@ func (h *Hub) getClientByID(clientID string) *Client {
 	return getClientByID(clientID, h.clients)
 }
 
-func (h *Hub) TextEveryone(message string) {
+func (h *Hub) TextEveryone(message []byte) {
 	h.mu.Lock()
 	defer h.mu.Unlock()
 
-	for roomID, room := range h.rooms {
-		select {
-		case room.send <- message:
-			log.Println("room : ", message)
-		default:
-			close(room.send)
-			delete(h.rooms, roomID)
-		}
-	}
+	// for roomID, room := range h.rooms {
+	// 	select {
+	// 	case room.broadcast <- message:
+	// 		log.Println("room : ", message)
+	// 	default:
+	// 		close(room.broadcast)
+	// 		delete(h.rooms, roomID)
+	// 	}
+	// }
 	sortOutClients(message, h.clients)
 }
 
@@ -104,7 +103,7 @@ func (hub *Hub) createRoom(name string) *Room {
 	defer hub.mu.Unlock()
 
 	if _, exists := hub.rooms[name]; !exists {
-		room := newRoom(name, tools.CreateNewGameTable())
+		room := newRoom(name, tools.CreateNewGameTable(name))
 		hub.rooms[name] = room
 		return room
 	}

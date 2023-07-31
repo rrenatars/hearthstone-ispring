@@ -15,27 +15,47 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 	switch msgReq.Type {
 	case "create game":
 		createGame(msgReq, c)
+		err := c.conn.WriteJSON(models.MessageResponse{
+			Type: "take room id",
+			Data: *c.room.game,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		// c.room.broadcast <- jsonData
 	case "give me a game":
 		giveMeGame(c)
 	case "exchange cards":
 		exchangeCards(msgReq, c)
-		c.conn.WriteJSON(models.MessageResponse{
+		jsonData, err := json.Marshal(models.MessageResponse{
 			Type: "exchange cards",
 			Data: *c.room.game,
 		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	case "end turn":
 		serverservices.EndTurn(c.room.game)
-		c.conn.WriteJSON(models.MessageResponse{
+		jsonData, err := json.Marshal(models.MessageResponse{
 			Type: "turn",
 			Data: *c.room.game,
 		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	case "card drag":
 		log.Println("hello card drag")
 		cardDrag(&msgReq, c)
-		c.conn.WriteJSON(models.MessageResponse{
+		jsonData, err := json.Marshal(models.MessageResponse{
 			Type: "card drag",
 			Data: *c.room.game,
 		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	default:
 		log.Println("unkown msgReq type: ", msgReq.Type)
 	}
@@ -85,7 +105,7 @@ func ConnectToRoom(c *Client) bool {
 		if len(r.clients) < 2 && r.id != "default" {
 			c.room = r
 
-			sendCreateGameResponse(c)
+			//sendCreateGameResponse(c)
 
 			log.Println("connect room roomID: ", r.id)
 			return true
@@ -95,7 +115,8 @@ func ConnectToRoom(c *Client) bool {
 }
 
 func CreateNewRoom(c *Client) {
-	roomPtr := newRoom(uuid.New().String(), tools.CreateNewGameTable())
+	id := uuid.New().String()
+	roomPtr := newRoom(id, tools.CreateNewGameTable(id))
 
 	if roomPtr.game.Player1.Name == "name" {
 		roomPtr.game.Player1.Name = c.id
@@ -106,9 +127,9 @@ func CreateNewRoom(c *Client) {
 	c.room = roomPtr
 	c.hub.rooms[roomPtr.id] = roomPtr
 
-	sendCreateGameResponse(c)
+	//sendCreateGameResponse(c)
 
-	log.Println("create room roomID: ", roomPtr.id)
+	log.Println("create room roomID: ", roomPtr.game.Id)
 }
 
 func sendCreateGameResponse(c *Client) {

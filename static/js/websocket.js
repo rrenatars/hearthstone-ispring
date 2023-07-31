@@ -354,6 +354,8 @@ export function ParseDataToGameTable(data) {
         ParseDataToPlayer(data.Player1),
         ParseDataToPlayer(data.Player2),
         ParseDataToCards(data.History),
+        data.Id,
+
     )
 }
 

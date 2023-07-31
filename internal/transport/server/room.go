@@ -7,11 +7,11 @@ import (
 )
 
 type Room struct {
-	id             string
-	register       chan *Client
-	unregister     chan *Client
-	broadcast      chan string
-	send           chan string
+	id         string
+	register   chan *Client
+	unregister chan *Client
+	broadcast  chan []byte
+	// send           chan string
 	clients        map[string]*Client
 	clientsHistory map[string]bool
 	game           *models.GameTable
@@ -20,11 +20,11 @@ type Room struct {
 
 func newRoom(name string, g *models.GameTable) *Room {
 	return &Room{
-		id:             name,
-		register:       make(chan *Client),
-		unregister:     make(chan *Client),
-		broadcast:      make(chan string),
-		send:           make(chan string),
+		id:         name,
+		register:   make(chan *Client),
+		unregister: make(chan *Client),
+		broadcast:  make(chan []byte),
+		// send:           make(chan string),
 		clients:        make(map[string]*Client),
 		clientsHistory: make(map[string]bool),
 		game:           g,
@@ -52,7 +52,7 @@ func (r *Room) getClientByID(clientID string) *Client {
 	return getClientByID(clientID, r.clients)
 }
 
-func (r *Room) TextEveryone(message string) {
+func (r *Room) textEveryone(message []byte) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -67,7 +67,7 @@ func (r *Room) run() {
 		case client := <-r.unregister:
 			r.unregisterClient(client)
 		case message := <-r.broadcast:
-			r.TextEveryone(message)
+			r.textEveryone(message)
 		}
 	}
 }

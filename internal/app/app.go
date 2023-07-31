@@ -18,10 +18,10 @@ func Run() {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:     "localhost",
 		Port:     "3306",
-		Username: "rrenatessa",
+		Username: "root",
 		DBName:   "hearthstone",
 		//SSLMode:  viper.GetString("db.sslmode"),
-		Password:     "sqlwebpassdata",
+		Password:     "password",
 		DbDriverName: "mysql",
 	})
 
@@ -42,7 +42,7 @@ func Run() {
 
 	pl1 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, true, 100, 100)
 	pl2 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 100, 100)
-	gameTable := models.NewGameTable(pl1, pl2, []models.CardData{})
+	gameTable := models.NewGameTable(pl1, pl2, []models.CardData{}, "")
 
 	var games []Game
 

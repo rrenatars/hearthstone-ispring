@@ -18,10 +18,10 @@ func deleteClientFromMap(client *Client, clients map[string]*Client, clientsHist
 	log.Println("::client unregisttrate")
 }
 
-func sortOutClients(message string, clients map[string]*Client) {
+func sortOutClients(message []byte, clients map[string]*Client) {
 	for clientID, client := range clients {
 		select {
-		case client.send <- string(message):
+		case client.send <- message:
 			log.Println("client : ", message)
 		default:
 			close(client.send)

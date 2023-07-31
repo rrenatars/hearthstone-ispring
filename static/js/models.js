@@ -47,11 +47,13 @@ export class GameTable {
      * @param {Player} player1
      * @param {Player} player2
      * @param {Array<CardData>} history
+     * @param {string} id
      */
-    constructor(player1, player2, history) {
+    constructor(player1, player2, history, id) {
         this.player1 = player1;
         this.player2 = player2;
         this.history = history;
+        this.id = id
     }
 }
 
