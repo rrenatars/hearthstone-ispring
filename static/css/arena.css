@@ -145,9 +145,18 @@
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 20px;
-    background-color: #7ec5ff;
+    background-color: #52a4d7;  
+    /* #12f2f6 */
     padding: 10px;
     border-radius: 10px;
+    animation: burn 1.5s linear infinite alternate;
+}
+
+@keyframes burn {
+  from { box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .4em #34c9ff, .2em -.3em .3em #0c92ec;}
+  45%  { box-shadow: .15em 0 .4em #85dafe, -.1em -.25em .5em #34c9ff, .15em -.45em .5em #0c92ec;}
+  70%  { box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .6em #34c9ff, .2em -.3em .4em #0c92ec;}
+  to   { box-shadow: -.15em 0 .6em #85dafe, .1em -.25em .6em #34c9ff, -.15em -.45em .5em #0c92ec;}
 }
 
 .cards {
@@ -224,58 +233,52 @@
     /*z-index: 12;*/
 }
 
-.card__attack
-{
+.card__attack {
     font-family: BelweBdBTBold;
     font-size: 130%;
     font-weight: bold;
     color: white;
     text-shadow:
-            -1px -1px 0 #000,
-            1px -1px 0 #000,
-            -1px 1px 0 #000,
-            1px 1px 0 #000;
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
     margin-bottom: 19%;
     margin-right: 45%;
     user-select: none;
 }
 
-.card__attack_provocation
-{
+.card__attack_provocation {
     margin-bottom: 28%;
     margin-right: 37%;
 }
 
-.card__attack_poison
-{
+.card__attack_poison {
     margin-bottom: 23%;
     margin-right: 46%;
 }
 
-.card__hp
-{
+.card__hp {
     font-family: BelweBdBTBold;
     font-weight: bold;
     font-size: 130%;
     color: white;
     text-shadow:
-            -1px -1px 0 #000,
-            1px -1px 0 #000,
-            -1px 1px 0 #000,
-            1px 1px 0 #000;
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
     margin-bottom: 19%;
     margin-right: 11%;
     user-select: none;
 }
 
-.card__hp_provocation
-{
+.card__hp_provocation {
     margin-bottom: 28%;
     margin-right: 16%;
 }
 
-.card__hp_poison
-{
+.card__hp_poison {
     margin-bottom: 22%;
     margin-right: 14%;
 }
@@ -391,6 +394,17 @@ button:active {
     font-family: BelweBdBTBold;
     border: none;
     z-index: 2;
+    border-top-left-radius: 120%35px;
+	border-bottom-left-radius: 120%35px; 
+	border-top-right-radius: 120%35px;
+	border-bottom-right-radius: 120%35px;
+}
+
+@keyframes burn2 {
+  from { box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .4em #29e73f, .2em -.3em .3em #1bc529, -.2em -.4em .4em #1bc529, .1em -.5em .7em #10cc1f;}
+  45%  { box-shadow: .1em -.2em .5em #62f164, .15em 0 .4em #29e73f, -.1em -.25em .5em #29e73f, .15em -.45em .5em #1bc529, -.1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;; }
+  70%  { box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .6em #29e73f, .2em -.3em .4em #1bc529, -.2em -.4em .7em #1bc529, .1em -.5em .7em #10cc1f;;}
+  to   { box-shadow: -.1em -.2em .6em #62f164, -.15em 0 .6em #29e73f, .1em -.25em .6em #29e73f, -.15em -.45em .5em #1bc529, .1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;; }
 }
 
 .playerManaValue {
@@ -501,4 +515,36 @@ button:active {
     position: absolute;
     height: 74%;
     top: 13%;
+}
+
+#attackWarning {
+    position: absolute;
+    z-index: 100000;
+    color: #FFFFFF;
+    opacity: 1;
+    visibility: hidden;
+}
+
+#manaWarning {
+    position: absolute;
+    z-index: 100000;
+    color: #FFFFFF;
+    opacity: 1;
+    visibility: hidden;
+}
+
+.shake {
+    animation: 0.5s ease-in-out 0s normal none infinite running trambling-animation;
+}
+
+@keyframes trambling-animation {
+    0%, 50%, 100% {
+        transform: rotate(3deg);
+    }
+    10%, 30% {
+        transform: rotate(-3deg);
+    }
+    20%, 40% {
+        transform: rotate(3deg);
+    }
 }
