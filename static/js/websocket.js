@@ -287,7 +287,10 @@ export function socketInit() {
 
         document.querySelectorAll(".field__card").forEach(function (e) {
             i++
-            if (i <= attackCardsLength) {
+            if ((i <= attackCardsLength)) {
+                e.classList.add("canAttack")
+            }
+            if (e.getAttribute("data-specification") === "charge") {
                 e.classList.add("canAttack")
             }
         });
@@ -314,7 +317,9 @@ export function socketInit() {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
-                    attackCardsLength = game.player1.cards.length
+                    endTurnButton.style.animation = "none";
+                    endTurnButton.style.removeProperty("backgroundColor");
+                    attackCardsLength = game.player1.cards.length;
 
                     const fightCards = document.querySelectorAll(".field__card")
                     fightCards.forEach(function (e) {

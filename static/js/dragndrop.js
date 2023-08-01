@@ -29,8 +29,21 @@ export function dragNDrop() {
                     const manaElement = document.getElementById("MyMana")
                     let mana = parseInt(manaElement.textContent)
                     let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
+
                     if ((mana - manaSelectedCard) < 0) {
-                        alert("Недостаточно маны");
+                        const label = document.getElementById("manaWarning");
+                        label.style.visibility = "visible";
+                        label.style.opacity = "1";
+                        var x = Math.round(e.clientX) - label.offsetWidth/1.5 + "px";
+                        var y = Math.round(e.clientY) - label.offsetHeight/1.5 + "px";
+                        label.style.left = x;
+                        label.style.top = y;
+                        setTimeout(function () {
+                            label.style.visibility = "hidden"
+                        }, 1500);
+                        label.style.transition = "all 3s";
+                        label.style.fontSize = "26px"
+                        label.style.opacity = "0"
                         return;
                     } else {
                         var coords = getCoords(card);
@@ -67,12 +80,6 @@ export function dragNDrop() {
 
 
                                 mana = mana - manaSelectedCard;
-
-                                // if (mana >=2)
-                                // {
-                                //     selectedHeroPowerElement.classList.add('canAttack');
-                                //     attack(selectedHeroPowerElement);
-                                // }
 
                                 const manaElement = document.getElementById('MyMana');
                                 manabarFilling(mana, manaElement);
