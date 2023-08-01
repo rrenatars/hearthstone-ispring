@@ -5,7 +5,7 @@ import { ViewCards } from "./view.js";
 
 import { dragNDrop } from "./dragndrop.js";
 import { manabarFilling } from "./manabarFilling.js";
-import {attack} from "./attack.js";
+import { attack } from "./attack.js";
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -247,16 +247,15 @@ export function socketInit() {
 
         document.querySelectorAll(".field__card").forEach(function (e) {
             i++
-            if ((i <= attackCardsLength) && (e.id != "heropower"))
-            {
+            if ((i <= attackCardsLength)) {
                 e.classList.add("canAttack")
             }
             if (e.getAttribute("data-specification") === "burst") {
                 e.classList.add("canAttack")
-            }
+            } 
         });
 
-        
+
 
         switch (type) {
             case "start game":
@@ -267,10 +266,16 @@ export function socketInit() {
                 afterStart()
                 dragNDrop()
                 attack()
+                // endTurnButton.style.backgroundImage = "url(../static/images/field/endTurnGreen1.png)";
+                // endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
+                // endTurnButton.style.backgroundColor = "#29e73f";
                 break
             case "card drag":
                 dragNDrop()
                 attack()
+                endTurnButton.style.backgroundImage = "url(../static/images/field/endTurnGreen1.png)";
+                endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
+                endTurnButton.style.backgroundColor = "#29e73f";
                 break
             case "turn":
                 dragNDrop()
@@ -280,14 +285,13 @@ export function socketInit() {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
                     endTurnButton.removeAttribute('disabled');
-                    attackCardsLength = game.player1.cards.length
+                    endTurnButton.style.animation = "none";
+                    endTurnButton.style.removeProperty("backgroundColor");
+                    attackCardsLength = game.player1.cards.length;
 
                     const fightCards = document.querySelectorAll(".field__card")
                     fightCards.forEach(function (e) {
-                        if (e.id != "heropower")
-                        {
                         e.classList.add("canAttack")
-                        }
                     })
 
                     attack()
