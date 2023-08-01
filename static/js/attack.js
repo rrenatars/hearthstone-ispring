@@ -1,6 +1,7 @@
-import { victory } from "./end-game.js";
+import {victory} from "./end-game.js";
 import {socket} from "./websocket.js"
 import {game} from "./game.js"
+
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');
@@ -9,6 +10,7 @@ export function attack() {
     const opponentHeroElement = document.getElementById('opponenthero');
     const opponentheroHealthElement = document.getElementById('Player2HealthValue');
     const fightCards = document.querySelectorAll(".field__card");
+    const enemyBattlefield = document.getElementById("background__field_opp")
     console.log(fightCards, "fightCards")
 
     fightCards.forEach(function (e) {
@@ -91,22 +93,23 @@ export function attack() {
                         //     label.style.fontSize = "26px"
                         //     label.style.opacity = "0";
                         // }
-                    }
-                    else {
+                    } else {
                         if (svg.style.display == "block") {
                             if (e.id != "heropower") {
                                 const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
                                 opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack)
-                            }
-                            else {
+                            } else {
                                 opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 2);
                             }
                             opponentheroHealthElement.style.color = '#c70d0d';
-                            if (opponentheroHealthElement.textContent <= 0) { victory() }
+                            if (opponentheroHealthElement.textContent <= 0) {
+                                victory()
+                            }
                             setTimeout(function () {
                                 opponentheroHealthElement.style.color = '#FFFFFF';
                             }, 2000);
-                        };
+                        }
+                        ;
                         svg.style.display = "none";
                         document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
 
@@ -149,6 +152,7 @@ export function attack() {
                     // provocationOnField();
 
                     e3.onclick = botCardClick
+
                     function botCardClick() {
                         if (svg.style.display == "block") {
                             e3.classList.add("activeTarget");
@@ -161,9 +165,8 @@ export function attack() {
                                 botCardHP.textContent = 0;
                                 console.log(botCardHP);
                                 console.log(botCardHP.textContent)
-                                console.log("poison")
-                            }
-                            else {
+                                console.log("poisonous")
+                            } else {
                                 const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
                                 botCardHP.textContent -= cardAttack;
                             }
@@ -174,6 +177,11 @@ export function attack() {
                                 e3.style.opacity = "0"
                                 setTimeout(function () {
                                     e3.remove()
+                                    if (enemyBattlefield.childElementCount === 0) {
+                                        let emptyField = document.createElement("div")
+                                        emptyField.classList.add("field__empty_opp")
+                                        enemyBattlefield.append(emptyField)
+                                    }
                                 }, 2100);
 
                             }
@@ -183,7 +191,8 @@ export function attack() {
                                 botCardHP.style.color = '#FFFFFF';
                             }, 2000);
 
-                        };
+                        }
+                        ;
                         svg.style.display = "none";
                         document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                         document.getElementById("arrowcursor").style.visibility = "hidden";
@@ -204,7 +213,7 @@ export function attack() {
                         }))
                     };
                 });
-            }, { once: true })
+            }, {once: true})
 
         }
     })
@@ -225,11 +234,9 @@ function collision(attacker, defender) {
         attacker.style.marginTop = defender.getBoundingClientRect().top - attacker.getBoundingClientRect().top + defender.offsetHeight - defender.offsetHeight / 2 + "px";
         if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) > 0) {
             attacker.style.marginLeft = defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left - defender.offsetWidth / 3 + "px";
-        }
-        else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
+        } else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
             attacker.style.marginLeft = defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left + defender.offsetWidth / 3 + "px";
-        }
-        else {
+        } else {
             attacker.style.marginLeft = "0px";
         }
 
@@ -242,11 +249,9 @@ function collision(attacker, defender) {
         attacker.style.marginTop = -(defender.getBoundingClientRect().top - attacker.getBoundingClientRect().top + defender.offsetHeight - defender.offsetHeight / 2) + "px";
         if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) > 0) {
             attacker.style.marginLeft = -(defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left - defender.offsetWidth / 3) + "px";
-        }
-        else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
+        } else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
             attacker.style.marginLeft = -(defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left + defender.offsetWidth / 3) + "px";
-        }
-        else {
+        } else {
             attacker.style.marginLeft = "0px";
         }
         document.getElementById("background__field").insertBefore(attacker, tempBlock.nextSibling);

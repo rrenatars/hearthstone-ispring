@@ -2,6 +2,7 @@ export function ViewCards(cards, parentId, childClassName) {
     const cardsHand = document.getElementById(parentId);
 
     if ((parentId != 'background__field' || parentId != 'background__field_opp') && (cards.length > 0)) {
+        console.log(cardsHand)
         while (cardsHand.firstChild) {
             cardsHand.removeChild(cardsHand.firstChild)
         }
