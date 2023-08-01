@@ -1,15 +1,19 @@
 async function fetchProtectedMenu() {
     try {
-        function getCookie(name) {
+        function getCookie() {
             const value = document.cookie;
             const tokenValue = value.split('=')[1];
             return tokenValue;
         }
 
+        console.log("cookie", getCookie())
+
+        let token = localStorage.getItem('token')
+
         const request = new Request('/protected/', {
             method: 'GET',
             headers: {
-                "Authorization": "Bearer " + getCookie()
+                "Authorization": "Bearer " + token
             }
         });
 

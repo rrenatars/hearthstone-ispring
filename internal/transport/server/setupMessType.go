@@ -22,7 +22,6 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 		if err != nil {
 			log.Println(err)
 		}
-		// c.room.broadcast <- jsonData
 	case "give me a game":
 		giveMeGame(c)
 	case "exchange cards":
@@ -56,8 +55,31 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 			log.Println(err)
 		}
 		c.room.broadcast <- jsonData
+	case "attack":
+		attack(&msgReq, c)
+		jsonData, err := json.Marshal(models.MessageResponse{
+			Type: "attack",
+			Data: *c.room.game,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	default:
 		log.Println("unkown msgReq type: ", msgReq.Type)
+	}
+}
+
+func attack(msgReq *models.MessageRequest, c *Client) {
+	attackData, err := serverservices.ParseToAttackType(msgReq)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(attackData)
+
+	err = serverservices.Attack(attackData, c.room.game)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
@@ -104,7 +126,13 @@ func ConnectToRoom(c *Client) bool {
 	for _, r := range c.hub.rooms {
 		if len(r.clients) < 2 && r.id != "default" {
 			c.room = r
-
+			if c.room.game.Player2.Name == "name" {
+				c.room.game.Player2.Name = c.id
+			} else if c.room.game.Player1.Name == "name" {
+				c.room.game.Player1.Name = c.id
+			} else {
+				log.Println("error log conncection")
+			}
 			//sendCreateGameResponse(c)
 
 			log.Println("connect room roomID: ", r.id)
@@ -130,17 +158,4 @@ func CreateNewRoom(c *Client) {
 	//sendCreateGameResponse(c)
 
 	log.Println("create room roomID: ", roomPtr.game.Id)
-}
-
-func sendCreateGameResponse(c *Client) {
-	c.conn.WriteJSON(struct {
-		Type string
-		Data Data
-	}{
-		Type: "take room id",
-		Data: Data{
-			RoomID: c.room.id,
-			Game:   *c.room.game,
-		},
-	})
 }

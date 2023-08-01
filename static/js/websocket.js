@@ -6,8 +6,7 @@ import {ViewCards} from "./view.js";
 import {dragNDrop} from "./dragndrop.js";
 import {manabarFilling} from "./manabar-filling.js";
 import {attack} from "./attack.js";
-import { lose } from "./end-game.js";
-import { victory } from "./end-game.js";
+
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
 
@@ -32,6 +31,60 @@ function selectCardsToExchange() {
             }
         });
     });
+}
+
+function Lose() {
+    const loseImage = document.getElementById('loseimg');
+    const endbg = document.getElementById('endbg');
+    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-lose-game.png)";
+    loseImage.style.width = "863px";
+    loseImage.style.height = "818px";
+    loseImage.style.zIndex = 9999;
+    loseImage.style.position = "absolute";
+    loseImage.style.top = "50%";
+    loseImage.style.left = "50%";
+    loseImage.style.marginRight = "-50%";
+    loseImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
+}
+
+function Victory() {
+    const winImage = document.getElementById('winimg');
+    const endbg = document.getElementById('endbg');
+    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-win-game.png)";
+    winImage.style.width = "793px";
+    winImage.style.height = "704px";
+    winImage.style.zIndex = 9999;
+    winImage.style.position = "absolute";
+    winImage.style.top = "50%";
+    winImage.style.left = "50%";
+    winImage.style.marginRight = "-50%";
+    winImage.style.transform = "translate(-50%, -50%)";
+    endbg.style.zIndex = 999;
+    endbg.style.backdropFilter = "blur(3px)";
+    endbg.style.textAlign = "center";
+    endbg.style.margin = "0";
+    endbg.style.width = "100%";
+    endbg.style.height = "100%";
+    endbg.style.position = "absolute";
+    endbg.style.bottom = "0";
+    endbg.style.top = "0";
+    endbg.style.left = "0";
+    endbg.style.right = "0";
+    endbg.style.backgroundColor = "#666666";
+    endbg.style.opacity = "0.95";
 }
 
 function startBefore() {
@@ -130,12 +183,12 @@ function afterStart() {
         selectedHeroPowerElement.addEventListener("click", function () {
             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
-                    case 'hunter':
+                    case 'Hunter':
                         opponentheroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (opponentheroHealthElement.textContent <= 0) victory()
+                        if (opponentheroHealthElement.textContent <= 0) Victory()
                         break;
-                    case 'mage':
+                    case 'Mage':
                         selectedHeroElement.addEventListener('click', () => {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
@@ -147,7 +200,7 @@ function afterStart() {
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         break;
-                    case 'warlock':
+                    case 'Warlock':
                         heroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         // const dataToSend = {
@@ -155,9 +208,9 @@ function afterStart() {
                         //     data: {}
                         // }
                         // socket.send(JSON.stringify(dataToSend))
-                        if (heroHealthElement.textContent <= 0) lose()
+                        if (heroHealthElement.textContent <= 0) Lose()
                         break;
-                    case 'paladin':
+                    case 'Paladin':
                         let recruit = document.createElement('div');
                         recruit.className = "field__empty";
                         recruit.style.width = '90px';
@@ -175,6 +228,18 @@ function afterStart() {
                         const cardPlayer1 = document.getElementById('background__field');
                         cardPlayer1.appendChild(recruit);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+                        break;
+                    case 'Priest':
+                        selectedHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                                heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+                        }, {once: true});
+                        opponentHeroElement.addEventListener('click', () => {
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                                opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
+                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+                        }, {once: true});
                         break;
                 }
 
@@ -197,7 +262,8 @@ if (clientId == undefined || clientId == null) {
     clientId = 0
 }
 
-export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
+export const socket = new WebSocket(`wss://`+window.location.hostname+`/ws?room=${room}&clientID=${clientId}`);
+//export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
 
 export function socketInit() {
     let attackCardsLength = 0;
@@ -206,12 +272,12 @@ export function socketInit() {
 
         const { type, data } = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
+        console.log(game)
         if(clientId == game.player1.name) {
             ViewCards(game.player1.cards, "background__field", "field__card")
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
-        }
-        else {
+        } else {
             ViewCards(game.player2.cards, "background__field", "field__card")
             ViewCards(game.player2.hand, "cards", "cards__card");
             ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
@@ -254,16 +320,17 @@ export function socketInit() {
                     fightCards.forEach(function (e) {
                         e.classList.add("canAttack");
                     })
-
                     attack()
-
-                    //socket.send("end turn")
                 }
                 break
             case "take a game":
                 dragNDrop()
                 attack()
                 console.log(type, game)
+                break
+            case "attack":
+                dragNDrop()
+                attack()
                 break
             default:
                 console.log("undefined type",type)
@@ -290,7 +357,6 @@ export function ParseDataToGameTable(data) {
         ParseDataToPlayer(data.Player2),
         ParseDataToCards(data.History),
         data.Id,
-
     )
 }
 

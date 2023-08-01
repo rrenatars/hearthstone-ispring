@@ -1,4 +1,6 @@
 import { victory } from "./end-game.js";
+import {socket} from "./websocket.js"
+import {game} from "./game.js"
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');
@@ -121,6 +123,14 @@ export function attack() {
                         e.style.removeProperty("zIndex");
                         e3.classList.remove("activeTarget");
                         e.classList.remove("activeCard");
+                        socket.send(JSON.stringify({
+                            type: "attack",
+                            data: {
+                                player: (game.player1.turn ? game.player1.name : game.player2.name),
+                                idAttack: e.id,
+                                idDefense: e3.id,
+                            }
+                        }))
                     };
                     e3.style.removeProperty("zIndex");
                 });

@@ -24,6 +24,7 @@ document.getElementById("signinForm").addEventListener("submit", function (event
             console.log("Token:", data.token);
             document.cookie = `token=${data.token}; path=/`; // Установка cookie со значением токена
             localStorage.setItem('id', data.id);
+            localStorage.setItem("token", data.token);
             // Переход на другую страницу после успешного входа
             window.location.href = "/menu";
         })

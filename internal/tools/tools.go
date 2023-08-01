@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"errors"
 	"log"
 	"math/rand"
 	"time"
@@ -30,9 +31,9 @@ func CreateNewGameTable(id_ string) *models.GameTable {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:         "localhost",
 		Port:         "3306",
-		Username:     "root",
+		Username:     "rrenatessa",
 		DBName:       "hearthstone",
-		Password:     "password",
+		Password:     "sqlwebpassdata",
 		DbDriverName: "mysql",
 	})
 	if err != nil {
@@ -49,4 +50,21 @@ func CreateNewGameTable(id_ string) *models.GameTable {
 	pl2 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 100, 100)
 
 	return models.NewGameTable(pl1, pl2, []models.CardData{}, id_)
+}
+
+func RemoveElemsFromSlice(cards []models.CardData, index int) []models.CardData {
+	if index < 0 || index >= len(cards) {
+		return cards
+	}
+
+	return append(cards[:index], cards[index+1:]...)
+}
+
+func GetIndexByCardID(id string, cards []models.CardData) (int, error) {
+	for index, value := range cards {
+		if value.CardID == id {
+			return index, nil
+		}
+	}
+	return -1, errors.New("a card with that ID does not exist")
 }

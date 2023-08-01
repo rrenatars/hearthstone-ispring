@@ -140,7 +140,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	if client1 == nil {
 		log.Println("client is nil")
 	}
-	log.Println("client is find")
+	//log.Println("client is find")
 
 	roomID := r.URL.Query().Get("room")
 	if roomID == "" {
@@ -164,7 +164,6 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	log.Println(room.id)
 
 	if room.id != "default" {
 		conn.WriteJSON(models.MessageResponse{
@@ -179,13 +178,11 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		room,
 		conn,
 	)
+	log.Println(client.id)
 	go client.room.run()
 
 	client.room.register <- client
 	client.hub.register <- client
-
-	log.Println("clients in room len: ", len(client.room.clients))
-	log.Println("clients in hub len: ", len(client.hub.clients))
 
 	go client.readPump()
 	go client.writePump()

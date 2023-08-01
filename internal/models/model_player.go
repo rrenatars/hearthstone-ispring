@@ -8,6 +8,7 @@ type Player struct {
 	Turn  bool
 	HP    int
 	Def   int
+	//Mana  int
 }
 
 func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def int) *Player {
@@ -19,5 +20,6 @@ func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def int
 		Turn:  turn,
 		HP:    hp,
 		Def:   def,
+		//Mana:  mana,
 	}
 }

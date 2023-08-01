@@ -18,10 +18,10 @@ func Run() {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:     "localhost",
 		Port:     "3306",
-		Username: "root",
+		Username: "rrenatessa",
 		DBName:   "hearthstone",
 		//SSLMode:  viper.GetString("db.sslmode"),
-		Password:     "password",
+		Password:     "sqlwebpassdata",
 		DbDriverName: "mysql",
 	})
 

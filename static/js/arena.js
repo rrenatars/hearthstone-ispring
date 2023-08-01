@@ -8,7 +8,6 @@ enemyTurnRun()
 
 socketInit()
 
-
 const startSubmit = document.getElementById("StartSubmit")
 console.log(startSubmit)
 if (!startSubmit) {
