@@ -351,15 +351,10 @@ export function socketInit() {
                 }
                 break
             case "turn":
-                if (game.player1.turn && clientId === game.player1.name) {
-                    dragNDrop()
-                }
-                if (game.player2.turn && clientId === game.player2.name) {
-                    dragNDrop()
-                }
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
                 if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -371,14 +366,10 @@ export function socketInit() {
                     fightCards.forEach(function (e) {
                         e.classList.add("canAttack");
                     })
-                    if (game.player1.turn && clientId === game.player1.name) {
-                        attack()
-                    }
-                    if (game.player2.turn && clientId === game.player2.name) {
-                        dragNDrop()
-                    }
+                    attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -390,12 +381,7 @@ export function socketInit() {
                     fightCards.forEach(function (e) {
                         e.classList.add("canAttack");
                     })
-                    if (game.player1.turn && clientId === game.player1.name) {
-                        attack()
-                    }
-                    if (game.player2.turn && clientId === game.player2.name) {
-                        dragNDrop()
-                    }
+                    attack()
                 }
                 break
             case "take a game":
