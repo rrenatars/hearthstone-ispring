@@ -78,18 +78,10 @@ export function dragNDrop() {
                                 card.classList.remove('cards__card');
                                 card.classList.add('field__card');
 
-
-                                mana = mana - manaSelectedCard;
-
-                                const manaElement = document.getElementById('MyMana');
-                                manabarFilling(mana, manaElement);
-
-                                let cardPortraitUrl = card.getAttribute('style').match(/background-image:\s?url\(['"]?([^'"]+?)['"]?\)/)[1];
-
-                                let creaturePortraitUrl = cardPortraitUrl.replace('cards-in-hand', 'creatures');
-                                card.style.backgroundImage = 'url(' + creaturePortraitUrl + ')'
-                                card.style.width = '125px'
-                                card.style.height = '168px'
+                                // mana = mana - manaSelectedCard;
+                                //
+                                // const manaElement = document.getElementById('MyMana');
+                                // manabarFilling(mana, manaElement);
 
                                 socket.send(JSON.stringify({
                                     type: "card drag",

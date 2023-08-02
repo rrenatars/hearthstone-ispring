@@ -1,25 +1,27 @@
 package models
 
 type Player struct {
-	Name  string
-	Hand  []CardData
-	Cards []CardData
-	Deck  []CardData
-	Turn  bool
-	HP    int
-	Def   int
-	//Mana  int
+	Name           string
+	Hand           []CardData
+	Cards          []CardData
+	Deck           []CardData
+	Turn           bool
+	HP             int
+	Def            int
+	Mana           int
+	CounterOfMoves int
 }
 
-func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def int) *Player {
+func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def, mana, counterOfMoves int) *Player {
 	return &Player{
-		Name:  name,
-		Hand:  hand,
-		Deck:  deck,
-		Cards: cards,
-		Turn:  turn,
-		HP:    hp,
-		Def:   def,
-		//Mana:  mana,
+		Name:           name,
+		Hand:           hand,
+		Deck:           deck,
+		Cards:          cards,
+		Turn:           turn,
+		HP:             hp,
+		Def:            def,
+		Mana:           mana,
+		CounterOfMoves: counterOfMoves,
 	}
 }

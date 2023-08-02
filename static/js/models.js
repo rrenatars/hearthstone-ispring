@@ -30,8 +30,10 @@ export class Player {
      * @param {boolean} turn
      * @param {number} HP
      * @param {number} Def
+     * @param {number} mana
+     * @param {number} counterOfMoves
      */
-    constructor(name, hand, cards, deck, turn, HP, Def) {
+    constructor(name, hand, cards, deck, turn, HP, Def, mana, counterOfMoves) {
         this.name = name;
         this.hand = hand;
         this.cards = cards;
@@ -39,6 +41,8 @@ export class Player {
         this.turn = turn;
         this.HP = HP;
         this.Def = Def;
+        this.Mana = mana;
+        this.CounterOfMoves = counterOfMoves;
     }
 }
 

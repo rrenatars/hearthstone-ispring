@@ -67,6 +67,8 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 	newCards := append(pl.Cards, newCard)
 	newHand := removeElemsFromSlice(pl.Hand, index)
 
+	newPlayerMana := pl.Mana - newCard.Mana
+
 	return models.NewPlayer(
 		pl.Name,
 		newHand,
@@ -75,6 +77,8 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 		pl.Turn,
 		pl.HP,
 		pl.Def,
+		newPlayerMana,
+		pl.CounterOfMoves,
 	), nil
 }
 

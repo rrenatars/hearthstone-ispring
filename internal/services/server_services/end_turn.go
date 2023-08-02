@@ -6,6 +6,13 @@ import (
 )
 
 func EndTurn(gameTable *models.GameTable) {
+	if gameTable.Player1.Turn {
+		gameTable.Player1.CounterOfMoves = gameTable.Player1.CounterOfMoves + 1
+	} else {
+		gameTable.Player2.CounterOfMoves = gameTable.Player2.CounterOfMoves + 1
+	}
+	gameTable.Player1.Mana = gameTable.Player1.CounterOfMoves
+	gameTable.Player2.Mana = gameTable.Player2.CounterOfMoves
 	gameTable.Player1.Turn = !gameTable.Player1.Turn
 	gameTable.Player2.Turn = !gameTable.Player2.Turn
 	log.Println("end turn Player1", gameTable.Player1)

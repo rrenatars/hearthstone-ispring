@@ -26,7 +26,7 @@ export function enemyTurnRun() {
     });
 
     function enemyTurn() {
-        manabarFilling(10, manaElement);
+        // manabarFilling(10, manaElement);
         const urlParams = new URLSearchParams(window.location.search);
         const heroClass = urlParams.get('heroclass');
         const selectedHeroPowerElement = document.getElementById('heropower');

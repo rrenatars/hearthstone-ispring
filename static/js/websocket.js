@@ -113,9 +113,6 @@ function startBefore() {
     startButton.textContent = 'OK'
     handCards.appendChild(startButton)
 
-    const manaElement = document.getElementById("MyMana")
-    manabarFilling(10, manaElement);
-
     let cards = document.querySelectorAll('.cards__card')
     const startSubmit = document.getElementById('StartSubmit')
 
@@ -275,15 +272,10 @@ export function socketInit() {
         setGame(ParseDataToGameTable(data));
         console.log(game)
         if (clientId === game.player1.name) {
-            console.log("clientId === game.player1.name", clientId, clientId === game.player1.name)
             if (game.player1.turn) {
-                console.log(clientId, "зашел в if")
-                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
                 document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                 endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
             } else {
-                console.log(clientId, "зашел в else")
-                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
                 document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                 endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
                 endTurnButton.setAttribute('disabled', '');
@@ -292,17 +284,12 @@ export function socketInit() {
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
         } else {
-            console.log("clientId === game.player1.name", clientId, clientId === game.player1.name)
             if (game.player2.turn) {
-                console.log(clientId, "зашел в if")
-                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
                 endTurnButton.addEventListener("click", function () {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
                 })
             } else {
-                console.log(clientId, "зашел в else")
-                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
                 document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                 endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
                 endTurnButton.setAttribute('disabled', '');
@@ -324,8 +311,22 @@ export function socketInit() {
             }
         });
 
+        const myManaElement = document.getElementById("MyMana")
+        const enemyManaElement = document.getElementById("EnemyMana")
+
+        console.log(game.player1.CounterOfMoves, game.player1.name)
+        console.log(game.player2.CounterOfMoves, game.player2.name)
+
         switch (type) {
             case "start game":
+                if (game.player1.turn && clientId === game.player1.name) {
+                    manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
+                }
                 startBefore()
                 start()
                 break;
@@ -344,16 +345,26 @@ export function socketInit() {
                 if (game.player1.turn && clientId === game.player1.name) {
                     dragNDrop()
                     attack()
+                    manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     dragNDrop()
                     attack()
+                    manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                }
+                if (clientId === game.player1.name) {
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                } else {
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                 }
                 break
             case "turn":
-                const manaElement = document.getElementById('MyMana');
-                manabarFilling(10, manaElement)
                 if (game.player1.turn && clientId === game.player1.name) {
+                    console.log("плеер один")
+                    console.log(game.player1.Mana, game.player1.name)
+                    console.log(game.player2.Mana, game.player2.name)
+                    manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -369,6 +380,11 @@ export function socketInit() {
                     attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
+                    console.log("плеер 2")
+                    console.log(game.player1.Mana, game.player1.name)
+                    console.log(game.player2.Mana, game.player2.name)
+                    manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -442,6 +458,8 @@ function ParseDataToPlayer(data) {
         data.Turn,
         data.HP,
         data.Def,
+        data.Mana,
+        data.CounterOfMoves,
     )
 }
 

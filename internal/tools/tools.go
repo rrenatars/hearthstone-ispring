@@ -46,8 +46,8 @@ func CreateNewGameTable(id_ string) *models.GameTable {
 		return &models.GameTable{}
 	}
 
-	pl1 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, true, 100, 100)
-	pl2 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 100, 100)
+	pl1 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, true, 30, 100, 1, 1)
+	pl2 := models.NewPlayer("name", GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 30, 100, 1, 1)
 
 	return models.NewGameTable(pl1, pl2, []models.CardData{}, id_)
 }
