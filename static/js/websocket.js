@@ -250,7 +250,7 @@ function afterStart() {
 let url = new URL(window.location.href)
 var room = url.searchParams.get("room")
 
-if(room === "" || room === null) {
+if (room === "" || room === null) {
     // room = localStorage.getItem("room")
     room = "default"
 } else {
@@ -262,7 +262,8 @@ if (clientId == undefined || clientId == null) {
     clientId = 0
 }
 
-export const socket = new WebSocket(`wss://`+window.location.hostname+`/ws?room=${room}&clientID=${clientId}`);
+export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
+
 //export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
 
 export function socketInit() {
@@ -270,14 +271,42 @@ export function socketInit() {
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
-        const { type, data } = JSON.parse(event.data);
+        const {type, data} = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
         console.log(game)
-        if(clientId == game.player1.name) {
+        if (clientId === game.player1.name) {
+            console.log("clientId === game.player1.name", clientId, clientId === game.player1.name)
+            if (game.player1.turn) {
+                console.log(clientId, "зашел в if")
+                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
+                document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+            } else {
+                console.log(clientId, "зашел в else")
+                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
+                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                endTurnButton.setAttribute('disabled', '');
+            }
             ViewCards(game.player1.cards, "background__field", "field__card")
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
         } else {
+            console.log("clientId === game.player1.name", clientId, clientId === game.player1.name)
+            if (game.player2.turn) {
+                console.log(clientId, "зашел в if")
+                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
+                endTurnButton.addEventListener("click", function () {
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+                })
+            } else {
+                console.log(clientId, "зашел в else")
+                console.log("turn", game.player1.turn, "!turn", game.player2.turn)
+                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                endTurnButton.setAttribute('disabled', '');
+            }
             ViewCards(game.player2.cards, "background__field", "field__card")
             ViewCards(game.player2.hand, "cards", "cards__card");
             ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
@@ -302,18 +331,35 @@ export function socketInit() {
                 break;
             case "exchange cards":
                 afterStart()
-                dragNDrop()
-                attack()
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                    attack()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                    attack()
+                }
                 break
             case "card drag":
-                dragNDrop()
-                attack()
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                    attack()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                    attack()
+                }
                 break
             case "turn":
-                dragNDrop()
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                }
                 const manaElement = document.getElementById('MyMana');
                 manabarFilling(10, manaElement)
-                if (game.player1.turn) {
+                if (game.player1.turn && clientId === game.player1.name) {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -325,20 +371,56 @@ export function socketInit() {
                     fightCards.forEach(function (e) {
                         e.classList.add("canAttack");
                     })
-                    attack()
+                    if (game.player1.turn && clientId === game.player1.name) {
+                        attack()
+                    }
+                    if (game.player2.turn && clientId === game.player2.name) {
+                        dragNDrop()
+                    }
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
+                    endTurnButton.removeAttribute('disabled');
+                    endTurnButton.style.animation = "none";
+                    endTurnButton.style.removeProperty("backgroundColor");
+                    attackCardsLength = game.player1.cards.length;
+
+                    const fightCards = document.querySelectorAll(".field__card")
+                    fightCards.forEach(function (e) {
+                        e.classList.add("canAttack");
+                    })
+                    if (game.player1.turn && clientId === game.player1.name) {
+                        attack()
+                    }
+                    if (game.player2.turn && clientId === game.player2.name) {
+                        dragNDrop()
+                    }
                 }
                 break
             case "take a game":
-                dragNDrop()
-                attack()
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                    attack()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                    attack()
+                }
                 console.log(type, game)
                 break
             case "attack":
-                dragNDrop()
-                attack()
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                    attack()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                    attack()
+                }
                 break
             default:
-                console.log("undefined type",type)
+                console.log("undefined type", type)
                 break;
         }
     };
