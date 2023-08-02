@@ -193,6 +193,14 @@ selectHeroButton.addEventListener("click", function () {
             });
         }
     });
+    const homeButton = document.createElement('div');
+    homeButton.className = 'homeButton';
+    homeButton.id = 'homeButton';
+    newbg.appendChild(homeButton);
+    homeButton.addEventListener("click", function () {
+        newbg.remove();
+        realbg.appendChild(bg);
+    });
 });
 startGameButton.addEventListener("click", function () {
     var url;
