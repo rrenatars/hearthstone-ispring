@@ -268,6 +268,9 @@ export function socketInit() {
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
+        const myHeroHealthValue = document.getElementById("Player1HealthValue")
+        const enemyHeroHealthValue = document.getElementById("Player2HealthValue")
+
         const {type, data} = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
         console.log(game)
@@ -283,6 +286,8 @@ export function socketInit() {
             ViewCards(game.player1.cards, "background__field", "field__card")
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+            myHeroHealthValue.textContent = game.player1.HP
+            enemyHeroHealthValue.textContent = game.player2.HP
         } else {
             if (game.player2.turn) {
                 endTurnButton.addEventListener("click", function () {
@@ -297,6 +302,8 @@ export function socketInit() {
             ViewCards(game.player2.cards, "background__field", "field__card")
             ViewCards(game.player2.hand, "cards", "cards__card");
             ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
+            myHeroHealthValue.textContent = game.player2.HP
+            enemyHeroHealthValue.textContent = game.player1.HP
         }
 
         let i = 0;
@@ -314,11 +321,9 @@ export function socketInit() {
         const myManaElement = document.getElementById("MyMana")
         const enemyManaElement = document.getElementById("EnemyMana")
 
-        console.log(game.player1.CounterOfMoves, game.player1.name)
-        console.log(game.player2.CounterOfMoves, game.player2.name)
-
         switch (type) {
             case "start game":
+                // заполнение маны в самом начале игры
                 if (game.player1.turn && clientId === game.player1.name) {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
                     manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
@@ -342,6 +347,7 @@ export function socketInit() {
                 }
                 break
             case "card drag":
+                // заполнение маны после перетаскивания карты
                 if (game.player1.turn && clientId === game.player1.name) {
                     dragNDrop()
                     attack()
@@ -352,19 +358,18 @@ export function socketInit() {
                     attack()
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                 }
-                if (clientId === game.player1.name) {
+                // чтобы мана оппонента обновлялась при его ходах
+                if ((clientId === game.player1.name) && (!game.player1.turn)) {
                     manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
-                } else {
+                }
+                if ((clientId === game.player2.name) && (!game.player2.turn)) {
                     manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                 }
                 break
             case "turn":
+                // чтобы мана оппонента не обновлялась при передаче хода, то есть была видна мана до нажатия кнопки завершить ход оппонента
                 if (game.player1.turn && clientId === game.player1.name) {
-                    console.log("плеер один")
-                    console.log(game.player1.Mana, game.player1.name)
-                    console.log(game.player2.Mana, game.player2.name)
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
-                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -380,11 +385,7 @@ export function socketInit() {
                     attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
-                    console.log("плеер 2")
-                    console.log(game.player1.Mana, game.player1.name)
-                    console.log(game.player2.Mana, game.player2.name)
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
-                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -398,6 +399,13 @@ export function socketInit() {
                         e.classList.add("canAttack");
                     })
                     attack()
+                }
+                // чтобы при передаче хода оппоненту заполнялась мана оппонента
+                if ((clientId === game.player1.name) && (!game.player1.turn)) {
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                }
+                if ((clientId === game.player2.name) && (!game.player2.turn)) {
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                 }
                 break
             case "take a game":

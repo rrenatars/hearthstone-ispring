@@ -33,16 +33,22 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			return err
 		}
 
-		indexCardDef, err := tools.GetIndexByCardID(attackData.IdDefense, g.Player2.Cards)
-		if err != nil {
-			return err
-		}
+		log.Println("герой", attackData.IdDefense)
+		if attackData.IdDefense == "opponenthero" {
+			g.Player2.HP = g.Player2.HP - g.Player1.Cards[indexCardAttack].Attack
+		} else {
+			indexCardDef, err := tools.GetIndexByCardID(attackData.IdDefense, g.Player2.Cards)
+			if err != nil {
+				return err
+			}
 
-		g.Player2.Cards[indexCardDef].HP = g.Player2.Cards[indexCardDef].HP - g.Player1.Cards[indexCardAttack].Attack
+			g.Player2.Cards[indexCardDef].HP = g.Player2.Cards[indexCardDef].HP - g.Player1.Cards[indexCardAttack].Attack
 
-		if g.Player2.Cards[indexCardDef].HP <= 0 {
-			g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardDef)
+			if g.Player2.Cards[indexCardDef].HP <= 0 {
+				g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardDef)
+			}
 		}
+		log.Println("уменьшается хп", g.Player2.HP)
 		return nil
 	}
 
@@ -52,16 +58,21 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			return err
 		}
 
-		indexCardDef, err := tools.GetIndexByCardID(attackData.IdDefense, g.Player1.Cards)
-		if err != nil {
-			return err
-		}
+		if attackData.IdDefense == "opponenthero" {
+			g.Player1.HP = g.Player1.HP - g.Player2.Cards[indexCardAttack].Attack
+		} else {
+			indexCardDef, err := tools.GetIndexByCardID(attackData.IdDefense, g.Player1.Cards)
+			if err != nil {
+				return err
+			}
 
-		g.Player1.Cards[indexCardDef].HP = g.Player1.Cards[indexCardDef].HP - g.Player2.Cards[indexCardAttack].Attack
+			g.Player1.Cards[indexCardDef].HP = g.Player1.Cards[indexCardDef].HP - g.Player2.Cards[indexCardAttack].Attack
 
-		if g.Player1.Cards[indexCardDef].HP <= 0 {
-			g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardDef)
+			if g.Player1.Cards[indexCardDef].HP <= 0 {
+				g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardDef)
+			}
 		}
+		log.Println("уменьшается хп", g.Player1.HP)
 		return nil
 	}
 

@@ -1,8 +1,13 @@
 export function manabarFilling(mana, manaElement, startManaMove) {
     const arrayOfCrystals = [];
 
+    if (mana >= 10) {
+        mana = 10
+    }
+    if (startManaMove >= 10) {
+        startManaMove = 10
+    }
     if (manaElement.id === 'MyMana') {
-        console.log(manaElement.id)
         const manabar = document.getElementById('Manabar');
 
         for (let i = 1; i <= mana; i++) {

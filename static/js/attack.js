@@ -120,6 +120,14 @@ export function attack() {
                         e.removeAttribute("data-specification");
                         e.style.removeProperty("zIndex");
                         e.classList.remove("activeCard");
+                        socket.send(JSON.stringify({
+                            type: "attack",
+                            data: {
+                                player: (game.player1.turn ? game.player1.name : game.player2.name),
+                                idAttack: e.id,
+                                idDefense: opponentHeroElement.id,
+                            }
+                        }))
                     }
                 };
 
