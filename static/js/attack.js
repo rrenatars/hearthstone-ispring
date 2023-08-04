@@ -10,6 +10,7 @@ export function attack() {
     const opponentHeroElement = document.getElementById('opponenthero');
     const opponentheroHealthElement = document.getElementById('Player2HealthValue');
     const fightCards = document.querySelectorAll(".field__card");
+    const myBattlefield = document.getElementById("background__field")
     const enemyBattlefield = document.getElementById("background__field_opp")
     console.log(fightCards, "fightCards")
 
@@ -73,7 +74,6 @@ export function attack() {
                         label.style.transition = "all 3s";
                         label.style.fontSize = "26px"
                         label.style.opacity = "0"
-
 
                         // function warningLabel()
                         // {
@@ -164,7 +164,13 @@ export function attack() {
                     function botCardClick() {
                         if (svg.style.display == "block") {
                             e3.classList.add("activeTarget");
-                            const botCardHP = document.querySelector(".activeTarget").childNodes[2];
+                            const botCard = document.querySelector(".activeTarget")
+                            const botCardHP = botCard.childNodes[2];
+                            const botCardAttackValue = botCard.querySelector(".card__attack").textContent
+
+                            const cardAttack = document.querySelector(".activeCard")
+                            const cardAttackValue = cardAttack.childNodes[1].textContent;
+                            const cardAttackHP = cardAttack.querySelector(".card__hp")
 
                             collision(e, e3);
 
@@ -175,8 +181,10 @@ export function attack() {
                                 console.log(botCardHP.textContent)
                                 console.log("poisonous")
                             } else {
-                                const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
-                                botCardHP.textContent -= cardAttack;
+                                botCardHP.textContent -= cardAttackValue;
+                                cardAttackHP.textContent -= botCardAttackValue
+                                console.log("bot card hp", botCardHP)
+                                console.log("card attack hp", cardAttackHP)
                             }
 
                             if (botCardHP.textContent <= 0) {
@@ -191,7 +199,20 @@ export function attack() {
                                         enemyBattlefield.append(emptyField)
                                     }
                                 }, 2100);
+                            }
 
+                            if (cardAttackHP.textContent <= 0) {
+                                e.style.transition = "all 2s";
+                                cardAttackHP.style.opacity = "0";
+                                e.style.opacity = "0"
+                                setTimeout(function () {
+                                    e.remove()
+                                    if (myBattlefield.childElementCount === 0) {
+                                        let emptyField = document.createElement("div")
+                                        emptyField.classList.add("field__empty")
+                                        myBattlefield.append(emptyField)
+                                    }
+                                }, 2100);
                             }
 
                             botCardHP.style.color = '#c70d0d';
@@ -199,6 +220,10 @@ export function attack() {
                                 botCardHP.style.color = '#FFFFFF';
                             }, 2000);
 
+                            cardAttackHP.style.color = '#c70d0d';
+                            setTimeout(function () {
+                                cardAttackHP.style.color = '#FFFFFF';
+                            }, 2000);
                         }
                         ;
                         svg.style.display = "none";

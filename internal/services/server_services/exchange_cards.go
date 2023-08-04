@@ -22,12 +22,18 @@ func ParseToExchangeCardsDataType(msgReq models.MessageRequest) (models.Exchange
 func ExchangeCardsDataType(game *models.GameTable, idPlayer string, exCardIds models.ExchangeCardsDataType) error {
 	if idPlayer == game.Player1.Name {
 		game.Player1.Hand = exchangeCards(game.Player1.Hand, game.Player1.Deck, exCardIds)
+		game.Player1.CounterOfMoves++
+		log.Println("mana", game.Player1.CounterOfMoves)
+		game.Player1.Mana = game.Player1.CounterOfMoves
 		log.Println("player 1, id: ", idPlayer)
 		return nil
 	}
 
 	if idPlayer == game.Player2.Name {
 		game.Player2.Hand = exchangeCards(game.Player2.Hand, game.Player2.Deck, exCardIds)
+		game.Player2.CounterOfMoves++
+		log.Println("mana", game.Player2.CounterOfMoves)
+		game.Player2.Mana = game.Player2.CounterOfMoves
 		log.Println("player 2, id: ", idPlayer)
 		return nil
 	}

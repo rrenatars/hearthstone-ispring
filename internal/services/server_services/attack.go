@@ -43,12 +43,15 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			}
 
 			g.Player2.Cards[indexCardDef].HP = g.Player2.Cards[indexCardDef].HP - g.Player1.Cards[indexCardAttack].Attack
+			g.Player1.Cards[indexCardAttack].HP = g.Player1.Cards[indexCardAttack].HP - g.Player2.Cards[indexCardDef].Attack
 
 			if g.Player2.Cards[indexCardDef].HP <= 0 {
 				g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardDef)
 			}
+			if g.Player1.Cards[indexCardAttack].HP <= 0 {
+				g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardAttack)
+			}
 		}
-		log.Println("уменьшается хп", g.Player2.HP)
 		return nil
 	}
 
@@ -67,12 +70,15 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			}
 
 			g.Player1.Cards[indexCardDef].HP = g.Player1.Cards[indexCardDef].HP - g.Player2.Cards[indexCardAttack].Attack
+			g.Player2.Cards[indexCardAttack].HP = g.Player2.Cards[indexCardAttack].HP - g.Player1.Cards[indexCardDef].Attack
 
 			if g.Player1.Cards[indexCardDef].HP <= 0 {
 				g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardDef)
 			}
+			if g.Player2.Cards[indexCardAttack].HP <= 0 {
+				g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardAttack)
+			}
 		}
-		log.Println("уменьшается хп", g.Player1.HP)
 		return nil
 	}
 

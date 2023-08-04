@@ -9,6 +9,7 @@ import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
+    console.log("зашел в функцию select cards")
 
     Array.from(cardsStart).forEach(function (card) {
         let img = null; // Флаг для отслеживания состояния элемента img
@@ -16,6 +17,7 @@ function selectCardsToExchange() {
             if (card.classList.contains('cards__card_swap')) {
                 card.classList.remove('cards__card_swap');
                 if (img) {
+                    console.log("card remove img", card, "img", img)
                     card.removeChild(img); // Удаляем img только если он был добавлен ранее
                     img = null; // Сбрасываем флаг
                 }
@@ -31,6 +33,7 @@ function selectCardsToExchange() {
             }
         });
     });
+    console.log("вышел из функции select cards")
 }
 
 function Lose() {
@@ -134,6 +137,7 @@ function start() {
     const handCards = document.querySelector('.hand__cards_start');
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
+            console.log("нажали на start submit")
             hand.classList.remove('hand-and-manabar__hand_start');
 
             handCards.removeChild(startSubmit);
@@ -158,6 +162,7 @@ function start() {
                     replacedCardIds: replacedCardIds
                 }
             }
+            console.log("отправили дату")
             socket.send(JSON.stringify(dataToSend))
         })
     }
@@ -275,13 +280,15 @@ export function socketInit() {
         setGame(ParseDataToGameTable(data));
         console.log(game)
         if (clientId === game.player1.name) {
-            if (game.player1.turn) {
-                document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
-            } else {
-                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
-                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
-                endTurnButton.setAttribute('disabled', '');
+            if (game.player1.CounterOfMoves > 0) {
+                if (game.player1.turn) {
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+                } else {
+                    document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                    endTurnButton.setAttribute('disabled', '');
+                }
             }
             ViewCards(game.player1.cards, "background__field", "field__card")
             ViewCards(game.player1.hand, "cards", "cards__card");
@@ -289,15 +296,17 @@ export function socketInit() {
             myHeroHealthValue.textContent = game.player1.HP
             enemyHeroHealthValue.textContent = game.player2.HP
         } else {
-            if (game.player2.turn) {
-                endTurnButton.addEventListener("click", function () {
-                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
-                })
-            } else {
-                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
-                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
-                endTurnButton.setAttribute('disabled', '');
+            if (game.player2.CounterOfMoves > 0) {
+                if (game.player2.turn) {
+                    endTurnButton.addEventListener("click", function () {
+                        document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                        endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+                    })
+                } else {
+                    document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                    endTurnButton.setAttribute('disabled', '');
+                }
             }
             ViewCards(game.player2.cards, "background__field", "field__card")
             ViewCards(game.player2.hand, "cards", "cards__card");
@@ -332,18 +341,141 @@ export function socketInit() {
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                     manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                 }
-                startBefore()
-                start()
+                if ((clientId === game.player1.name) && (!game.player1.turn)) {
+                    if (game.player1.Mana > 1) {
+                        manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
+                    }
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                }
+                if ((clientId === game.player2.name) && (!game.player2.turn)) {
+                    if (game.player2.Mana > 1) {
+                        manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                    }
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
+                }
+                // if ((game.player1.CounterOfMoves === 0) && (game.player2.CounterOfMoves === 0)) {
+                //     startBefore()
+                //     start()
+                // }
+                if ((clientId === game.player1.name) && (game.player1.CounterOfMoves === 0)) {
+                    startBefore()
+                    start()
+                }
+                if ((clientId === game.player2.name) && (game.player2.CounterOfMoves === 0)) {
+                    startBefore()
+                    start()
+                }
                 break;
             case "exchange cards":
-                afterStart()
-                if (game.player1.turn && clientId === game.player1.name) {
-                    dragNDrop()
-                    attack()
+                // if (clientId === game.player1.name) {
+                //     if (game.player1.CounterOfMoves > 0) {
+                //         console.log("fjajdf", game.player1.CounterOfMoves)
+                //         afterStart()
+                //         ViewCards(game.player1.hand, "cards", "cards__card");
+                //         if (game.player1.turn) {
+                //             manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
+                //             manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                //             dragNDrop()
+                //             attack()
+                //         }
+                //     } else {
+                //         const startSubmit = document.getElementById("StartSubmit")
+                //         console.log("else")
+                //         if (!startSubmit) {
+                //             console.log("else2")
+                //             startBefore()
+                //             start()
+                //         }
+                //     }
+                // }
+                // if (clientId === game.player2.name) {
+                //     if (game.player2.CounterOfMoves > 0) {
+                //         console.log("fjajdf", game.player2.CounterOfMoves)
+                //         afterStart()
+                //         ViewCards(game.player2.hand, "cards", "cards__card");
+                //         if (game.player2.turn) {
+                //             manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                //             manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
+                //             dragNDrop()
+                //             attack()
+                //         }
+                //     } else {
+                //         const startSubmit = document.getElementById("StartSubmit")
+                //         console.log("else")
+                //         if (!startSubmit) {
+                //             console.log("else2")
+                //             startBefore()
+                //             start()
+                //         }
+                //     }
+                // }
+                console.log("карты сразу после того как зашли в exchange cards", document.querySelectorAll(".cards__card"))
+                if (clientId === game.player1.name) {
+                    if (game.player1.turn && game.player1.CounterOfMoves > 0) {
+                        afterStart()
+                        console.log("зашел после after start")
+                        manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
+                        manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                        dragNDrop()
+                        attack()
+                    } else {
+                        console.log("зашел в else start", document.getElementById("StartSubmit"))
+                        if (document.getElementById("StartSubmit")) {
+                            console.log("зашел в if с cards start")
+                            const hand = document.querySelector('.hand-and-manabar__hand');
+
+                            const startSubmit = document.getElementById('StartSubmit');
+                            const cardsHeader = document.querySelector('.cards__header');
+                            const handCards = document.querySelector('.hand__cards_start');
+
+                            hand.classList.remove('hand-and-manabar__hand_start');
+
+                            handCards.removeChild(startSubmit);
+                            handCards.removeChild(cardsHeader);
+                            handCards.classList.remove('hand__cards_start');
+
+                            startBefore()
+                            start()
+                        }
+                    }
                 }
-                if (game.player2.turn && clientId === game.player2.name) {
-                    dragNDrop()
-                    attack()
+                if (clientId === game.player2.name) {
+                    if (game.player2.CounterOfMoves > 0 && game.player2.turn) {
+                        afterStart()
+                        console.log("зашел после after start")
+                        manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                        manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
+                        dragNDrop()
+                        attack()
+                    } else {
+                        console.log("зашел в else start", document.getElementById("StartSubmit"))
+                        if (document.getElementById("StartSubmit")) {
+                            console.log("зашел в if с cards start")
+                            const hand = document.querySelector('.hand-and-manabar__hand');
+
+                            const startSubmit = document.getElementById('StartSubmit');
+                            const cardsHeader = document.querySelector('.cards__header');
+                            const cards = document.querySelectorAll('.cards__card_start');
+                            const handCards = document.querySelector('.hand__cards_start');
+
+                            hand.classList.remove('hand-and-manabar__hand_start');
+
+                            handCards.removeChild(startSubmit);
+                            handCards.removeChild(cardsHeader);
+                            handCards.classList.remove('hand__cards_start');
+
+                            startBefore()
+                            start()
+                        }
+                    }
+                }
+
+                // чтобы при ходе оппонента заполнилась его мана
+                if (clientId === game.player1.name && game.player1.CounterOfMoves > 0) {
+                    manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                }
+                if (clientId === game.player2.name && game.player2.CounterOfMoves > 0) {
+                    manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                 }
                 break
             case "card drag":
