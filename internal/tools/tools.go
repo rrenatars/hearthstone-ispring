@@ -63,8 +63,8 @@ func CreateNewGameTable(id_ string, b bool) (*models.GameTable, error) {
 
 	if !b {
 		return models.NewGameTable(
-			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 100, 100, 0, 0),
-			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 100, 100, 0, 0),
+			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 30, 100, 0, 0),
+			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 30, 100, 0, 0),
 			[]models.CardData{}, id_), nil
 	}
 
