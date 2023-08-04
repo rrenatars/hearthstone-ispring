@@ -34,19 +34,16 @@ func calculateOptimalMove(g *models.GameTable, p *models.Player) {
 	if p.Name == g.Player1.Name {
 		botAttack(p, g.Player2)
 	}
-	log.Println(g.Player2.Cards)
 
 	if p.Name == g.Player2.Name {
 		botAttack(p, g.Player1)
 	}
-	log.Println(g.Player1.Cards)
 }
 
 func botAttack(bot *models.Player, player *models.Player) {
 	if botAttackPlayer(bot, player, botAttackPlayerCards(bot, player)) {
 		log.Println("bot win")
 	}
-	log.Println(player.Cards)
 }
 
 func botAttackPlayer(bot *models.Player, player *models.Player, i_ int) bool {
@@ -75,7 +72,6 @@ func botAttackPlayerCards(bot *models.Player, player *models.Player) int {
 			}
 		}
 	}
-	log.Println("фор", player.Cards)
 	return i_
 }
 
