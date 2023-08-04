@@ -56,9 +56,11 @@ func (c *Client) readPump() {
 		c.conn.Close()
 		close(c.send)
 	}()
+
 	c.conn.SetReadLimit(maxMessageSize)
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
 	for {
 		_, message, err := c.conn.ReadMessage()
 		if err != nil {
@@ -140,20 +142,13 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	if client1 == nil {
 		log.Println("client is nil")
 	}
-	//log.Println("client is find")
 
 	roomID := r.URL.Query().Get("room")
 	if roomID == "" {
 		log.Println("room default")
 		roomID = "default"
 	}
-	// room := hub.getRoom(roomID)
-	// if room == nil {
-	// 	log.Println("room is nil: ", roomID)
-	// 	conn.WriteJSON("ROOM IS UNDEFINED")
-	// 	conn.Close()
-	// 	return
-	// }
+
 	room := hub.getRoomByClientID(clientID)
 	if room == nil || room.id == "default" {
 		room = hub.getRoom(roomID)

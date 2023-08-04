@@ -193,32 +193,49 @@ selectHeroButton.addEventListener("click", function () {
             });
         }
     });
+    const homeButton = document.createElement('div');
+    homeButton.className = 'homeButton';
+    homeButton.id = 'homeButton';
+    newbg.appendChild(homeButton);
+    homeButton.addEventListener("click", function () {
+        newbg.remove();
+        realbg.appendChild(bg);
+    });
 });
 startGameButton.addEventListener("click", function () {
     var url;
+    console.log(selectGameMode)
     if (selectGameMode === 'singleplayer') {
         url = 'arena?heroclass=' + encodeURIComponent(selectHero) +
             '&difficulty=' + encodeURIComponent(selectDifficulty);
+        console.log(localStorage.getItem('id'), "artem")
+        socket.send(JSON.stringify({
+                type: "create bot game",
+                data : {
+                    clientID: localStorage.getItem('id')
+                }
+            })
+        )
     } else {
-        url = 'multiplayer?heroclass=' + encodeURIComponent(selectHero);
+        url = 'arena?heroclass=' + encodeURIComponent(selectHero);
+        socket.send(JSON.stringify({
+            type: "create game",
+            data : {
+                clientID: localStorage.getItem('id')
+            }
+        }))
     }
-    console.log(localStorage.getItem('id'))
-    socket.send(JSON.stringify({
-        type: "create game",
-        data : {
-            clientID: localStorage.getItem('id')
-        }
-    }))
+
 
     socket.onmessage = event =>{
         const data = JSON.parse(event.data);
-        console.log(data.type);  
+        console.log(data.type);
         console.log(data.data);
 
         setGame(ParseDataToGameTable(data.data))
         url += "&room="+ game.id
         console.log(url)
-        
-       window.location.href = url;
+
+        window.location.href = url;
     }
 });

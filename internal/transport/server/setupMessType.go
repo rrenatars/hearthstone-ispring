@@ -13,8 +13,17 @@ import (
 func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 	log.Println(msgReq.Type)
 	switch msgReq.Type {
+	case "create bot game":
+		createGame(msgReq, c, bot)
+		err := c.conn.WriteJSON(models.MessageResponse{
+			Type: "take room id",
+			Data: *c.room.game,
+		})
+		if err != nil {
+			log.Println(err)
+		}
 	case "create game":
-		createGame(msgReq, c)
+		createGame(msgReq, c, multiplayer)
 		err := c.conn.WriteJSON(models.MessageResponse{
 			Type: "take room id",
 			Data: *c.room.game,
@@ -36,6 +45,10 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 		c.room.broadcast <- jsonData
 	case "end turn":
 		serverservices.EndTurn(c.room.game)
+		if c.room.bot {
+			serverservices.Bot(c.room.game)
+			serverservices.EndTurn(c.room.game)
+		}
 		jsonData, err := json.Marshal(models.MessageResponse{
 			Type: "turn",
 			Data: *c.room.game,
@@ -108,23 +121,23 @@ func giveMeGame(c *Client) {
 	})
 }
 
-func createGame(msgReq models.MessageRequest, c *Client) {
+func createGame(msgReq models.MessageRequest, c *Client, b bool) {
 	var createGame CreateGameData
 	if err := json.Unmarshal(msgReq.Data, &createGame); err != nil {
 		log.Println("Ошибка при парсинге JSON: ", err)
 		return
 	}
 
-	if ConnectToRoom(c) {
+	if !b && ConnectToRoom(c) {
 		return
 	}
 
-	CreateNewRoom(c)
+	CreateNewRoom(c, b)
 }
 
 func ConnectToRoom(c *Client) bool {
 	for _, r := range c.hub.rooms {
-		if len(r.clients) < 2 && r.id != "default" {
+		if len(r.clients) < 2 && r.id != "default" && !r.bot {
 			c.room = r
 			if c.room.game.Player2.Name == "name" {
 				c.room.game.Player2.Name = c.id
@@ -133,7 +146,6 @@ func ConnectToRoom(c *Client) bool {
 			} else {
 				log.Println("error log conncection")
 			}
-			//sendCreateGameResponse(c)
 
 			log.Println("connect room roomID: ", r.id)
 			return true
@@ -142,9 +154,14 @@ func ConnectToRoom(c *Client) bool {
 	return false
 }
 
-func CreateNewRoom(c *Client) {
-	id := uuid.New().String()
-	roomPtr := newRoom(id, tools.CreateNewGameTable(id))
+func CreateNewRoom(c *Client, b bool) {
+	g, err := tools.CreateNewGameTable(uuid.New().String(), b)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	roomPtr := newRoom(g.Id, g, b)
 
 	if roomPtr.game.Player1.Name == "name" {
 		roomPtr.game.Player1.Name = c.id
@@ -154,8 +171,6 @@ func CreateNewRoom(c *Client) {
 
 	c.room = roomPtr
 	c.hub.rooms[roomPtr.id] = roomPtr
-
-	//sendCreateGameResponse(c)
 
 	log.Println("create room roomID: ", roomPtr.game.Id)
 }

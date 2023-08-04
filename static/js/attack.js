@@ -239,7 +239,7 @@ export function attack() {
                         socket.send(JSON.stringify({
                             type: "attack",
                             data: {
-                                player: (game.player1.turn ? game.player1.name : game.player2.name),
+                                player: localStorage.getItem("id"),
                                 idAttack: e.id,
                                 idDefense: e3.id,
                             }

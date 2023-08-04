@@ -6,25 +6,30 @@ import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 )
 
+const (
+	bot         = true
+	multiplayer = false
+)
+
 type Room struct {
-	id         string
-	register   chan *Client
-	unregister chan *Client
-	broadcast  chan []byte
-	// send           chan string
+	id             string
+	register       chan *Client
+	unregister     chan *Client
+	broadcast      chan []byte
+	bot            bool
 	clients        map[string]*Client
 	clientsHistory map[string]bool
 	game           *models.GameTable
 	mu             sync.Mutex
 }
 
-func newRoom(name string, g *models.GameTable) *Room {
+func newRoom(name string, g *models.GameTable, b bool) *Room {
 	return &Room{
-		id:         name,
-		register:   make(chan *Client),
-		unregister: make(chan *Client),
-		broadcast:  make(chan []byte),
-		// send:           make(chan string),
+		id:             name,
+		register:       make(chan *Client),
+		unregister:     make(chan *Client),
+		broadcast:      make(chan []byte),
+		bot:            b,
 		clients:        make(map[string]*Client),
 		clientsHistory: make(map[string]bool),
 		game:           g,

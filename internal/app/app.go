@@ -40,8 +40,8 @@ func Run() {
 		return
 	}
 
-	pl1 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, true, 30, 100, 1, 0)
-	pl2 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(deck, 3), deck, []models.CardData{}, false, 30, 100, 1, 0)
+	pl1 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(&deck, 3), deck, []models.CardData{}, true, 30, 100, 0, 0)
+	pl2 := models.NewPlayer("name", tools.GetRandomElementsFromDeck(&deck, 3), deck, []models.CardData{}, false, 30, 100, 0, 0)
 	gameTable := models.NewGameTable(pl1, pl2, []models.CardData{}, "")
 
 	var games []Game

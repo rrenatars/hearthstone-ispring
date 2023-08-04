@@ -47,7 +47,7 @@ func exchangeCards(cards []models.CardData, deck []models.CardData, exCardIds mo
 		return cards
 	}
 
-	newCards := tools.GetRandomElementsFromDeck(deck, len(exCardIds.ReplacedCardIds))
+	newCards := tools.GetRandomElementsFromDeck(&deck, len(exCardIds.ReplacedCardIds))
 
 	for _, c := range cards {
 		f := false
