@@ -51,7 +51,8 @@ export function dragNDrop() {
                         var shiftY = e.pageY - coords.top;
 
                         card.style.position = 'absolute';
-                        moveAt(e);
+                        card.classList.remove("cards__card")
+                        card.classList.add("cards__drag")
 
                         card.style.zIndex = 1000;
 
@@ -61,7 +62,9 @@ export function dragNDrop() {
                         }
 
                         document.onmousemove = function (e) {
-                            moveAt(e);
+                            setTimeout(function() {
+                                moveAt(e);
+                            }, 100);
                         };
 
                         card.onmouseup = function () {
@@ -75,13 +78,8 @@ export function dragNDrop() {
                                 }
                                 field.appendChild(card);
                                 card.style.position = 'static';
-                                card.classList.remove('cards__card');
+                                card.classList.remove('cards__drag');
                                 card.classList.add('field__card');
-
-                                // mana = mana - manaSelectedCard;
-                                //
-                                // const manaElement = document.getElementById('MyMana');
-                                // manabarFilling(mana, manaElement);
 
                                 socket.send(JSON.stringify({
                                     type: "card drag",
@@ -91,6 +89,8 @@ export function dragNDrop() {
                                     },
                                 }))
                             } else {
+                                card.classList.remove("cards__drag")
+                                card.classList.add("cards__card")
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';
                             }

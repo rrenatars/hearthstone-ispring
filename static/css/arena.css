@@ -97,6 +97,18 @@
     background-repeat: no-repeat;
 }
 
+.cards__drag {
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    box-shadow: none;
+    transform: none;
+    background-repeat: no-repeat;
+}
+
 .cards__card:hover {
     margin-bottom: 135px;
     transform: scale(2.3);

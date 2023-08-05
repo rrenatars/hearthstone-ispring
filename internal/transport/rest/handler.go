@@ -103,6 +103,8 @@ func (h *Handler) InitRoutes(gameTable *models.GameTable) *gin.Engine {
 		})
 	})
 
+	router.GET("/test", test)
+
 	router.GET("/menu", h.menu)
 	// Остальные маршруты без middleware аутентификации
 	router.GET("/ws", ginWsServe(hub))
