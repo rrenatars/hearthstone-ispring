@@ -109,6 +109,7 @@ func exchangeCards(msgReq models.MessageRequest, c *Client) {
 	if err != nil {
 		return
 	}
+	log.Println("exchange cards data", data)
 	serverservices.ExchangeCardsDataType(c.room.game, c.id, data)
 }
 

@@ -264,6 +264,17 @@ if (clientId == undefined || clientId == null) {
     clientId = 0
 }
 
+function mouseOver(elements) {
+    function handleMouseOver(event) {
+        // Выводим сообщение в консоль при наведении на элемент
+        console.log("Наведение на элемент:", event.target);
+    }
+
+    // Добавляем обработчик события для каждого элемента из коллекции cards
+    elements.forEach((element) => {
+        element.addEventListener("mouseover", handleMouseOver);
+    });
+}
 export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
 
 //export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
@@ -327,9 +338,22 @@ export function socketInit() {
             }
         });
 
+        if (clientId === game.player1.name && game.player1.turn && game.player1.CounterOfMoves > 0) {
+            const cards = document.querySelectorAll(".cards__card")
+            mouseOver(cards)
+            dragNDrop()
+            attack()
+        }
+        if (clientId === game.player2.name && game.player2.turn && game.player2.CounterOfMoves > 0) {
+            const cards = document.querySelectorAll(".cards__card")
+            mouseOver(cards)
+            dragNDrop()
+            attack()
+        }
+
         const myManaElement = document.getElementById("MyMana")
         const enemyManaElement = document.getElementById("EnemyMana")
-
+        console.log("type", type)
         switch (type) {
             case "start game":
                 // заполнение маны в самом начале игры
@@ -416,6 +440,8 @@ export function socketInit() {
                         console.log("зашел после after start")
                         manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
                         manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
+                        const cards = document.querySelectorAll(".cards__card")
+                        mouseOver(cards)
                         dragNDrop()
                         attack()
                     } else {
@@ -445,6 +471,8 @@ export function socketInit() {
                         console.log("зашел после after start")
                         manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                         manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
+                        const cards = document.querySelectorAll(".cards__card")
+                        mouseOver(cards)
                         dragNDrop()
                         attack()
                     } else {
@@ -481,11 +509,15 @@ export function socketInit() {
             case "card drag":
                 // заполнение маны после перетаскивания карты
                 if (game.player1.turn && clientId === game.player1.name) {
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     attack()
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     attack()
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
@@ -502,6 +534,8 @@ export function socketInit() {
                 // чтобы мана оппонента не обновлялась при передаче хода, то есть была видна мана до нажатия кнопки завершить ход оппонента
                 if (game.player1.turn && clientId === game.player1.name) {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -518,6 +552,8 @@ export function socketInit() {
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -542,25 +578,29 @@ export function socketInit() {
                 break
             case "take a game":
                 if (game.player1.turn && clientId === game.player1.name) {
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
+                    const cards = document.querySelectorAll(".cards__card")
+                    mouseOver(cards)
                     dragNDrop()
                     attack()
                 }
                 console.log(type, game)
                 break
-            case "attack":
-                if (game.player1.turn && clientId === game.player1.name) {
-                    dragNDrop()
-                    attack()
-                }
-                if (game.player2.turn && clientId === game.player2.name) {
-                    dragNDrop()
-                    attack()
-                }
-                break
+            // case "attack":
+            //     if (game.player1.turn && clientId === game.player1.name) {
+            //         dragNDrop()
+            //         attack()
+            //     }
+            //     if (game.player2.turn && clientId === game.player2.name) {
+            //         dragNDrop()
+            //         attack()
+            //     }
+            //     break
             default:
                 console.log("undefined type", type)
                 break;
