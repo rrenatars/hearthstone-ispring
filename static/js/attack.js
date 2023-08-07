@@ -26,19 +26,20 @@ export function attack() {
                 document.getElementById("arrowcursor").style.visibility = "visible";
                 document.body.style.cursor = "none";
                 e.classList.add("activeCard");
-                e.style.zIndex = "-1";
+                // e.style.zIndex = "-1";
 
                 document.body.addEventListener('mousemove', function (e2) {
-                    var xDest = e2.clientX;
-                    var yDest = e2.clientY;
-                    var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
-                    var deg = angleDeg + 90;
-                    document.getElementById("arrowcursor").style.left = xDest + 'px';
-                    document.getElementById("arrowcursor").style.zIndex = 1000;
-                    document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
-                    document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
-                    svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
-
+                    if (document.querySelector(".activeCard")) {
+                        var xDest = e2.clientX;
+                        var yDest = e2.clientY;
+                        var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
+                        var deg = angleDeg + 90;
+                        document.getElementById("arrowcursor").style.left = xDest + 'px';
+                        document.getElementById("arrowcursor").style.zIndex = 14;
+                        document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
+                        document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
+                        svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                    }
                     if (document.querySelector(".activeCard")) {
                         let cardsHand = document.querySelectorAll(".cards__card")
                         cardsHand.forEach((cardHand) => {
