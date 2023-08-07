@@ -9,8 +9,9 @@ export function ViewCards(cards, parentId, childClassName) {
     }
 
     console.log(cards)
-
+    let i = -1
     for (const cardInHand of cards) {
+        i++
         let newCardElement = document.createElement('div');
 
         newCardElement.className = childClassName;
@@ -26,7 +27,7 @@ export function ViewCards(cards, parentId, childClassName) {
         const manaElement = document.createElement('span');
         manaElement.className = "card__mana";
         manaElement.textContent = cardInHand.mana;
-        manaElement.style.display = "inline-block"
+        manaElement.style.display = "none"
         manaElement.style.visibility = "hidden"
         newCardElement.appendChild(manaElement);
 
@@ -56,7 +57,6 @@ export function ViewCards(cards, parentId, childClassName) {
             hpElement.textContent = cardInHand.hp
             newCardElement.appendChild(hpElement)
         }
-
         cardsHand.appendChild(newCardElement);
     }
     //stateMachine.processEvent("start game");

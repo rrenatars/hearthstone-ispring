@@ -1,7 +1,24 @@
-import { attack } from "./attack.js";
-import { manabarFilling } from "./manabar-filling.js";
-import { game } from "./game.js";
-import { socket } from "./websocket.js";
+import {game} from "./game.js";
+import {socket} from "./websocket.js";
+
+const beforeStyle = document.createElement("style");
+document.head.appendChild(beforeStyle);
+
+function animateCards(b) {
+    const cardPortraitUrl = "url_to_your_card_portrait_image";
+
+    beforeStyle.innerHTML = `.cards__card_drag::before {` +
+        `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(` + b + `px);
+    }`;
+
+    setTimeout(function() {
+        if (b === 9) {
+            animateCards(6);
+        } else {
+            animateCards(b + 1);
+        }
+    }, 500);
+}
 
 export function dragNDrop() {
     function getCoords(elem) {
@@ -34,8 +51,8 @@ export function dragNDrop() {
                         const label = document.getElementById("manaWarning");
                         label.style.visibility = "visible";
                         label.style.opacity = "1";
-                        var x = Math.round(e.clientX) - label.offsetWidth/1.5 + "px";
-                        var y = Math.round(e.clientY) - label.offsetHeight/1.5 + "px";
+                        var x = Math.round(e.clientX) - label.offsetWidth / 1.5 + "px";
+                        var y = Math.round(e.clientY) - label.offsetHeight / 1.5 + "px";
                         label.style.left = x;
                         label.style.top = y;
                         setTimeout(function () {
@@ -51,18 +68,31 @@ export function dragNDrop() {
                         var shiftY = e.pageY - coords.top;
 
                         card.style.position = 'absolute';
+                        console.log("card drag", card)
                         card.classList.remove("cards__card")
-                        card.classList.add("cards__drag")
+                        card.classList.remove("cards__card_enable-to-drag")
+                        card.classList.add("cards__card_drag")
 
                         card.style.zIndex = 1000;
+                        const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
+                        const beforeStyle = document.createElement('style');
+                        beforeStyle.innerHTML = `
+            .cards__card_drag::before {
+                background-image: url(` + cardPortraitUrl + `);
+            }
+            `;
+                        // Добавляем созданный стиль в голову документа
+                        document.head.appendChild(beforeStyle);
+
+                        animateCards(6);
 
                         function moveAt(e) {
-                            card.style.left = e.pageX - shiftX + 'px';
-                            card.style.top = e.pageY - shiftY + 'px';
+                            card.style.left = e.pageX + 'px';
+                            card.style.top = e.pageY + 'px';
                         }
 
                         document.onmousemove = function (e) {
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 moveAt(e);
                             }, 100);
                         };
@@ -89,8 +119,9 @@ export function dragNDrop() {
                                     },
                                 }))
                             } else {
-                                card.classList.remove("cards__drag")
+                                card.classList.remove("cards__card_drag")
                                 card.classList.add("cards__card")
+                                card.classList.add("cards__card_enable-to-drag")
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';
                             }

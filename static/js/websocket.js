@@ -4,7 +4,7 @@ import {game, setGame} from "./game.js"
 import {ViewCards} from "./view.js";
 
 import {dragNDrop} from "./dragndrop.js";
-import {manabarFilling} from "./manabar-filling.js";
+import {manabarFilling, manabarFillingHover} from "./manabar-filling.js";
 import {attack} from "./attack.js";
 
 function selectCardsToExchange() {
@@ -26,6 +26,7 @@ function selectCardsToExchange() {
                     card.classList.add('cards__card_swap');
                     if (!img) {
                         img = document.createElement("img");
+                        img.classList.add("cross")
                         img.src = "/static/images/cross.png";
                         card.appendChild(img); // Добавляем img только если его еще нет
                     }
@@ -183,7 +184,7 @@ function afterStart() {
         const opponentHeroElement = document.getElementById('opponenthero');
         const opponentheroHealthElement = document.getElementById('Player2HealthValue');
         selectedHeroPowerElement.addEventListener("click", function () {
-            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
                     case 'Hunter':
                         opponentheroHealthElement.textContent -= 2;
@@ -192,12 +193,12 @@ function afterStart() {
                         break;
                     case 'Mage':
                         selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
@@ -233,12 +234,12 @@ function afterStart() {
                         break;
                     case 'Priest':
                         selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
@@ -260,14 +261,109 @@ if (room === "" || room === null) {
     // localStorage.setItem("room", room)
 }
 let clientId = localStorage.getItem('id')
-if (clientId == undefined || clientId == null) {
+if (clientId === undefined || clientId === null) {
     clientId = 0
 }
 
-function mouseOver(elements) {
+const beforeStyleAnim = document.createElement("style");
+document.head.appendChild(beforeStyleAnim);
+
+function animateCards(b, s) {
+    beforeStyleAnim.innerHTML = `.cards__card_enable-to-drag::before {` +
+        `filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(` + s +`) blur(` + b + `px);
+    }`;
+
+    setTimeout(function() {
+        if (b === 9) {
+            animateCards(6, s);
+        } else if (s === 16) {
+            animateCards(b + 1, 4);
+        } else {
+            animateCards(b + 1, s + 1)
+        }
+    }, 500);
+}
+
+function yourTurn() {
+    let yourTurnElement = document.createElement("img")
+
+    yourTurnElement.classList.add("your-turn")
+    yourTurnElement.src = "../../static/images/field/your-turn.png"
+    document.body.append(yourTurnElement)
+
+    setTimeout(function () {
+        document.body.removeChild(document.querySelector(".your-turn"))
+    }, 2000)
+}
+
+function enableToDrag(manaValue) {
+    const cards = document.querySelectorAll(".cards__card")
+
+    cards.forEach((card) => {
+        if (manaValue >= parseInt(card.querySelector(".card__mana").textContent)) {
+            card.classList.add("cards__card_enable-to-drag")
+            const style = window.getComputedStyle(card, "::before");
+            const cardPortraitUrl = card.style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
+            let beforeStyle = document.createElement('style');
+            beforeStyle.innerHTML = `
+            .cards__card_enable-to-drag::before {
+                background-image: url(` + cardPortraitUrl + `);
+            }
+            `;
+            // Добавляем созданный стиль в голову документа
+            document.head.appendChild(beforeStyle);
+
+            const innerE = document.createElement("div")
+            innerE.style.backgroundImage = "url(" + cardPortraitUrl + ")"
+            innerE.style.backgroundSize = "cover"
+            innerE.classList.add("cards__card_inner")
+            card.style.backgroundImage = ''
+            card.append(innerE)
+
+            animateCards(6, 4);
+        }
+    })
+}
+
+function mouseOver(game, elements) {
     function handleMouseOver(event) {
         // Выводим сообщение в консоль при наведении на элемент
-        console.log("Наведение на элемент:", event.target);
+
+        let card = event.target
+
+        if (event.target.classList.contains("cards__card_inner")) {
+            card = event.target.parentElement
+        }
+
+        if (card.classList.contains("cards__card_enable-to-drag")) {
+            const cardManaValue = parseInt(card.querySelector(".card__mana").textContent)
+            setTimeout(function () {
+                manabarFillingHover(cardManaValue)
+            }, 200)
+        }
+
+        card.addEventListener("mouseout", handleMouseOut)
+    }
+
+    function handleMouseOut(event) {
+        let card = event.target
+
+        if (event.target.classList.contains("cards__card_inner")) {
+            card = event.target.parentElement
+        }
+
+        if (card.classList.contains("cards__card_enable-to-drag")) {
+            const myManaElement = document.getElementById("MyMana")
+            if (game.player1.name === clientId) {
+                setTimeout(function () {
+                    manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
+                }, 200)
+            } else {
+                setTimeout(function () {
+                    manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
+                }, 200)
+            }
+        }
     }
 
     // Добавляем обработчик события для каждого элемента из коллекции cards
@@ -275,6 +371,7 @@ function mouseOver(elements) {
         element.addEventListener("mouseover", handleMouseOver);
     });
 }
+
 export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
 
 //export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
@@ -339,14 +436,16 @@ export function socketInit() {
         });
 
         if (clientId === game.player1.name && game.player1.turn && game.player1.CounterOfMoves > 0) {
+            enableToDrag(game.player1.Mana)
             const cards = document.querySelectorAll(".cards__card")
-            mouseOver(cards)
+            mouseOver(game, cards)
             dragNDrop()
             attack()
         }
         if (clientId === game.player2.name && game.player2.turn && game.player2.CounterOfMoves > 0) {
+            enableToDrag(game.player2.Mana)
             const cards = document.querySelectorAll(".cards__card")
-            mouseOver(cards)
+            mouseOver(game, cards)
             dragNDrop()
             attack()
         }
@@ -441,7 +540,8 @@ export function socketInit() {
                         manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
                         manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
                         const cards = document.querySelectorAll(".cards__card")
-                        mouseOver(cards)
+                        mouseOver(game, cards)
+                        yourTurn()
                         dragNDrop()
                         attack()
                     } else {
@@ -472,7 +572,8 @@ export function socketInit() {
                         manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                         manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                         const cards = document.querySelectorAll(".cards__card")
-                        mouseOver(cards)
+                        mouseOver(game, cards)
+                        yourTurn()
                         dragNDrop()
                         attack()
                     } else {
@@ -510,14 +611,14 @@ export function socketInit() {
                 // заполнение маны после перетаскивания карты
                 if (game.player1.turn && clientId === game.player1.name) {
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
                     attack()
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
                     attack()
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
@@ -535,8 +636,9 @@ export function socketInit() {
                 if (game.player1.turn && clientId === game.player1.name) {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
+                    yourTurn()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -553,8 +655,9 @@ export function socketInit() {
                 if (game.player2.turn && clientId === game.player2.name) {
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
+                    yourTurn()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -579,13 +682,13 @@ export function socketInit() {
             case "take a game":
                 if (game.player1.turn && clientId === game.player1.name) {
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
                     attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(cards)
+                    mouseOver(game, cards)
                     dragNDrop()
                     attack()
                 }
