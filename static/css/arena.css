@@ -145,7 +145,7 @@
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 20px;
-    background-color: #52a4d7;  
+    background-color: #52a4d7;
     /* #12f2f6 */
     padding: 10px;
     border-radius: 10px;
@@ -153,10 +153,21 @@
 }
 
 @keyframes burn {
-  from { box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .4em #34c9ff, .2em -.3em .3em #0c92ec;}
-  45%  { box-shadow: .15em 0 .4em #85dafe, -.1em -.25em .5em #34c9ff, .15em -.45em .5em #0c92ec;}
-  70%  { box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .6em #34c9ff, .2em -.3em .4em #0c92ec;}
-  to   { box-shadow: -.15em 0 .6em #85dafe, .1em -.25em .6em #34c9ff, -.15em -.45em .5em #0c92ec;}
+    from {
+        box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .4em #34c9ff, .2em -.3em .3em #0c92ec;
+    }
+
+    45% {
+        box-shadow: .15em 0 .4em #85dafe, -.1em -.25em .5em #34c9ff, .15em -.45em .5em #0c92ec;
+    }
+
+    70% {
+        box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .6em #34c9ff, .2em -.3em .4em #0c92ec;
+    }
+
+    to {
+        box-shadow: -.15em 0 .6em #85dafe, .1em -.25em .6em #34c9ff, -.15em -.45em .5em #0c92ec;
+    }
 }
 
 .cards {
@@ -221,16 +232,11 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    /* Ограничьте размеры div, чтобы они не зависели от размеров содержимого */
-    /*width: 200px; !* Например, вы можете задать фиксированную ширину *!*/
-    /*height: 150px; !* Например, вы можете задать фиксированную высоту *!*/
-    /* Другие стили для внешнего вида div */
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
-    /*z-index: 12;*/
 }
 
 .card__attack {
@@ -248,12 +254,12 @@
     user-select: none;
 }
 
-.card__attack_provocation {
+.card__attack_taunt {
     margin-bottom: 28%;
     margin-right: 37%;
 }
 
-.card__attack_poison {
+.card__attack_poisonous {
     margin-bottom: 23%;
     margin-right: 46%;
 }
@@ -273,12 +279,12 @@
     user-select: none;
 }
 
-.card__hp_provocation {
+.card__hp_taunt {
     margin-bottom: 28%;
     margin-right: 16%;
 }
 
-.card__hp_poison {
+.card__hp_poisonous {
     margin-bottom: 22%;
     margin-right: 14%;
 }
@@ -305,13 +311,16 @@ button:active {
     position: absolute;
     width: 11%;
     height: 17%;
-    left: 45.55%;
+    left: 45.35%;
     top: 9.75%;
     z-index: 11;
-    background-image: url(../images/field/medivh.gif);
+    background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
     user-select: none;
+    /* border-top-left-radius: 90%;
+    border-top-right-radius: 90%;
+    box-shadow: inset 0px 0px 50px 4px #ba1515; */
 }
 
 .playerHero {
@@ -321,7 +330,7 @@ button:active {
     left: 45.05%;
     top: 67.45%;
     z-index: 2;
-    background-image: url(../images/field/Mage.png);
+    background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -339,7 +348,7 @@ button:active {
 
 .opposingHeroHealthValue {
     margin-top: 47%;
-    margin-left: 10%;
+    margin-left: 5%;
     font-size: 26px;
     font-weight: bold;
     color: white;
@@ -374,7 +383,7 @@ button:active {
     top: 70.5%;
     left: 54%;
     z-index: 2;
-    background-image: url(../images/field/playerpower.png);
+    background-image: url(../images/field/magepower.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -388,23 +397,37 @@ button:active {
     user-select: none;
     font-size: 16px;
     font-weight: bold;
-    background: url(../images/field/endturn1.png);
+    background: url(../images/field/end-turn1.png);
     background-repeat: no-repeat;
     background-size: contain;
     font-family: BelweBdBTBold;
     border: none;
     z-index: 2;
     border-top-left-radius: 120%35px;
-	border-bottom-left-radius: 120%35px; 
-	border-top-right-radius: 120%35px;
-	border-bottom-right-radius: 120%35px;
+    border-bottom-left-radius: 120%35px;
+    border-top-right-radius: 120%35px;
+    border-bottom-right-radius: 120%35px;
 }
 
 @keyframes burn2 {
-  from { box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .4em #29e73f, .2em -.3em .3em #1bc529, -.2em -.4em .4em #1bc529, .1em -.5em .7em #10cc1f;}
-  45%  { box-shadow: .1em -.2em .5em #62f164, .15em 0 .4em #29e73f, -.1em -.25em .5em #29e73f, .15em -.45em .5em #1bc529, -.1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;; }
-  70%  { box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .6em #29e73f, .2em -.3em .4em #1bc529, -.2em -.4em .7em #1bc529, .1em -.5em .7em #10cc1f;;}
-  to   { box-shadow: -.1em -.2em .6em #62f164, -.15em 0 .6em #29e73f, .1em -.25em .6em #29e73f, -.15em -.45em .5em #1bc529, .1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;; }
+    from {
+        box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .4em #29e73f, .2em -.3em .3em #1bc529, -.2em -.4em .4em #1bc529, .1em -.5em .7em #10cc1f;
+    }
+
+    45% {
+        box-shadow: .1em -.2em .5em #62f164, .15em 0 .4em #29e73f, -.1em -.25em .5em #29e73f, .15em -.45em .5em #1bc529, -.1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
+        ;
+    }
+
+    70% {
+        box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .6em #29e73f, .2em -.3em .4em #1bc529, -.2em -.4em .7em #1bc529, .1em -.5em .7em #10cc1f;
+        ;
+    }
+
+    to {
+        box-shadow: -.1em -.2em .6em #62f164, -.15em 0 .6em #29e73f, .1em -.25em .6em #29e73f, -.15em -.45em .5em #1bc529, .1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
+        ;
+    }
 }
 
 .playerManaValue {
@@ -452,7 +475,7 @@ button:active {
 .enemycard:before {
     content: '';
     position: absolute;
-    background-image: url(../images/field/cardBackSide.png);
+    background-image: url(../images/field/card-back-side.png);
     background-repeat: no-repeat;
     background-size: contain;
     width: 70px;
@@ -473,30 +496,6 @@ button:active {
     bottom: 5.6%;
 }
 
-#innercursor {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    height: 20px;
-    width: 20px;
-    border-radius: 50%;
-    border: 4px solid #bd2e18;
-    pointer-events: none;
-    visibility: hidden;
-    z-index: 100;
-}
-
-#outercursor {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    height: 75px;
-    width: 75px;
-    border-radius: 50%;
-    border: 16px solid #bd2e18;
-    pointer-events: none;
-    visibility: hidden;
-    z-index: 100;
-}
-
 #arrowcursor {
     width: 0;
     height: 0;
@@ -515,36 +514,156 @@ button:active {
     position: absolute;
     height: 74%;
     top: 13%;
+    z-index: 10000;
+    pointer-events: none;
 }
 
-#attackWarning {
+.divine-shield {
     position: absolute;
-    z-index: 100000;
-    color: #FFFFFF;
-    opacity: 1;
-    visibility: hidden;
+    width: 115%;
+    top: -6%;
+    left: -6%;
 }
 
-#manaWarning {
+.tauntDamage {
     position: absolute;
-    z-index: 100000;
+    width: 97%;
+    top: 0;
+    left: 0;
+}
+
+.damage {
+    position: absolute;
+    width: 97%;
+    top: 7%;
+    left: 3%;
+}
+
+.opponentHeroDamage
+{
+    position: absolute;
+    width: 70%;
+    top: 3%;
+    left: 4%;
+}
+
+.tauntDamageText {
+    position: absolute;
     color: #FFFFFF;
-    opacity: 1;
-    visibility: hidden;
+    font-family: BelweBdBTBold;
+    font-size: 205%;
+    transform: rotate(-20deg);
+    top: 25%;
+    left: 32%;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
 }
 
-.shake {
-    animation: 0.5s ease-in-out 0s normal none infinite running trambling-animation;
+.damageText {
+    position: absolute;
+    color: #FFFFFF;
+    font-family: BelweBdBTBold;
+    font-size: 205%;
+    transform: rotate(-20deg);
+    top: 33%;
+    left: 34%;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
 }
 
-@keyframes trambling-animation {
-    0%, 50%, 100% {
-        transform: rotate(3deg);
+.opponentHeroDamageText
+{
+    position: absolute;
+    color: #FFFFFF;
+    font-family: BelweBdBTBold;
+    font-size: 212%;
+    transform: rotate(-20deg);
+    top: 35%;
+    left: 28%;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
+}
+
+@-webkit-keyframes deathShake {
+    0% {
+        -webkit-transform: translate(2px, 1px) rotate(0deg);
     }
-    10%, 30% {
-        transform: rotate(-3deg);
+
+    10% {
+        -webkit-transform: translate(-1px, -2px) rotate(-1deg);
     }
-    20%, 40% {
-        transform: rotate(3deg);
+
+    20% {
+        -webkit-transform: translate(-3px, 0px) rotate(1deg);
     }
+
+    30% {
+        -webkit-transform: translate(0px, 2px) rotate(0deg);
+    }
+
+    40% {
+        -webkit-transform: translate(1px, -1px) rotate(1deg);
+    }
+
+    50% {
+        -webkit-transform: translate(-1px, 2px) rotate(-1deg);
+    }
+
+    60% {
+        -webkit-transform: translate(-3px, 1px) rotate(0deg);
+    }
+
+    70% {
+        -webkit-transform: translate(2px, 1px) rotate(-1deg);
+    }
+
+    80% {
+        -webkit-transform: translate(-1px, -1px) rotate(1deg);
+    }
+
+    90% {
+        -webkit-transform: translate(2px, 2px) rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: translate(1px, -2px) rotate(-1deg);
+    }
+}
+
+.killed {
+    -webkit-animation-name: deathShake;
+    -webkit-animation-duration: 0.5s;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation-iteration-count: infinite;
+}
+
+.comment {
+    position: absolute;
+    left: 53%;
+    top: 56%;
+    padding-top: 2%;
+    padding-bottom: 2%;
+    display: flex;
+    justify-content: center;
+    color: #000000;
+    font-family: BelweBdBTBold;
+    background-image: url(../images/field/comment.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 12%;
+    height: 17%;
+    opacity: 0;
+    z-index: 104;
+    transition: all 1.5s;
+    user-select: none;
+    pointer-events: none;
 }
