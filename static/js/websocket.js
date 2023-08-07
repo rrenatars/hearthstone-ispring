@@ -489,6 +489,9 @@ export function socketInit() {
         const myManaElement = document.getElementById("MyMana")
         const enemyManaElement = document.getElementById("EnemyMana")
         console.log("type", type)
+
+        let cardsNumber = i
+
         switch (type) {
             case "start game":
                 // заполнение маны в самом начале игры
@@ -648,14 +651,38 @@ export function socketInit() {
                 if (game.player1.turn && clientId === game.player1.name) {
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     attack()
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     attack()
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                 }
@@ -673,7 +700,19 @@ export function socketInit() {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     yourTurn()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -692,7 +731,19 @@ export function socketInit() {
                     manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     yourTurn()
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
@@ -719,13 +770,37 @@ export function socketInit() {
                 if (game.player1.turn && clientId === game.player1.name) {
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     attack()
                 }
                 if (game.player2.turn && clientId === game.player2.name) {
                     const cards = document.querySelectorAll(".cards__card")
                     mouseOver(game, cards)
-                    dragNDrop()
+                    if (cardsNumber <= 7) {
+                        dragNDrop()
+                    }
+                    else {
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
+                    }
                     attack()
                 }
                 console.log(type, game)
@@ -742,7 +817,19 @@ export function socketInit() {
             //     break
             case "bot attack":
                 console.log("bot attack")
-                dragNDrop()
+                if (cardsNumber <= 7) {
+                    dragNDrop()
+                }
+                else {
+                    const comment = document.getElementById("comment");
+                    const commentText = document.getElementById("commentText");
+                    commentText.innerText = "У меня слишком\nмного существ";
+                    comment.style.opacity = "1";
+                    commentText.style.fontSize = "20px";
+                    setTimeout(function () {
+                        comment.style.opacity = "0"
+                    }, 1500);
+                }
                 attack()
                 break
             case "bot win":
@@ -757,7 +844,19 @@ export function socketInit() {
                 break
             case "ability":
                 console.log("ability")
-                dragNDrop()
+                if (cardsNumber <= 7) {
+                    dragNDrop()
+                }
+                else {
+                    const comment = document.getElementById("comment");
+                    const commentText = document.getElementById("commentText");
+                    commentText.innerText = "У меня слишком\nмного существ";
+                    comment.style.opacity = "1";
+                    commentText.style.fontSize = "20px";
+                    setTimeout(function () {
+                        comment.style.opacity = "0"
+                    }, 1500);
+                }
                 attack()
                 break
             default:

@@ -48,19 +48,14 @@ export function dragNDrop() {
                     let manaSelectedCard = parseInt(card.querySelector('.card__mana').textContent);
 
                     if ((mana - manaSelectedCard) < 0) {
-                        const label = document.getElementById("manaWarning");
-                        label.style.visibility = "visible";
-                        label.style.opacity = "1";
-                        var x = Math.round(e.clientX) - label.offsetWidth / 1.5 + "px";
-                        var y = Math.round(e.clientY) - label.offsetHeight / 1.5 + "px";
-                        label.style.left = x;
-                        label.style.top = y;
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "Мне не\nхватает маны.";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
                         setTimeout(function () {
-                            label.style.visibility = "hidden"
+                            comment.style.opacity = "0"
                         }, 1500);
-                        label.style.transition = "all 3s";
-                        label.style.fontSize = "26px"
-                        label.style.opacity = "0"
                         return;
                     } else {
                         var coords = getCoords(card);
