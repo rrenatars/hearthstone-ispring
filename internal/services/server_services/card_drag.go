@@ -18,7 +18,6 @@ func ParseToCardDragDataType(msgReq *models.MessageRequest) (models.CardDragData
 		return models.CardDragDataType{}, err
 	}
 
-	log.Println(data.CardInHandId, " ", data.Player)
 	return data, nil
 }
 
@@ -27,24 +26,24 @@ func CardDrag(id string, message *models.CardDragDataType, gameTable *models.Gam
 		// Ход первого игрока
 		newPlayer1, err := playerMadeMove(message.CardInHandId, gameTable.Player1)
 		if err != nil {
-			log.Println(err.Error(), message.CardInHandId, gameTable.Player1.Hand)
+			log.Println(err, message.CardInHandId, gameTable.Player1.Hand)
 			return
 		}
 		gameTable.Player1 = newPlayer1
-		log.Println(gameTable.Player1, "\n", newPlayer1)
+		// gameTable.History = append(gameTable.History, gameTable.Player1.Cards[len(gameTable.Player1.Cards)-1])
 		return
 	}
 	// Ход второго игрока
 	newPlayer2, err := playerMadeMove(message.CardInHandId, gameTable.Player2)
 	if err != nil {
-		log.Println(err.Error())
+		log.Println(err, message.CardInHandId, gameTable.Player1.Hand)
 		return
 	}
-	log.Println(gameTable.Player2, "\n", newPlayer2)
 	gameTable.Player2 = newPlayer2
+	// gameTable.History = append(gameTable.History, gameTable.Player2.Cards[len(gameTable.Player2.Cards)-1])
 }
 
-func removeElemsFromSlice(cards []models.CardData, index int) []models.CardData {
+func RemoveElemsFromSlice(cards []models.CardData, index int) []models.CardData {
 	if index < 0 || index >= len(cards) {
 		return cards
 	}
@@ -65,7 +64,7 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 	newCard := pl.Hand[index]
 	newCard.Portrait = strings.Replace(pl.Hand[index].Portrait, "cards-in-hand", "creatures", 1)
 	newCards := append(pl.Cards, newCard)
-	newHand := removeElemsFromSlice(pl.Hand, index)
+	newHand := RemoveElemsFromSlice(pl.Hand, index)
 
 	newPlayerMana := pl.Mana - newCard.Mana
 

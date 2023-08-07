@@ -14,9 +14,9 @@ func GetCardsFromDB() ([]models.CardData, error) {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:         "localhost",
 		Port:         "3306",
-		Username:     "rrenatessa",
+		Username:     "root",
 		DBName:       "hearthstone",
-		Password:     "sqlwebpassdata",
+		Password:     "password",
 		DbDriverName: "mysql",
 	})
 

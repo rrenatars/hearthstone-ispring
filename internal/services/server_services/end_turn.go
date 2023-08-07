@@ -2,7 +2,6 @@ package serverservices
 
 import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
-	"log"
 )
 
 func EndTurn(gameTable *models.GameTable) {
@@ -21,8 +20,6 @@ func EndTurn(gameTable *models.GameTable) {
 	}
 	gameTable.Player1.Turn = !gameTable.Player1.Turn
 	gameTable.Player2.Turn = !gameTable.Player2.Turn
-	log.Println("end turn Player1", gameTable.Player1)
-	log.Println("end turn Player2", gameTable.Player2)
 	if gameTable.Player1.Turn {
 		if len(gameTable.Player2.Hand) == 5 {
 			return

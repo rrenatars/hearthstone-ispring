@@ -33,7 +33,6 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			return err
 		}
 
-		log.Println("герой", attackData.IdDefense)
 		if attackData.IdDefense == "opponenthero" {
 			g.Player2.HP = g.Player2.HP - g.Player1.Cards[indexCardAttack].Attack
 		} else {
@@ -46,9 +45,11 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			g.Player1.Cards[indexCardAttack].HP = g.Player1.Cards[indexCardAttack].HP - g.Player2.Cards[indexCardDef].Attack
 
 			if g.Player2.Cards[indexCardDef].HP <= 0 {
+				g.History = append(g.History, g.Player2.Cards[indexCardDef])
 				g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardDef)
 			}
 			if g.Player1.Cards[indexCardAttack].HP <= 0 {
+				g.History = append(g.History, g.Player1.Cards[indexCardAttack])
 				g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardAttack)
 			}
 		}
@@ -73,9 +74,12 @@ func Attack(attackData *AttackType, g *models.GameTable) error {
 			g.Player2.Cards[indexCardAttack].HP = g.Player2.Cards[indexCardAttack].HP - g.Player1.Cards[indexCardDef].Attack
 
 			if g.Player1.Cards[indexCardDef].HP <= 0 {
+				g.History = append(g.History, g.Player1.Cards[indexCardDef])
 				g.Player1.Cards = tools.RemoveElemsFromSlice(g.Player1.Cards, indexCardDef)
 			}
+
 			if g.Player2.Cards[indexCardAttack].HP <= 0 {
+				g.History = append(g.History, g.Player2.Cards[indexCardAttack])
 				g.Player2.Cards = tools.RemoveElemsFromSlice(g.Player2.Cards, indexCardAttack)
 			}
 		}

@@ -56,8 +56,8 @@ export function dragNDrop() {
                         card.style.zIndex = 1000;
 
                         function moveAt(e) {
-                            card.style.left = e.pageX - shiftX + 'px';
-                            card.style.top = e.pageY - shiftY + 'px';
+                            card.style.left = e.pageX + 'px';
+                            card.style.top = e.pageY + 'px';
                         }
 
                         document.onmousemove = function (e) {

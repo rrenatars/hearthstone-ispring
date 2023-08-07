@@ -3,9 +3,30 @@ import {CardData, GameTable, Player} from "./models.js";
 import {game, setGame} from "./game.js"
 import {ViewCards} from "./view.js";
 
+import { lose } from "./end-game.js"
+import { victory } from "./end-game.js"
+
 import {dragNDrop} from "./dragndrop.js";
 import {manabarFilling} from "./manabar-filling.js";
 import {attack} from "./attack.js";
+
+let url = new URL(window.location.href)
+var room = url.searchParams.get("room")
+
+if (room === "" || room === null) {
+    // room = localStorage.getItem("room")
+    room = "default"
+} else {
+    console.log(room)
+    // localStorage.setItem("room", room)
+}
+let clientId = localStorage.getItem('id')
+if (clientId == undefined || clientId == null) {
+    clientId = 0
+}
+
+export const socket = new WebSocket(`ws://` + window.location.hostname + `:3000/ws?room=${room}&clientID=${clientId}`);
+
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -34,60 +55,6 @@ function selectCardsToExchange() {
         });
     });
     console.log("вышел из функции select cards")
-}
-
-function Lose() {
-    const loseImage = document.getElementById('loseimg');
-    const endbg = document.getElementById('endbg');
-    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-lose-game.png)";
-    loseImage.style.width = "863px";
-    loseImage.style.height = "818px";
-    loseImage.style.zIndex = 9999;
-    loseImage.style.position = "absolute";
-    loseImage.style.top = "50%";
-    loseImage.style.left = "50%";
-    loseImage.style.marginRight = "-50%";
-    loseImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
-}
-
-function Victory() {
-    const winImage = document.getElementById('winimg');
-    const endbg = document.getElementById('endbg');
-    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-win-game.png)";
-    winImage.style.width = "793px";
-    winImage.style.height = "704px";
-    winImage.style.zIndex = 9999;
-    winImage.style.position = "absolute";
-    winImage.style.top = "50%";
-    winImage.style.left = "50%";
-    winImage.style.marginRight = "-50%";
-    winImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
 }
 
 function startBefore() {
@@ -168,6 +135,11 @@ function start() {
     }
 }
 
+let paladinAbID = 1
+let warlockAbID = 2
+let hunterAbID  = 3
+let mageAbID    = 4
+
 function afterStart() {
     const startSubmit = document.getElementById('StartSubmit');
     if (!startSubmit) {
@@ -185,12 +157,23 @@ function afterStart() {
         selectedHeroPowerElement.addEventListener("click", function () {
             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
-                    case 'Hunter':
+                    case 'hunter':
                         opponentheroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (opponentheroHealthElement.textContent <= 0) Victory()
+                        if (opponentheroHealthElement.textContent <= 0) victory()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : hunterAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Mage':
+                    case 'mage':
                         selectedHeroElement.addEventListener('click', () => {
                             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
@@ -201,8 +184,19 @@ function afterStart() {
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : mageAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Warlock':
+                    case 'warlock':
                         heroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         // const dataToSend = {
@@ -211,8 +205,19 @@ function afterStart() {
                         // }
                         // socket.send(JSON.stringify(dataToSend))
                         if (heroHealthElement.textContent <= 0) Lose()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : warlockAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Paladin':
+                    case 'paladin':
                         let recruit = document.createElement('div');
                         recruit.className = "field__empty";
                         recruit.style.width = '90px';
@@ -230,18 +235,18 @@ function afterStart() {
                         const cardPlayer1 = document.getElementById('background__field');
                         cardPlayer1.appendChild(recruit);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        break;
-                    case 'Priest':
-                        selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
-                                heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        }, {once: true});
-                        opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
-                                opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        }, {once: true});
+                        if (heroHealthElement.textContent <= 0) Lose()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : paladinAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
                 }
 
@@ -249,24 +254,48 @@ function afterStart() {
     }
 }
 
-let url = new URL(window.location.href)
-var room = url.searchParams.get("room")
-
-if (room === "" || room === null) {
-    // room = localStorage.getItem("room")
-    room = "default"
-} else {
-    console.log(room)
-    // localStorage.setItem("room", room)
-}
-let clientId = localStorage.getItem('id')
-if (clientId == undefined || clientId == null) {
-    clientId = 0
-}
-
-export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
-
 //export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
+
+
+function HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton) {
+    setGame(ParseDataToGameTable(data));
+    console.log(game)
+    if (clientId === game.player1.name) {
+        if (game.player1.CounterOfMoves > 0) {
+            if (game.player1.turn) {
+                document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+            } else {
+                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                endTurnButton.setAttribute('disabled', '');
+            }
+        }
+        ViewCards(game.player1.cards, "background__field", "field__card")
+        ViewCards(game.player1.hand, "cards", "cards__card");
+        ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+        myHeroHealthValue.textContent = game.player1.HP
+        enemyHeroHealthValue.textContent = game.player2.HP
+    } else {
+        if (game.player2.CounterOfMoves > 0) {
+            if (game.player2.turn) {
+                endTurnButton.addEventListener("click", function () {
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
+                })
+            } else {
+                document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                endTurnButton.setAttribute('disabled', '');
+            }
+        }
+        ViewCards(game.player2.cards, "background__field", "field__card")
+        ViewCards(game.player2.hand, "cards", "cards__card");
+        ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
+        myHeroHealthValue.textContent = game.player2.HP
+        enemyHeroHealthValue.textContent = game.player1.HP
+    }
+}
 
 export function socketInit() {
     let attackCardsLength = 0;
@@ -277,43 +306,8 @@ export function socketInit() {
         const enemyHeroHealthValue = document.getElementById("Player2HealthValue")
 
         const {type, data} = JSON.parse(event.data);
-        setGame(ParseDataToGameTable(data));
-        console.log(game)
-        if (clientId === game.player1.name) {
-            if (game.player1.CounterOfMoves > 0) {
-                if (game.player1.turn) {
-                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
-                } else {
-                    document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
-                    endTurnButton.setAttribute('disabled', '');
-                }
-            }
-            ViewCards(game.player1.cards, "background__field", "field__card")
-            ViewCards(game.player1.hand, "cards", "cards__card");
-            ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
-            myHeroHealthValue.textContent = game.player1.HP
-            enemyHeroHealthValue.textContent = game.player2.HP
-        } else {
-            if (game.player2.CounterOfMoves > 0) {
-                if (game.player2.turn) {
-                    endTurnButton.addEventListener("click", function () {
-                        document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                        endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
-                    })
-                } else {
-                    document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
-                    endTurnButton.setAttribute('disabled', '');
-                }
-            }
-            ViewCards(game.player2.cards, "background__field", "field__card")
-            ViewCards(game.player2.hand, "cards", "cards__card");
-            ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
-            myHeroHealthValue.textContent = game.player2.HP
-            enemyHeroHealthValue.textContent = game.player1.HP
-        }
+        console.log(data)
+        // HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
 
         let i = 0;
 
@@ -332,6 +326,7 @@ export function socketInit() {
 
         switch (type) {
             case "start game":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 // заполнение маны в самом начале игры
                 if (game.player1.turn && clientId === game.player1.name) {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
@@ -367,6 +362,7 @@ export function socketInit() {
                 }
                 break;
             case "exchange cards":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 // if (clientId === game.player1.name) {
                 //     if (game.player1.CounterOfMoves > 0) {
                 //         console.log("fjajdf", game.player1.CounterOfMoves)
@@ -479,6 +475,7 @@ export function socketInit() {
                 }
                 break
             case "card drag":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 // заполнение маны после перетаскивания карты
                 if (game.player1.turn && clientId === game.player1.name) {
                     dragNDrop()
@@ -499,6 +496,7 @@ export function socketInit() {
                 }
                 break
             case "turn":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 // чтобы мана оппонента не обновлялась при передаче хода, то есть была видна мана до нажатия кнопки завершить ход оппонента
                 if (game.player1.turn && clientId === game.player1.name) {
                     manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves)
@@ -541,6 +539,7 @@ export function socketInit() {
                 }
                 break
             case "take a game":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 if (game.player1.turn && clientId === game.player1.name) {
                     dragNDrop()
                     attack()
@@ -552,6 +551,7 @@ export function socketInit() {
                 console.log(type, game)
                 break
             case "attack":
+                HandleGame(data, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
                 if (game.player1.turn && clientId === game.player1.name) {
                     dragNDrop()
                     attack()
@@ -561,9 +561,25 @@ export function socketInit() {
                     attack()
                 }
                 break
+            case "bot attack":
+                HandleGame(data.Game, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
+                console.log("bot attack")
+                dragNDrop()
+                attack()
+                break
+            case "bot win":
+                console.log("$$$$$$$$$$$$$$$$$$$$$bot win$$$$$$$$$$$$$$$$$$$$$$")
+                lose()
+                socket.send(JSON.stringify({
+                    type: "defeat",
+                    data : {
+                        clientID: localStorage.getItem('id')
+                    }
+                }))
+                break
             default:
                 console.log("undefined type", type)
-                break;
+                break
         }
     };
 
@@ -618,6 +634,9 @@ function ParseDataToCard(data) {
 
 function ParseDataToCards(data) {
     let newCards = [];
+    if (data == null) {
+        return [CardData]
+    }
     for (const card of data) {
         newCards.push(ParseDataToCard(card));
     }
