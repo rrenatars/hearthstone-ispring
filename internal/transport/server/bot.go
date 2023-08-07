@@ -60,7 +60,7 @@ func botAttack(bot *models.Player, player *models.Player, conn *websocket.Conn, 
 func botAttackPlayer(bot *models.Player, player *models.Player, i_ int, conn *websocket.Conn) bool {
 	for indexCard := i_; indexCard < len(bot.Cards); indexCard++ {
 		player.HP -= bot.Cards[indexCard].Attack
-		if player.HP < 0 {
+		if player.HP <= 0 {
 			log.Printf("bot win")
 			return true
 		}
@@ -79,18 +79,17 @@ type BotAttackDataType struct {
 	Game      *models.GameTable `json:"Game"`
 }
 
-func botAttackCard(bot *models.Player, indexBotCards int, card *models.CardData, conn *websocket.Conn, g *models.GameTable) (int, []int) {
-	var botIds []int
+func botAttackCard(bot *models.Player, indexBotCards int, card *models.CardData, conn *websocket.Conn, g *models.GameTable) int {
 	for indexCard := indexBotCards; indexCard < len(bot.Cards); indexCard++ {
 		if card.HP <= 0 {
-			return indexCard, botIds
+			return indexCard
 		}
 
 		card.HP -= bot.Cards[indexCard].Attack
 		bot.Cards[indexCard].HP -= card.Attack
 
 		if bot.Cards[indexCard].HP <= 0 {
-			botIds = append(botIds, indexCard)
+			//botIds = append(botIds, indexCard)
 			//bot.Cards = tools.RemoveElemsFromSlice(bot.Cards, indexCard)
 			g.History = append(g.History, bot.Cards[indexCard])
 		}
@@ -104,19 +103,16 @@ func botAttackCard(bot *models.Player, indexBotCards int, card *models.CardData,
 		// 	},
 		// })
 	}
-	return len(bot.Cards), botIds
+	return len(bot.Cards)
 }
 
 func botAttackPlayerCards(bot *models.Player, player *models.Player, conn *websocket.Conn, g *models.GameTable) int {
 	lenBotCards := 0
-	var botIndexes []int
 	var deleteCardsIds []int
 
 	for cardIndex := 0; cardIndex < len(player.Cards) && lenBotCards < len(bot.Cards); cardIndex++ {
 		if player.Cards[cardIndex].Specification == "taunt" {
-			var botIndexes_ []int
-			lenBotCards, botIndexes_ = botAttackCard(bot, lenBotCards, &player.Cards[cardIndex], conn, g)
-			botIndexes = append(botIndexes, botIndexes_...)
+			lenBotCards = botAttackCard(bot, lenBotCards, &player.Cards[cardIndex], conn, g)
 		}
 		if player.Cards[cardIndex].HP <= 0 {
 			deleteCardsIds = append(deleteCardsIds, cardIndex)
@@ -124,7 +120,6 @@ func botAttackPlayerCards(bot *models.Player, player *models.Player, conn *webso
 	}
 
 	updateCardsWithZeroHP(&bot.Cards)
-
 	updateCardsWithZeroHP(&player.Cards)
 
 	return lenBotCards

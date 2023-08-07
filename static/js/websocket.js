@@ -577,6 +577,12 @@ export function socketInit() {
                     }
                 }))
                 break
+            case "ability":
+                HandleGame(data.Game, myHeroHealthValue, enemyHeroHealthValue, endTurnButton)
+                console.log("ability")
+                dragNDrop()
+                attack()
+                break
             default:
                 console.log("undefined type", type)
                 break
