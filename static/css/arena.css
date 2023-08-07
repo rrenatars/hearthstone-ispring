@@ -328,7 +328,7 @@
     -1px 1px 0 #000,
     1px 1px 0 #000;
     margin-bottom: 19%;
-    margin-right: 45%;
+    margin-right: 22%;
     user-select: none;
 }
 
@@ -339,7 +339,7 @@
 
 .card__attack_poisonous {
     margin-bottom: 23%;
-    margin-right: 46%;
+    margin-right: 16%;
 }
 
 .card__hp {
@@ -352,7 +352,7 @@
     -1px 1px 0 #000,
     1px 1px 0 #000;
     margin-bottom: 19%;
-    margin-right: 11%;
+    margin-right: -1%;
     user-select: none;
 }
 
@@ -363,7 +363,7 @@
 
 .card__hp_poisonous {
     margin-bottom: 22%;
-    margin-right: 14%;
+    margin-right: -2%;
 }
 
 body {

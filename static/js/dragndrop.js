@@ -98,8 +98,8 @@ export function dragNDrop() {
                         animateCards(6);
 
                         function moveAt(e) {
-                            card.style.left = e.pageX + 'px';
-                            card.style.top = e.pageY + 'px';
+                            card.style.left = e.pageX - 30 + 'px';
+                            card.style.top = e.pageY - 30 + 'px';
                         }
 
                         document.onmousemove = function (e) {
