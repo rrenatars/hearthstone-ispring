@@ -337,9 +337,11 @@ function mouseOver(game, elements) {
 
         if (card.classList.contains("cards__card_enable-to-drag")) {
             const cardManaValue = parseInt(card.querySelector(".card__mana").textContent)
-            setTimeout(function () {
-                manabarFillingHover(cardManaValue)
-            }, 200)
+            if (cardManaValue > 0) {
+                setTimeout(function () {
+                    manabarFillingHover(cardManaValue)
+                }, 200)
+            }
         }
 
         card.addEventListener("mouseout", handleMouseOut)

@@ -34,27 +34,21 @@ export function manabarFillingHover(cardManaValue) {
         arrayOfCrystals.push(manaCrystalImage)
     }
 
-    console.log("array of crystals default", arrayOfCrystals)
-
     for (let i = playerManaValue - cardManaValue + 1; i <= playerManaValue; i++) {
         const manaCrystalImage = document.createElement('img');
         manaCrystalImage.src = '../static/images/field/mana.png';
         manaCrystalImage.setAttribute('class', 'manabar__crystall_bright');
         arrayOfCrystals.push(manaCrystalImage)
     }
-    console.log("array of crystals bright", arrayOfCrystals)
-
     manabar.replaceChildren(...emptyArray)
 
     for (let i = 0; arrayOfCrystals[i].classList.contains("manabar__crystall"); i++) {
         manabar.append(arrayOfCrystals[i])
     }
 
-    console.log(playerManaValue, cardManaValue, "value")
-
     for (let i = playerManaValue - cardManaValue; i < playerManaValue; i++) {
         // setTimeout(function() {
-            manabar.append(arrayOfCrystals[i]);
+        manabar.append(arrayOfCrystals[i]);
         // }, 100);
     }
 }

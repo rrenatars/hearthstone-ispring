@@ -11,7 +11,7 @@ function animateCards(b) {
         `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(` + b + `px);
     }`;
 
-    setTimeout(function() {
+    setTimeout(function () {
         if (b === 9) {
             animateCards(6);
         } else {
@@ -73,6 +73,17 @@ export function dragNDrop() {
                         card.classList.remove("cards__card_enable-to-drag")
                         card.classList.add("cards__card_drag")
 
+
+                        let cardsNotToDrag = document.querySelectorAll(".cards__card")
+                        console.log(cardsNotToDrag)
+                        cardsNotToDrag.forEach((cardNotToDrag) => {
+                            console.log(cardNotToDrag, "not contain cards__card_drag")
+                            if (!cardNotToDrag.classList.contains("cards__card_drag")) {
+                                cardNotToDrag.classList.remove("cards__card")
+                                cardNotToDrag.classList.add("cards__card_if-drag-card")
+                            }
+                        });
+
                         card.style.zIndex = 1000;
                         const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
                         const beforeStyle = document.createElement('style');
@@ -111,6 +122,21 @@ export function dragNDrop() {
                                 card.classList.remove('cards__drag');
                                 card.classList.add('field__card');
 
+                                cardsNotToDrag = document.querySelectorAll(".cards__card")
+                                console.log(cardsNotToDrag)
+                                cardsNotToDrag.forEach((cardNotToDrag) => {
+                                    console.log(cardNotToDrag, "not contain cards__card_drag")
+                                    if (!cardNotToDrag.classList.contains("cards__card_drag")) {
+                                        cardNotToDrag.classList.add("cards__card")
+                                        cardNotToDrag.classList.remove("cards__card_if-drag-card")
+                                    }
+                                });
+
+                                // for (const card of cards) {
+                                //     card.classList.add("cards__card")
+                                //     card.classList.remove("cards__card_if-drag-card")
+                                // }
+
                                 socket.send(JSON.stringify({
                                     type: "card drag",
                                     data: {
@@ -124,6 +150,16 @@ export function dragNDrop() {
                                 card.classList.add("cards__card_enable-to-drag")
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';
+
+                                cardsNotToDrag = document.querySelectorAll(".cards__card_if-drag-card")
+                                console.log(cardsNotToDrag)
+                                cardsNotToDrag.forEach((cardNotToDrag) => {
+                                    console.log(cardNotToDrag, "not contain cards__card_drag")
+                                    if (!cardNotToDrag.classList.contains("cards__card_drag")) {
+                                        cardNotToDrag.classList.add("cards__card")
+                                        cardNotToDrag.classList.remove("cards__card_if-drag-card")
+                                    }
+                                });
                             }
                         }
                     }

@@ -167,6 +167,18 @@
     transform: scale(2.3);
 }
 
+.cards__card_if-drag-card
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    background-repeat: no-repeat;
+    transform: translate(0px, 0px) scale(1.2);
+}
+
 .cards__card:active {
     cursor: url(../images/cursor/grab.png) 10 2, auto;
     margin-bottom: 0;
