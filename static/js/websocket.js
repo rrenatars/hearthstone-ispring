@@ -250,11 +250,13 @@ export function socketInit() {
             if ((i <= attackCardsLength)) {
                 e.classList.add("canAttack")
             }
-            if (e.getAttribute("data-specification") === "burst") {
+            if (e.getAttribute("data-specification") === "charge") {
                 e.classList.add("canAttack")
-            } 
+            }
+
         });
 
+        var cardsNumber = i;
 
 
         switch (type) {
@@ -264,18 +266,41 @@ export function socketInit() {
                 break;
             case "exchange cards":
                 afterStart()
-                dragNDrop()
+                if (cardsNumber <= 7) {
+                    dragNDrop()
+                }
+                else {
+                    const comment = document.getElementById("comment");
+                    const commentText = document.getElementById("commentText");
+                    commentText.innerText = "У меня слишком\nмного существ";
+                    comment.style.opacity = "1";
+                    commentText.style.fontSize = "20px";
+                    setTimeout(function () {
+                        comment.style.opacity = "0"
+                    }, 1500);
+                }
                 attack()
-                // endTurnButton.style.backgroundImage = "url(../static/images/field/endTurnGreen1.png)";
-                // endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
-                // endTurnButton.style.backgroundColor = "#29e73f";
                 break
             case "card drag":
-                dragNDrop()
+                if (cardsNumber <= 7) {
+                    dragNDrop()
+                }
+                else {
+                    const comment = document.getElementById("comment");
+                    const commentText = document.getElementById("commentText");
+                    commentText.innerText = "У меня слишком\nмного существ";
+                    comment.style.opacity = "1";
+                    commentText.style.fontSize = "20px";
+                    setTimeout(function () {
+                        comment.style.opacity = "0"
+                    }, 1500);
+                }
                 attack()
-                endTurnButton.style.backgroundImage = "url(../static/images/field/endTurnGreen1.png)";
+                endTurnButton.style.transition = "all 2.5s";
+                endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn-green.jpg)";
                 endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
-                endTurnButton.style.backgroundColor = "#29e73f";
+
+                // endTurnButton.style.backgroundColor = "#29e73f";
                 break
             case "turn":
                 dragNDrop()
@@ -283,10 +308,9 @@ export function socketInit() {
                 manabarFilling(10, manaElement)
                 if (game.player1.turn) {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                    endTurnButton.style.backgroundImage = "url(../../static/images/field/endturn1.png)";
+                    endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
                     endTurnButton.style.animation = "none";
-                    endTurnButton.style.removeProperty("backgroundColor");
                     attackCardsLength = game.player1.cards.length;
 
                     const fightCards = document.querySelectorAll(".field__card")

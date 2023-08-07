@@ -6,7 +6,7 @@ export function enemyTurnRun() {
     const manaElement = document.getElementById("MyMana")
     endTurnButton.addEventListener("click", function () {
         document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
-        endTurnButton.style.backgroundImage = "url(../static/images/field/enemyturn.png)";
+        endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
         endTurnButton.setAttribute('disabled', '');
         const dataToSend = {
             type: "end turn",
