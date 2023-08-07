@@ -73,15 +73,10 @@ export function dragNDrop() {
                         card.classList.remove("cards__card_enable-to-drag")
                         card.classList.add("cards__card_drag")
 
-
                         let cardsNotToDrag = document.querySelectorAll(".cards__card")
-                        console.log(cardsNotToDrag)
                         cardsNotToDrag.forEach((cardNotToDrag) => {
-                            console.log(cardNotToDrag, "not contain cards__card_drag")
-                            if (!cardNotToDrag.classList.contains("cards__card_drag")) {
-                                cardNotToDrag.classList.remove("cards__card")
-                                cardNotToDrag.classList.add("cards__card_if-drag-card")
-                            }
+                            cardNotToDrag.classList.remove("cards__card")
+                            cardNotToDrag.classList.add("cards__card_hover-off")
                         });
 
                         card.style.zIndex = 1000;
@@ -123,13 +118,9 @@ export function dragNDrop() {
                                 card.classList.add('field__card');
 
                                 cardsNotToDrag = document.querySelectorAll(".cards__card")
-                                console.log(cardsNotToDrag)
                                 cardsNotToDrag.forEach((cardNotToDrag) => {
-                                    console.log(cardNotToDrag, "not contain cards__card_drag")
-                                    if (!cardNotToDrag.classList.contains("cards__card_drag")) {
-                                        cardNotToDrag.classList.add("cards__card")
-                                        cardNotToDrag.classList.remove("cards__card_if-drag-card")
-                                    }
+                                    cardNotToDrag.classList.add("cards__card")
+                                    cardNotToDrag.classList.remove("cards__card_hover-off")
                                 });
 
                                 // for (const card of cards) {
@@ -151,14 +142,10 @@ export function dragNDrop() {
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';
 
-                                cardsNotToDrag = document.querySelectorAll(".cards__card_if-drag-card")
-                                console.log(cardsNotToDrag)
+                                cardsNotToDrag = document.querySelectorAll(".cards__card_hover-off")
                                 cardsNotToDrag.forEach((cardNotToDrag) => {
-                                    console.log(cardNotToDrag, "not contain cards__card_drag")
-                                    if (!cardNotToDrag.classList.contains("cards__card_drag")) {
-                                        cardNotToDrag.classList.add("cards__card")
-                                        cardNotToDrag.classList.remove("cards__card_if-drag-card")
-                                    }
+                                    cardNotToDrag.classList.add("cards__card")
+                                    cardNotToDrag.classList.remove("cards__card_hover-off")
                                 });
                             }
                         }

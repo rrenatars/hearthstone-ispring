@@ -167,7 +167,7 @@
     transform: scale(2.3);
 }
 
-.cards__card_if-drag-card
+.cards__card_hover-off
 {
     width: 94px;
     height: 135px;
@@ -403,7 +403,7 @@ button:active {
     height: 17.5%;
     left: 45.05%;
     top: 67.45%;
-    z-index: 2;
+    /*z-index: 2;*/
     background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;

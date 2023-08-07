@@ -34,9 +34,19 @@ export function attack() {
                     var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
                     var deg = angleDeg + 90;
                     document.getElementById("arrowcursor").style.left = xDest + 'px';
+                    document.getElementById("arrowcursor").style.zIndex = 1000;
                     document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
                     document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
                     svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+
+                    if (document.querySelector(".activeCard")) {
+                        let cardsHand = document.querySelectorAll(".cards__card")
+                        cardsHand.forEach((cardHand) => {
+                            console.log(document.getElementById("arrowcursor"))
+                            cardHand.classList.remove("cards__card")
+                            cardHand.classList.add("cards__card_hover-off")
+                        });
+                    }
 
                     // opponentHeroElement.addEventListener("mouseover", function () {
                     //     document.getElementById("innercursor").style.visibility = "visible";
@@ -120,6 +130,14 @@ export function attack() {
                         e.removeAttribute("data-specification");
                         e.style.removeProperty("zIndex");
                         e.classList.remove("activeCard");
+
+                        let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                        console.log(cardsHand, "attack")
+                        cardsHand.forEach((cardHand) => {
+                            console.log("----", cardHand)
+                            cardHand.classList.add("cards__card")
+                            cardHand.classList.remove("cards__card_hover-off")
+                        });
                         socket.send(JSON.stringify({
                             type: "attack",
                             data: {
@@ -236,6 +254,12 @@ export function attack() {
                         e.style.removeProperty("zIndex");
                         e3.classList.remove("activeTarget");
                         e.classList.remove("activeCard");
+
+                        let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                        cardsHand.forEach((cardHand) => {
+                            cardHand.classList.add("cards__card")
+                            cardHand.classList.remove("cards__card_hover-off")
+                        });
                         socket.send(JSON.stringify({
                             type: "attack",
                             data: {
