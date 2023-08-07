@@ -76,7 +76,12 @@ func (c *Client) readPump() {
 			log.Println("error while parsing JSON data: ", err.Error())
 			break
 		}
-		setupMessageTypes(msgReq, c)
+
+		if setupMessageTypes(msgReq, c) {
+			log.Println("end game")
+			c.hub.deleteRoom(c.room.id)
+
+		}
 	}
 }
 
@@ -132,15 +137,23 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	clientID := r.URL.Query().Get("clientID")
 	if clientID == "" {
-		log.Println("client is null, dont have client id", clientID)
+		log.Println("client id in URL is null, dont have client id")
 		conn.Close()
 		return
 	}
 
-	var client1 *Client
-	client1 = hub.getClientByID(clientID)
+	client1 := hub.getClientByID(clientID)
 	if client1 == nil {
-		log.Println("client is nil")
+		isClientFound := false
+		for id, _ := range hub.clientsHistory {
+			if id == clientID {
+				isClientFound = true
+			}
+		}
+
+		if !isClientFound {
+			log.Println("client with id : ", clientID, " is nil")
+		}
 	}
 
 	roomID := r.URL.Query().Get("room")
@@ -173,7 +186,9 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		room,
 		conn,
 	)
+
 	log.Println(client.id)
+
 	go client.room.run()
 
 	client.room.register <- client

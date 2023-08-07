@@ -3,9 +3,29 @@ import {CardData, GameTable, Player} from "./models.js";
 import {game, setGame} from "./game.js"
 import {ViewCards} from "./view.js";
 
+import { lose } from "./end-game.js"
+import { victory } from "./end-game.js"
+
 import {dragNDrop} from "./dragndrop.js";
 import {manabarFilling, manabarFillingHover} from "./manabar-filling.js";
 import {attack} from "./attack.js";
+
+let url = new URL(window.location.href)
+var room = url.searchParams.get("room")
+
+if (room === "" || room === null) {
+    // room = localStorage.getItem("room")
+    room = "default"
+} else {
+    console.log(room)
+    // localStorage.setItem("room", room)
+}
+let clientId = localStorage.getItem('id')
+if (clientId === undefined || clientId === null) {
+    clientId = 0
+}
+
+export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
@@ -169,6 +189,11 @@ function start() {
     }
 }
 
+let paladinAbID = 1
+let warlockAbID = 2
+let hunterAbID  = 3
+let mageAbID    = 4
+
 function afterStart() {
     const startSubmit = document.getElementById('StartSubmit');
     if (!startSubmit) {
@@ -184,36 +209,64 @@ function afterStart() {
         const opponentHeroElement = document.getElementById('opponenthero');
         const opponentheroHealthElement = document.getElementById('Player2HealthValue');
         selectedHeroPowerElement.addEventListener("click", function () {
-            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
+            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
-                    case 'Hunter':
+                    case 'hunter':
                         opponentheroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (opponentheroHealthElement.textContent <= 0) Victory()
+                        if (opponentheroHealthElement.textContent <= 0) victory()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : hunterAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Mage':
+                    case 'mage':
                         selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 heroHealthElement.textContent = parseInt(heroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
                         opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
+                            if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : mageAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Warlock':
+                    case 'warlock':
                         heroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        // const dataToSend = {
-                        //     type: "card drag",
-                        //     data: {}
-                        // }
-                        // socket.send(JSON.stringify(dataToSend))
                         if (heroHealthElement.textContent <= 0) Lose()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : warlockAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
-                    case 'Paladin':
+                    case 'paladin':
                         let recruit = document.createElement('div');
                         recruit.className = "field__empty";
                         recruit.style.width = '90px';
@@ -231,38 +284,23 @@ function afterStart() {
                         const cardPlayer1 = document.getElementById('background__field');
                         cardPlayer1.appendChild(recruit);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        break;
-                    case 'Priest':
-                        selectedHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
-                                heroHealthElement.textContent = 2 + parseInt(heroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        }, {once: true});
-                        opponentHeroElement.addEventListener('click', () => {
-                            if (selectedHeroPowerElement.style.backgroundImage === ('url("../static/images/field/' + heroClass + '-power.png")'))
-                                opponentheroHealthElement.textContent = 2 + parseInt(opponentheroHealthElement.textContent);
-                            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        }, {once: true});
+                        if (heroHealthElement.textContent <= 0) Lose()
+                        socket.send(JSON.stringify({
+                            type: "ability",
+                            data : {
+                                PlyaerId : localStorage.getItem("id"),
+                                AbilityID : paladinAbID,
+                                AdditionalInformation : {
+                                    Type: "",
+                                    IdDefense : "",
+                                }
+                            }
+                        }))
                         break;
                 }
 
         });
     }
-}
-
-let url = new URL(window.location.href)
-var room = url.searchParams.get("room")
-
-if (room === "" || room === null) {
-    // room = localStorage.getItem("room")
-    room = "default"
-} else {
-    console.log(room)
-    // localStorage.setItem("room", room)
-}
-let clientId = localStorage.getItem('id')
-if (clientId === undefined || clientId === null) {
-    clientId = 0
 }
 
 const beforeStyleAnim = document.createElement("style");
@@ -373,10 +411,6 @@ function mouseOver(game, elements) {
         element.addEventListener("mouseover", handleMouseOver);
     });
 }
-
-export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?room=${room}&clientID=${clientId}`);
-
-//export const socket = new WebSocket(`ws://localhost:3000/ws?room=${room}&clientID=${clientId}`);
 
 export function socketInit() {
     let attackCardsLength = 0;
@@ -706,6 +740,26 @@ export function socketInit() {
             //         attack()
             //     }
             //     break
+            case "bot attack":
+                console.log("bot attack")
+                dragNDrop()
+                attack()
+                break
+            case "bot win":
+                console.log("$$$$$$$$$$$$$$$$$$$$$bot win$$$$$$$$$$$$$$$$$$$$$$")
+                lose()
+                socket.send(JSON.stringify({
+                    type: "defeat",
+                    data : {
+                        clientID: localStorage.getItem('id')
+                    }
+                }))
+                break
+            case "ability":
+                console.log("ability")
+                dragNDrop()
+                attack()
+                break
             default:
                 console.log("undefined type", type)
                 break;
@@ -763,6 +817,9 @@ function ParseDataToCard(data) {
 
 function ParseDataToCards(data) {
     let newCards = [];
+    if (data == null) {
+        return [CardData]
+    }
     for (const card of data) {
         newCards.push(ParseDataToCard(card));
     }

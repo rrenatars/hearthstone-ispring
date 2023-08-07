@@ -44,7 +44,7 @@ func CardDrag(id string, message *models.CardDragDataType, gameTable *models.Gam
 	gameTable.Player2 = newPlayer2
 }
 
-func removeElemsFromSlice(cards []models.CardData, index int) []models.CardData {
+func RemoveElemsFromSlice(cards []models.CardData, index int) []models.CardData {
 	if index < 0 || index >= len(cards) {
 		return cards
 	}
@@ -65,7 +65,7 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 	newCard := pl.Hand[index]
 	newCard.Portrait = strings.Replace(pl.Hand[index].Portrait, "cards-in-hand", "creatures", 1)
 	newCards := append(pl.Cards, newCard)
-	newHand := removeElemsFromSlice(pl.Hand, index)
+	newHand := RemoveElemsFromSlice(pl.Hand, index)
 
 	newPlayerMana := pl.Mana - newCard.Mana
 

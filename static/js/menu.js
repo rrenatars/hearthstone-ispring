@@ -1,6 +1,6 @@
 import { socket, socketInit, ParseDataToGameTable } from "./websocket.js";
 import { game, setGame, stateMachine } from "./game.js"
-socketInit();
+// socketInit();
 
 var selectGameMode = 'singleplayer';
 var selectDifficulty = 'easy';

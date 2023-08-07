@@ -502,7 +502,7 @@ button:active {
 .playerManaValue {
     position: absolute;
     top: 92.5%;
-    left: 64.5%;;
+    left: 64%;
     color: white;
     font-size: 23px;
     font-weight: bold;

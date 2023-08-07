@@ -10,7 +10,7 @@ import (
 	"github.com/rrenatars/hearthstone-ispring/internal/tools"
 )
 
-func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
+func setupMessageTypes(msgReq models.MessageRequest, c *Client) bool {
 	log.Println(msgReq.Type)
 	switch msgReq.Type {
 	case "create bot game":
@@ -33,6 +33,14 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 		}
 	case "give me a game":
 		giveMeGame(c)
+		jsonData, err := json.Marshal(models.MessageResponse{
+			Type: "take a game",
+			Data: *c.room.game,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	case "exchange cards":
 		exchangeCards(msgReq, c)
 		jsonData, err := json.Marshal(models.MessageResponse{
@@ -42,11 +50,12 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 		if err != nil {
 			log.Println(err)
 		}
+		// c.conn.WriteJSON(jsonData)
 		c.room.broadcast <- jsonData
 	case "end turn":
 		serverservices.EndTurn(c.room.game)
 		if c.room.bot {
-			serverservices.Bot(c.room.game)
+			Bot(c)
 			serverservices.EndTurn(c.room.game)
 		}
 		jsonData, err := json.Marshal(models.MessageResponse{
@@ -78,9 +87,23 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) {
 			log.Println(err)
 		}
 		c.room.broadcast <- jsonData
+	case "defeat":
+		return true
+	case "ability":
+		log.Println("ability")
+		ability(&msgReq, c)
+		jsonData, err := json.Marshal(models.MessageResponse{
+			Type: "ability",
+			Data: *c.room.game,
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		c.room.broadcast <- jsonData
 	default:
 		log.Println("unkown msgReq type: ", msgReq.Type)
 	}
+	return false
 }
 
 func attack(msgReq *models.MessageRequest, c *Client) {
@@ -96,6 +119,14 @@ func attack(msgReq *models.MessageRequest, c *Client) {
 	}
 }
 
+func ability(msgReq *models.MessageRequest, c *Client) {
+	data, err := serverservices.ParseToAblitiesType(msgReq)
+	if err != nil {
+		return
+	}
+	serverservices.SetupAbilities(&data, c.room.game)
+}
+
 func cardDrag(msgReq *models.MessageRequest, c *Client) {
 	data, err := serverservices.ParseToCardDragDataType(msgReq)
 	if err != nil {
@@ -109,7 +140,6 @@ func exchangeCards(msgReq models.MessageRequest, c *Client) {
 	if err != nil {
 		return
 	}
-	log.Println("exchange cards data", data)
 	serverservices.ExchangeCardsDataType(c.room.game, c.id, data)
 }
 
@@ -171,6 +201,16 @@ func CreateNewRoom(c *Client, b bool) {
 	}
 
 	c.room = roomPtr
+	if c.room.bot {
+		if c.room.game.Player1.Name == "bot" && c.room.game.Player1.Turn {
+			Bot(c)
+			serverservices.EndTurn(c.room.game)
+		}
+		if c.room.game.Player2.Name == "bot" && c.room.game.Player2.Turn {
+			Bot(c)
+			serverservices.EndTurn(c.room.game)
+		}
+	}
 	c.hub.rooms[roomPtr.id] = roomPtr
 
 	log.Println("create room roomID: ", roomPtr.game.Id)
