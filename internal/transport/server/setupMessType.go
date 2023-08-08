@@ -53,10 +53,10 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) bool {
 		// c.conn.WriteJSON(jsonData)
 		c.room.broadcast <- jsonData
 	case "end turn":
-		serverservices.EndTurn(c.room.game)
+		serverservices.SetUpEndTurn(c.room.game)
 		if c.room.bot {
 			Bot(c)
-			serverservices.EndTurn(c.room.game)
+			serverservices.SetUpEndTurn(c.room.game)
 		}
 		jsonData, err := json.Marshal(models.MessageResponse{
 			Type: "turn",

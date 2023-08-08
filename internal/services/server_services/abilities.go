@@ -66,7 +66,17 @@ func Ability(ability *AbilitiesType, g *models.GameTable) {
 }
 
 func setupAbilities(p *models.Player, o *models.Player, history *[]models.CardData, ability *AbilitiesType) {
+	if p.Mana < 2 {
+		return
+	}
+
 	p.Mana -= 2
+
+	if p.HeroTurn {
+		return
+	}
+
+	p.HeroTurn = true
 	switch p.Hero {
 	case "mage":
 		mageAbility(o, ability.IdDefense)

@@ -11,6 +11,7 @@ type Player struct {
 	Mana           int
 	CounterOfMoves int
 	Hero           string
+	HeroTurn       bool
 }
 
 func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def, mana, counterOfMoves int, hero string) *Player {
@@ -25,5 +26,6 @@ func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def, ma
 		Mana:           mana,
 		CounterOfMoves: counterOfMoves,
 		Hero:           hero,
+		HeroTurn:       false,
 	}
 }

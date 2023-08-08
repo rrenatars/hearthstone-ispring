@@ -428,13 +428,22 @@ export function socketInit() {
         const {type, data} = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
         checkVictoryOrLoose(game)
+        
         if (game.player1.name == clientId) {
             selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '.png)';
-            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '-power.png)';
+            if (!game.player1.heroTurn) {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '-power.png)';
+            } else {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+            }
             opponentHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '.png)'
         } else {
             selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '.png)';
-            selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '-power.png)';
+            if (!game.player2.heroTurn) {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '-power.png)';
+            } else {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+            }
             opponentHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '.png)'
         }
 
@@ -880,8 +889,7 @@ export function socketInit() {
                 break;
         }
     };
-    
-    
+
     selectedHeroPowerElement.addEventListener("click", event => {
         socket.send(JSON.stringify({
             type: "ability",
@@ -962,6 +970,7 @@ function ParseDataToPlayer(data) {
         data.Mana,
         data.CounterOfMoves,
         data.Hero,
+        data.HeroTurn,
     )
 }
 
