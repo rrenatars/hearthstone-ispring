@@ -6,7 +6,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
-	serverservices "github.com/rrenatars/hearthstone-ispring/internal/services/server_services"
 	"github.com/rrenatars/hearthstone-ispring/internal/tools"
 )
 
@@ -29,6 +28,8 @@ func Bot(c *Client) {
 }
 
 func calculateOptimalMove(g *models.GameTable, p *models.Player, conn *websocket.Conn) {
+	receivesCardInDeck(p, g)
+
 	if p.Name == g.Player1.Name {
 		botAttack(p, g.Player2, conn, g)
 	}
@@ -37,15 +38,23 @@ func calculateOptimalMove(g *models.GameTable, p *models.Player, conn *websocket
 		botAttack(p, g.Player1, conn, g)
 	}
 
-	receivesCardInDeck(p, g)
-
-	for len(p.Hand) > 0 && len(p.Cards) <= 7 && p.Mana-p.Hand[0].Mana >= 0 {
-		p.Mana -= p.Hand[0].Mana
-		p.Hand[0].Portrait = strings.Replace(p.Hand[0].Portrait, "cards-in-hand", "creatures", 1)
-		p.Cards = append(p.Cards, p.Hand[0])
+	var i = 0
+	for i < len(p.Hand) && len(p.Cards) < 7 && p.Mana >= 0 {
+		p.Mana -= p.Hand[i].Mana
+		p.Hand[i].Portrait = strings.Replace(p.Hand[i].Portrait, "cards-in-hand", "creatures", 1)
+		p.Cards = append(p.Cards, p.Hand[i])
 		//g.History = append(g.History, p.Hand[0])
-		p.Hand = serverservices.RemoveElemsFromSlice(p.Hand, 0)
+		// p.Hand = serverservices.RemoveElemsFromSlice(p.Hand, 0)
+		i++
 	}
+
+	newHand := make([]models.CardData, 0)
+	for i < len(p.Hand) {
+		newHand = append(newHand, p.Hand[i])
+		i++
+	}
+
+	p.Hand = newHand
 }
 
 func botAttack(bot *models.Player, player *models.Player, conn *websocket.Conn, g *models.GameTable) {
