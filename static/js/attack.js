@@ -1,5 +1,6 @@
-import { socket } from "./websocket.js";
-import { game } from "./game.js";
+import { victory } from "./end-game.js";
+import { socket } from "./websocket.js"
+import { game } from "./game.js"
 
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -10,26 +11,28 @@ export function attack() {
     const opponentHeroElement = document.getElementById("opponenthero");
     const opponentheroHealthElement = document.getElementById("Player2HealthValue");
     const fightCards = document.querySelectorAll(".field__card");
-    const manaElement = document.getElementById("MyMana");
-    console.log(fightCards, "fightCards");
+    const myBattlefield = document.getElementById("background__field")
+    const enemyBattlefield = document.getElementById("background__field_opp")
     var tauntOnField = false;
+    
 
-    if (heroClass == "Mage") {
+    if (heroClass === "mage") {
         selectedHeroPowerElement.classList.add("field__card");
-        let mana = parseInt(manaElement.textContent);
-        if (mana >= 2) {
-            selectedHeroPowerElement.classList.add("canAttack")
-        }
-        else {
-            selectedHeroPowerElement.classList.remove("canAttack")
-        }
     }
-
 
 
     fightCards.forEach(function (e) {
         if ((e.classList.contains('canAttack')) || (e.getAttribute("data-specification") === "rush")) {
             e.style.zIndex = 100;
+
+            const manaElement = document.getElementById("MyMana");
+            const mana = manaElement.textContent.substring(0, manaElement.textContent.indexOf("/"));
+            console.log("manavalue", mana);
+            if (mana >= 2) {
+                selectedHeroPowerElement.classList.add("canAttack")
+            } else {
+                selectedHeroPowerElement.classList.remove("canAttack")
+            }
 
             e.addEventListener("mousedown", function () {
                 var xOrigin = e.offsetLeft + e.offsetWidth / 2;
@@ -41,27 +44,36 @@ export function attack() {
                 e.style.zIndex = "-1";
 
                 document.body.addEventListener('mousemove', function (e2) {
-                    var xDest = e2.clientX;
-                    var yDest = e2.clientY;
-                    var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
-                    var deg = angleDeg + 90;
-                    document.getElementById("arrowcursor").style.left = xDest + 'px';
-                    document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
-                    document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
-                    svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
-
+                    if (document.querySelector(".activeCard")) {
+                        var xDest = e2.clientX;
+                        var yDest = e2.clientY;
+                        var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
+                        var deg = angleDeg + 90;
+                        document.getElementById("arrowcursor").style.left = xDest + 'px';
+                        document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
+                        document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
+                        svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
+                    }
+                    if (document.querySelector(".activeCard")) {
+                        let cardsHand = document.querySelectorAll(".cards__card")
+                        cardsHand.forEach((cardHand) => {
+                            console.log(document.getElementById("arrowcursor"))
+                            cardHand.classList.remove("cards__card")
+                            cardHand.classList.add("cards__card_hover-off")
+                        });
+                    }
                 });
 
 
-                // e.addEventListener("click", function () {
-                //     svg.style.display = "none";
-                //     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                //     document.getElementById("arrowcursor").style.visibility = "hidden";
-                //     document.getElementById("innercursor").style.visibility = "hidden";
-                //     document.getElementById("outercursor").style.visibility = "hidden";
-                //     // e.classList.remove('canAttack');
-                //     e.style.removeProperty("zIndex");
-                // });
+                e.onclick = function () {
+                    console.log("кликнасебя")
+                    svg.style.display = "none";
+                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    document.getElementById("arrowcursor").style.visibility = "hidden";
+                    // e.classList.remove('canAttack');
+                    e.classList.remove("activeCard");
+                    e.style.removeProperty("zIndex");
+                };
 
 
                 opponentHeroElement.onclick = function (p) {
@@ -75,15 +87,18 @@ export function attack() {
                             comment.style.opacity = "0"
                         }, 1500);
 
-                    }
-                    else if (tauntOnField === true) {
+                        opponentHeroElement.classList.remove("activeTarget");
+                        e.classList.remove("activeCard");
+                        e.classList.remove("canAttack");
+                        e.removeAttribute("data-specification");
+                        e.style.removeProperty("zIndex");
+                    } else if (tauntOnField === true) {
                         if (svg.style.display == "block") {
                             const comment = document.getElementById("comment");
                             const commentText = document.getElementById("commentText");
-                            if ((heroClass == "Mage") || (heroClass == "Rogue")) {
+                            if ((heroClass === "mage") || (heroClass === "rogue")) {
                                 commentText.innerText = "Я должна\nатаковать\nпровокатора."
-                            }
-                            else {
+                            } else {
                                 commentText.innerText = "Я должен\nатаковать\nпровокатора."
                             }
                             comment.style.opacity = "1";
@@ -92,8 +107,7 @@ export function attack() {
                                 comment.style.opacity = "0"
                             }, 1500);
                         }
-                    }
-                    else {
+                    } else {
                         if (svg.style.display == "block") {
 
                             if (e.id != "heropower") {
@@ -106,26 +120,39 @@ export function attack() {
                                     if (e.id != "heropower") {
                                         const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
                                         opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack)
-                                    }
-                                    else {
+                                    } else {
                                         opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 1);
                                     }
                                     opponentheroHealthElement.style.color = '#c70d0d';
-                                    if (opponentheroHealthElement.textContent <= 0) { Victory() }
+                                    if (opponentheroHealthElement.textContent <= 0) {
+                                        Victory()
+                                    }
                                     setTimeout(function () {
                                         opponentheroHealthElement.style.color = '#FFFFFF';
                                     }, 2000);
+                                    if (e.id === "heropower") {
+                                        e.classList.remove("activeCard");
+                                        e.classList.remove("canAttack");
+                                        e.removeAttribute("data-specification");
+                                        e.style.removeProperty("zIndex");
+                                    }
 
                                 }, 255)
-                        };
+                            svg.style.display = "none";
+                            document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+
+                            document.getElementById("arrowcursor").style.visibility = "hidden";
+                        }
+                        ;
                     }
-                    svg.style.display = "none";
-                    document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
 
-                    document.getElementById("arrowcursor").style.visibility = "hidden";
-                    document.getElementById("innercursor").style.visibility = "hidden";
-                    document.getElementById("outercursor").style.visibility = "hidden";
-
+                    let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                    console.log(cardsHand, "attack")
+                    cardsHand.forEach((cardHand) => {
+                        console.log("----", cardHand)
+                        cardHand.classList.add("cards__card")
+                        cardHand.classList.remove("cards__card_hover-off")
+                    });
                 };
 
                 const botCards = document.querySelectorAll(".field__empty_opp");
@@ -151,15 +178,14 @@ export function attack() {
                     if (tauntOnField === false) {
                         e3.onclick = botCardClick
                     }
-                    else {
+                    else if (e3.getAttribute("data-specification") !== "taunt") {
                         e3.onclick = () => {
                             if (svg.style.display == "block") {
                                 const comment = document.getElementById("comment");
                                 const commentText = document.getElementById("commentText");
                                 if ((heroClass == "Mage") || (heroClass == "Rogue")) {
                                     commentText.innerText = "Я должна\nатаковать\nпровокатора."
-                                }
-                                else {
+                                } else {
                                     commentText.innerText = "Я должен\nатаковать\nпровокатора."
                                 }
                                 comment.style.opacity = "1";
@@ -180,20 +206,22 @@ export function attack() {
                                 collision(e, this)
                             }
 
+                            const cardAttack = document.querySelector(".activeCard")
+                            const cardAttackHP = cardAttack.querySelector(".card__hp")
+
                             setTimeout(
                                 () => {
                                     this.classList.add("activeTarget");
                                     const botCardHP = document.querySelector(".activeTarget").childNodes[2];
+                                    const botCardAttack = document.querySelector(".activeTarget").childNodes[1]
                                     if (e.id == "heropower") {
                                         botCardHP.textContent -= 1;
-                                    }
-                                    else if (e.getAttribute("data-specification") === "poisonous")
-                                    {
+                                    } else if (e.getAttribute("data-specification") === "poisonous") {
                                         botCardHP.textContent -= botCardHP.textContent;
-                                    }
-                                    else {
-                                        const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
-                                        botCardHP.textContent -= cardAttack;
+                                    } else {
+                                        const cardAttackValue = cardAttack.childNodes[1];
+                                        botCardHP.textContent -= cardAttackValue.textContent;
+                                        cardAttackHP.textContent -= botCardAttack.textContent
                                     }
 
                                     if (botCardHP.textContent <= 0) {
@@ -203,32 +231,56 @@ export function attack() {
                                         var killed = this
                                         setTimeout(function () {
                                             killed.remove()
+                                            if (enemyBattlefield.childElementCount === 0) {
+                                                let emptyField = document.createElement("div")
+                                                emptyField.classList.add("field__empty_opp")
+                                                enemyBattlefield.append(emptyField)
+                                            }
                                         }, 1010);
+                                    }
 
+                                    if (e.id !== "heropower") {
+                                        if (cardAttackHP.textContent <= 0) {
+                                            e.style.transition = "all 1s";
+                                            e.classList.add("killed");
+                                            e.style.opacity = "0";
+                                            var killed = e
+                                            setTimeout(function () {
+                                                e.remove()
+                                                if (myBattlefield.childElementCount === 0) {
+                                                    let emptyField = document.createElement("div")
+                                                    emptyField.classList.add("field__empty")
+                                                    myBattlefield.append(emptyField)
+                                                }
+                                            }, 1010);
+                                        }
                                     }
 
                                     botCardHP.style.color = '#c70d0d';
                                     setTimeout(function () {
                                         botCardHP.style.color = '#FFFFFF';
                                     }, 1500);
+
+                                    if (e.id !== "heropower") {
+                                        cardAttackHP.style.color = '#c70d0d';
+                                        setTimeout(function () {
+                                            cardAttackHP.style.color = '#FFFFFF';
+                                        }, 1500);
+                                    }
+
+                                    if (e.id === "heropower") {
+                                        e.classList.remove("activeCard");
+                                        e.classList.remove("canAttack");
+                                        e.style.removeProperty("zIndex");
+                                    }
                                 }, 255)
 
 
                         };
+
                         svg.style.display = "none";
                         document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                         document.getElementById("arrowcursor").style.visibility = "hidden";
-                        document.getElementById("innercursor").style.visibility = "hidden";
-                        document.getElementById("outercursor").style.visibility = "hidden";
-
-                        // socket.send(JSON.stringify({
-                        //     type: "attack",
-                        //     data: {
-                        //         player: (game.player1.turn ? true : false),
-                        //         idAttack: e.id,
-                        //         idDefense: e3.id,
-                        //     }
-                        // }))
                     };
                 });
             }, { once: true })
@@ -252,30 +304,26 @@ export function collision(attacker, defender) {
         attacker.style.marginTop = defender.getBoundingClientRect().top - attacker.getBoundingClientRect().top + defender.offsetHeight - defender.offsetHeight / 2 + "px";
         if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) > 0) {
             attacker.style.marginLeft = defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left - defender.offsetWidth / 3 + "px";
-        }
-        else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
+        } else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
             attacker.style.marginLeft = defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left + defender.offsetWidth / 3 + "px";
-        }
-        else {
+        } else {
             attacker.style.marginLeft = "0px";
-        };
+        }
+        ;
 
         damageImg();
         setTimeout(back, 1000);
 
     }, 200)
 
-
     function back() {
         attacker.style.transition = "all 1s";
         attacker.style.marginTop = -(defender.getBoundingClientRect().top - attacker.getBoundingClientRect().top + defender.offsetHeight - defender.offsetHeight / 2) + "px";
         if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) > 0) {
             attacker.style.marginLeft = -(defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left - defender.offsetWidth / 3) + "px";
-        }
-        else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
+        } else if ((defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left) < 0) {
             attacker.style.marginLeft = -(defender.getBoundingClientRect().left - attacker.getBoundingClientRect().left + defender.offsetWidth / 3) + "px";
-        }
-        else {
+        } else {
             attacker.style.marginLeft = "0px";
         }
         document.getElementById("background__field").insertBefore(attacker, tempBlock.nextSibling);
@@ -289,6 +337,7 @@ export function collision(attacker, defender) {
         attacker.classList.remove("canAttack");
         attacker.removeAttribute("data-specification");
         attacker.style.removeProperty("zIndex");
+        console.log("сработал remove")
     }
 
     function damageImg() {
@@ -300,28 +349,26 @@ export function collision(attacker, defender) {
         if (attacker.getAttribute("data-specification") === "taunt") {
             damageImage.classList.add("tauntDamage");
             damageText.classList.add("tauntDamageText");
-        }
-        else if (defender.id == "opponenthero")
-        {
+        } else if (defender.id == "opponenthero") {
             defender.style.position = "absolute";
             damageImage.classList.add("opponentHeroDamage");
             damageText.classList.add("opponentHeroDamageText");
-        }
-        else {
+        } else {
             damageImage.classList.add("damage");
             damageText.classList.add("damageText");
         }
         if ((attacker.getAttribute("data-specification") === "poisonous") && (defender.id != "opponenthero")) {
             const hpValue = defender.childNodes[2].textContent;
             damageText.innerText = String(-hpValue);
-        }
-        else {
+        } else {
             if (attackValue != 0) {
                 damageText.innerText = String(-attackValue)
             }
         }
+
         defender.appendChild(damageImage);
         defender.appendChild(damageText);
+
         setTimeout(
             () => {
                 damageImage.style.transition = "all 1.2s";
@@ -332,65 +379,16 @@ export function collision(attacker, defender) {
                     () => {
                         damageImage.remove();
                         damageText.remove();
+
+                        socket.send(JSON.stringify({
+                            type: "attack",
+                            data: {
+                                player: (localStorage.getItem("id")),
+                                idAttack: attacker.id,
+                                idDefense: defender.id,
+                            }
+                        }))
                     }, 1200)
             }, 500)
     }
-}
-
-function Lose() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const heroClass = urlParams.get('heroclass');
-    const loseImage = document.getElementById('loseimg');
-    const endbg = document.getElementById('endbg');
-    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "LoseGame.png)";
-    loseImage.style.width = "863px";
-    loseImage.style.height = "818px";
-    loseImage.style.zIndex = 9999;
-    loseImage.style.position = "absolute";
-    loseImage.style.top = "50%";
-    loseImage.style.left = "50%";
-    loseImage.style.marginRight = "-50%";
-    loseImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
-}
-
-function Victory() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const heroClass = urlParams.get('heroclass');
-    const winImage = document.getElementById('winimg');
-    const endbg = document.getElementById('endbg');
-    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "WinGame.png)";
-    winImage.style.width = "793px";
-    winImage.style.height = "704px";
-    winImage.style.zIndex = 9999;
-    winImage.style.position = "absolute";
-    winImage.style.top = "50%";
-    winImage.style.left = "50%";
-    winImage.style.marginRight = "-50%";
-    winImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
 }

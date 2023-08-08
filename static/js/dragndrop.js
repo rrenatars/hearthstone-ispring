@@ -1,7 +1,24 @@
-import { attack } from "./attack.js";
-import { manabarFilling } from "./manabarFilling.js";
-import { game } from "./game.js";
-import { socket } from "./websocket.js";
+import {game} from "./game.js";
+import {socket} from "./websocket.js";
+
+const beforeStyle = document.createElement("style");
+document.head.appendChild(beforeStyle);
+
+function animateCards(b) {
+    const cardPortraitUrl = "url_to_your_card_portrait_image";
+
+    beforeStyle.innerHTML = `.cards__card_drag::before {` +
+        `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(` + b + `px);
+    }`;
+
+    setTimeout(function () {
+        if (b === 9) {
+            animateCards(6);
+        } else {
+            animateCards(b + 1);
+        }
+    }, 500);
+}
 
 export function dragNDrop() {
     function getCoords(elem) {
@@ -20,6 +37,8 @@ export function dragNDrop() {
     for (const card of cards) {
         card.draggable = true;
     }
+
+    let cardsNumber = document.querySelectorAll(".field__card").length
 
     const handLimits = 520;
     for (var i = 0; i < cards.length; i++) {
@@ -40,23 +59,55 @@ export function dragNDrop() {
                             comment.style.opacity = "0"
                         }, 1500);
                         return;
+                    } else if (cardsNumber == 7) {
+                        console.log("cards Number", cardsNumber)
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
                     } else {
                         var coords = getCoords(card);
                         var shiftX = e.pageX - coords.left;
                         var shiftY = e.pageY - coords.top;
 
                         card.style.position = 'absolute';
-                        moveAt(e);
+                        console.log("card drag", card)
+                        card.classList.remove("cards__card")
+                        card.classList.remove("cards__card_enable-to-drag")
+                        card.classList.add("cards__card_drag")
+
+                        let cardsNotToDrag = document.querySelectorAll(".cards__card")
+                        cardsNotToDrag.forEach((cardNotToDrag) => {
+                            cardNotToDrag.classList.remove("cards__card")
+                            cardNotToDrag.classList.add("cards__card_hover-off")
+                        });
 
                         card.style.zIndex = 1000;
+                        const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
+                        const beforeStyle = document.createElement('style');
+                        beforeStyle.innerHTML = `
+            .cards__card_drag::before {
+                background-image: url(` + cardPortraitUrl + `);
+            }
+            `;
+                        // Добавляем созданный стиль в голову документа
+                        document.head.appendChild(beforeStyle);
+
+                        animateCards(6);
 
                         function moveAt(e) {
-                            card.style.left = e.pageX - shiftX + 'px';
-                            card.style.top = e.pageY - shiftY + 'px';
+                            card.style.left = e.pageX - 30 + 'px';
+                            card.style.top = e.pageY - 30 + 'px';
                         }
 
                         document.onmousemove = function (e) {
-                            moveAt(e);
+                            setTimeout(function () {
+                                moveAt(e);
+                            }, 100);
                         };
 
                         card.onmouseup = function () {
@@ -70,22 +121,20 @@ export function dragNDrop() {
                                 }
                                 field.appendChild(card);
                                 card.style.position = 'static';
-                                card.classList.remove('cards__card');
+                                card.classList.remove('cards__drag');
                                 card.classList.add('field__card');
 
+                                cardsNotToDrag = document.querySelectorAll(".cards__card")
+                                cardsNotToDrag.forEach((cardNotToDrag) => {
+                                    cardNotToDrag.classList.add("cards__card")
+                                    cardNotToDrag.classList.remove("cards__card_hover-off")
+                                });
 
-                                mana = mana - manaSelectedCard;
-
-                                const manaElement = document.getElementById('MyMana');
-                                manabarFilling(mana, manaElement);
-
-                                let cardPortraitUrl = card.getAttribute('style').match(/background-image:\s?url\(['"]?([^'"]+?)['"]?\)/)[1];
-
-                                let creaturePortraitUrl = cardPortraitUrl.replace('cards-in-hand', 'creatures');
-                                card.style.backgroundImage = 'url(' + creaturePortraitUrl + ')'
-                                card.style.width = '125px'
-                                card.style.height = '168px'
-
+                                // for (const card of cards) {
+                                //     card.classList.add("cards__card")
+                                //     card.classList.remove("cards__card_if-drag-card")
+                                // }
+                                cardsNumber = document.querySelectorAll(".field__card").length
                                 socket.send(JSON.stringify({
                                     type: "card drag",
                                     data: {
@@ -94,8 +143,17 @@ export function dragNDrop() {
                                     },
                                 }))
                             } else {
+                                card.classList.remove("cards__card_drag")
+                                card.classList.add("cards__card")
+                                card.classList.add("cards__card_enable-to-drag")
                                 cardsElement.appendChild(card);
                                 card.style.position = 'static';
+
+                                cardsNotToDrag = document.querySelectorAll(".cards__card_hover-off")
+                                cardsNotToDrag.forEach((cardNotToDrag) => {
+                                    cardNotToDrag.classList.add("cards__card")
+                                    cardNotToDrag.classList.remove("cards__card_hover-off")
+                                });
                             }
                         }
                     }
