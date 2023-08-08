@@ -7,7 +7,16 @@ import { dragNDrop } from "./dragndrop.js";
 enemyTurnRun()
 
 socketInit()
+var battleSound = new Audio("../sounds/battle.wav");
+var battleSoundLoaded = false;
 
+battleSound.addEventListener('loadeddata', function () {
+    battleSoundLoaded = true;
+    battleSound.loop = true;
+}, false);
+document.addEventListener("click", function () {
+    battleSound.play();
+}, { once })
 const startSubmit = document.getElementById("StartSubmit")
 console.log(startSubmit)
 if (!startSubmit) {

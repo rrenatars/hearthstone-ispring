@@ -1,6 +1,6 @@
 import { victory } from "./end-game.js";
-import {socket} from "./websocket.js"
-import {game} from "./game.js"
+import { socket } from "./websocket.js"
+import { game } from "./game.js"
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');
@@ -149,11 +149,24 @@ export function attack() {
                     // provocationOnField();
 
                     e3.onclick = botCardClick
-                    function botCardClick() {
+                    async function botCardClick() {
                         if (svg.style.display == "block") {
                             e3.classList.add("activeTarget");
                             const botCardHP = document.querySelector(".activeTarget").childNodes[2];
-
+                            async function checkFileExists(url) {
+                                try {
+                                    const response = await fetch(url, { method: 'HEAD' });
+                                    return response.ok;
+                                } catch (error) {
+                                    return false;
+                                }
+                            }
+                            const filename = "../sounds/" + e.style.backgroundImage.match(/creatures\/(.*?)\.png/)[1] + "-attack";
+                            if (await checkFileExists(filename + '.ogg')) { src = filename + '.ogg' } else { src = filename + '.wav' }
+                            var attackSound = new Audio(src);
+                            attackSound.addEventListener('loadeddata', function () {
+                                attackSound.play();
+                            }, false);
                             collision(e, e3);
 
                             if ((e.getAttribute("data-specification") === "poisonous")) {
@@ -169,6 +182,12 @@ export function attack() {
                             }
 
                             if (botCardHP.textContent <= 0) {
+                                const filename = "../sounds/" + e3.style.backgroundImage.match(/creatures\/(.*?)\.png/)[1] + "-death";
+                                if (await checkFileExists(filename + '.ogg')) { src = filename + '.ogg' } else { src = filename + '.wav' }
+                                var deathSound = new Audio(src);
+                                deathSound.addEventListener('loadeddata', function () {
+                                    deathSound.play();
+                                }, false);
                                 e3.style.transition = "all 2s";
                                 botCardHP.style.opacity = "0";
                                 e3.style.opacity = "0"

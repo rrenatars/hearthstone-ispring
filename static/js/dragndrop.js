@@ -34,8 +34,8 @@ export function dragNDrop() {
                         const label = document.getElementById("manaWarning");
                         label.style.visibility = "visible";
                         label.style.opacity = "1";
-                        var x = Math.round(e.clientX) - label.offsetWidth/1.5 + "px";
-                        var y = Math.round(e.clientY) - label.offsetHeight/1.5 + "px";
+                        var x = Math.round(e.clientX) - label.offsetWidth / 1.5 + "px";
+                        var y = Math.round(e.clientY) - label.offsetHeight / 1.5 + "px";
                         label.style.left = x;
                         label.style.top = y;
                         setTimeout(function () {
@@ -64,7 +64,7 @@ export function dragNDrop() {
                             moveAt(e);
                         };
 
-                        card.onmouseup = function () {
+                        card.onmouseup = async function () {
                             document.onmousemove = null;
                             card.onmouseup = null;
 
@@ -83,7 +83,20 @@ export function dragNDrop() {
 
                                 const manaElement = document.getElementById('MyMana');
                                 manabarFilling(mana, manaElement);
-
+                                async function checkFileExists(url) {
+                                    try {
+                                        const response = await fetch(url, { method: 'HEAD' });
+                                        return response.ok;
+                                    } catch (error) {
+                                        return false;
+                                    }
+                                }
+                                const filename = "../sounds/" + cardPortraitUrl.match(/creatures\/(.*?)\.png/)[1] + "-summon";
+                                if (await checkFileExists(filename + '.ogg')) { src = filename + '.ogg' } else { src = filename + '.wav' }
+                                var summonSound = new Audio(src);
+                                summonSound.addEventListener('loadeddata', function () {
+                                    summonSound.play();
+                                }, false);
                                 let cardPortraitUrl = card.getAttribute('style').match(/background-image:\s?url\(['"]?([^'"]+?)['"]?\)/)[1];
 
                                 let creaturePortraitUrl = cardPortraitUrl.replace('cards-in-hand', 'creatures');

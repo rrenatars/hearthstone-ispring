@@ -1,4 +1,4 @@
-document.getElementById("openSignInPageButton").addEventListener("click",
+document.getElementById("button-sign-in").addEventListener("click",
     function() {
         window.location.href = "/auth/sign-in"
         // Perform the GET request when the button is clicked
@@ -13,7 +13,7 @@ document.getElementById("openSignInPageButton").addEventListener("click",
             .catch(error => console.error("Error:", error));
     });
 
-document.getElementById("openSignUpPageButton").addEventListener("click",
+document.getElementById("button-sign-up").addEventListener("click",
     function() {
         window.location.href = "/auth/sign-up"
         // Perform the GET request when the button is clicked

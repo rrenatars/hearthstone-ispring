@@ -31,9 +31,9 @@ func CreateNewGameTable(id_ string) *models.GameTable {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:         "localhost",
 		Port:         "3306",
-		Username:     "rrenatessa",
+		Username:     "root",
 		DBName:       "hearthstone",
-		Password:     "sqlwebpassdata",
+		Password:     "ozQG7LC5!",
 		DbDriverName: "mysql",
 	})
 	if err != nil {

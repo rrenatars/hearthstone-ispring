@@ -1,4 +1,4 @@
-document.getElementById("signinForm").addEventListener("submit", function (event) {
+document.getElementById("form").addEventListener("submit", function (event) {
     event.preventDefault();
 
     const formData = {
@@ -34,3 +34,7 @@ document.getElementById("signinForm").addEventListener("submit", function (event
             console.error("Error:", error);
         });
 });
+const button = document.getElementById("sign-up-button");
+button.addEventListener("click", () => {
+    window.location.href = 'sign-up';
+})
