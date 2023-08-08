@@ -87,8 +87,6 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) bool {
 			log.Println(err)
 		}
 		c.room.broadcast <- jsonData
-	case "defeat":
-		return true
 	case "ability":
 		log.Println("ability")
 		ability(&msgReq, c)
@@ -100,6 +98,9 @@ func setupMessageTypes(msgReq models.MessageRequest, c *Client) bool {
 			log.Println(err)
 		}
 		c.room.broadcast <- jsonData
+	case "defeat":
+
+		return true
 	default:
 		log.Println("unkown msgReq type: ", msgReq.Type)
 	}
@@ -113,7 +114,7 @@ func attack(msgReq *models.MessageRequest, c *Client) {
 	}
 	log.Println(attackData)
 
-	err = serverservices.Attack(attackData, c.room.game)
+	err = serverservices.SetupAttack(attackData, c.room.game)
 	if err != nil {
 		log.Println(err)
 	}
@@ -124,7 +125,7 @@ func ability(msgReq *models.MessageRequest, c *Client) {
 	if err != nil {
 		return
 	}
-	serverservices.SetupAbilities(&data, c.room.game)
+	serverservices.Ability(&data, c.room.game)
 }
 
 func cardDrag(msgReq *models.MessageRequest, c *Client) {
@@ -152,28 +153,40 @@ func giveMeGame(c *Client) {
 	})
 }
 
+type CreateGameData struct {
+	ClientID string `json:"clientID"`
+	Hero     string `json:"hero"`
+}
+
+type CreateGameMess struct {
+	Type string         `json:"type"`
+	Data CreateGameData `json:"data"`
+}
+
 func createGame(msgReq models.MessageRequest, c *Client, b bool) {
 	var createGame CreateGameData
 	if err := json.Unmarshal(msgReq.Data, &createGame); err != nil {
 		log.Println("Ошибка при парсинге JSON: ", err)
 		return
 	}
-
-	if !b && ConnectToRoom(c) {
+	log.Println(createGame, "create game")
+	if !b && ConnectToRoom(c, createGame.Hero) {
 		return
 	}
 
-	CreateNewRoom(c, b)
+	CreateNewRoom(c, b, createGame.Hero)
 }
 
-func ConnectToRoom(c *Client) bool {
+func ConnectToRoom(c *Client, hero string) bool {
 	for _, r := range c.hub.rooms {
 		if len(r.clients) < 2 && r.id != "default" && !r.bot {
 			c.room = r
 			if c.room.game.Player2.Name == "name" {
 				c.room.game.Player2.Name = c.id
+				c.room.game.Player2.Hero = hero
 			} else if c.room.game.Player1.Name == "name" {
 				c.room.game.Player1.Name = c.id
+				c.room.game.Player2.Hero = hero
 			} else {
 				log.Println("error log conncection")
 			}
@@ -185,7 +198,7 @@ func ConnectToRoom(c *Client) bool {
 	return false
 }
 
-func CreateNewRoom(c *Client, b bool) {
+func CreateNewRoom(c *Client, b bool, hero string) {
 	g, err := tools.CreateNewGameTable(uuid.New().String(), b)
 	if err != nil {
 		log.Println(err)
@@ -193,22 +206,30 @@ func CreateNewRoom(c *Client, b bool) {
 	}
 
 	roomPtr := newRoom(g.Id, g, b)
-
+	log.Println(hero)
 	if roomPtr.game.Player1.Name == "name" {
 		roomPtr.game.Player1.Name = c.id
+		roomPtr.game.Player1.Hero = hero
 	} else {
 		roomPtr.game.Player2.Name = c.id
+		roomPtr.game.Player2.Hero = hero
 	}
 
 	c.room = roomPtr
 	if c.room.bot {
-		if c.room.game.Player1.Name == "bot" && c.room.game.Player1.Turn {
-			Bot(c)
-			serverservices.EndTurn(c.room.game)
+		if c.room.game.Player1.Name == "bot" {
+			c.room.game.Player1.Hero = "mage"
+			if c.room.game.Player1.Turn {
+				Bot(c)
+				serverservices.EndTurn(c.room.game)
+			}
 		}
-		if c.room.game.Player2.Name == "bot" && c.room.game.Player2.Turn {
-			Bot(c)
-			serverservices.EndTurn(c.room.game)
+		if c.room.game.Player2.Name == "bot" {
+			c.room.game.Player2.Hero = "mage"
+			if c.room.game.Player2.Turn {
+				Bot(c)
+				serverservices.EndTurn(c.room.game)
+			}
 		}
 	}
 	c.hub.rooms[roomPtr.id] = roomPtr

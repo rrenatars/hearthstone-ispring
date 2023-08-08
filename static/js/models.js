@@ -32,8 +32,9 @@ export class Player {
      * @param {number} Def
      * @param {number} mana
      * @param {number} counterOfMoves
+     * @param {string} hero
      */
-    constructor(name, hand, cards, deck, turn, HP, Def, mana, counterOfMoves) {
+    constructor(name, hand, cards, deck, turn, HP, Def, mana, counterOfMoves, hero) {
         this.name = name;
         this.hand = hand;
         this.cards = cards;
@@ -43,6 +44,7 @@ export class Player {
         this.Def = Def;
         this.Mana = mana;
         this.CounterOfMoves = counterOfMoves;
+        this.hero = hero
     }
 }
 

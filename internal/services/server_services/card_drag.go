@@ -79,6 +79,7 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 		pl.Def,
 		newPlayerMana,
 		pl.CounterOfMoves,
+		pl.Hero,
 	), nil
 }
 

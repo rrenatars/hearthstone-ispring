@@ -14,9 +14,9 @@ func GetCardsFromDB() ([]models.CardData, error) {
 	db, err := database.NewMySQLDB(database.Config{
 		Host:         "localhost",
 		Port:         "3306",
-		Username:     "rrenatessa",
+		Username:     "root",
 		DBName:       "hearthstone",
-		Password:     "sqlwebpassdata",
+		Password:     "password",
 		DbDriverName: "mysql",
 	})
 
@@ -63,8 +63,8 @@ func CreateNewGameTable(id_ string, b bool) (*models.GameTable, error) {
 
 	if !b {
 		return models.NewGameTable(
-			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 30, 100, 0, 0),
-			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 30, 100, 0, 0),
+			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 30, 100, 0, 0, ""),
+			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 30, 100, 0, 0, ""),
 			[]models.CardData{}, id_), nil
 	}
 
@@ -86,14 +86,14 @@ func CreateNewGameTable(id_ string, b bool) (*models.GameTable, error) {
 	log.Println("random number")
 	if getRandomNumber(1, 2) == 1 {
 		return models.NewGameTable(
-			models.NewPlayer("bot", handForBot, deckForBot, []models.CardData{}, true, 30, 100, 0, 0),
-			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 30, 100, 0, 0),
+			models.NewPlayer("bot", handForBot, deckForBot, []models.CardData{}, true, 30, 100, 0, 0, ""),
+			models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, false, 30, 100, 0, 0, ""),
 			[]models.CardData{}, id_), nil
 	}
 
 	return models.NewGameTable(
-		models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 30, 100, 0, 0),
-		models.NewPlayer("bot", handForBot, deckForBot, []models.CardData{}, false, 30, 100, 0, 0),
+		models.NewPlayer("name", GetRandomElementsFromDeck(&deck, 3), ShuffleDeck(deck), []models.CardData{}, true, 30, 100, 0, 0, ""),
+		models.NewPlayer("bot", handForBot, deckForBot, []models.CardData{}, false, 30, 100, 0, 0, ""),
 		[]models.CardData{}, id_), nil
 }
 
