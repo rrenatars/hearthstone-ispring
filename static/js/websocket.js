@@ -29,7 +29,6 @@ export const socket = new WebSocket(`wss://` + window.location.hostname + `/ws?r
 
 function selectCardsToExchange() {
     const cardsStart = document.querySelectorAll('.cards__card_start');
-    console.log("зашел в функцию select cards")
 
     Array.from(cardsStart).forEach(function (card) {
         let img = null; // Флаг для отслеживания состояния элемента img
@@ -54,61 +53,6 @@ function selectCardsToExchange() {
             }
         });
     });
-    console.log("вышел из функции select cards")
-}
-
-function Lose() {
-    const loseImage = document.getElementById('loseimg');
-    const endbg = document.getElementById('endbg');
-    loseImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-lose-game.png)";
-    loseImage.style.width = "863px";
-    loseImage.style.height = "818px";
-    loseImage.style.zIndex = 9999;
-    loseImage.style.position = "absolute";
-    loseImage.style.top = "50%";
-    loseImage.style.left = "50%";
-    loseImage.style.marginRight = "-50%";
-    loseImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
-}
-
-function Victory() {
-    const winImage = document.getElementById('winimg');
-    const endbg = document.getElementById('endbg');
-    winImage.style.backgroundImage = "url(../static/images/field/" + heroClass + "-win-game.png)";
-    winImage.style.width = "793px";
-    winImage.style.height = "704px";
-    winImage.style.zIndex = 9999;
-    winImage.style.position = "absolute";
-    winImage.style.top = "50%";
-    winImage.style.left = "50%";
-    winImage.style.marginRight = "-50%";
-    winImage.style.transform = "translate(-50%, -50%)";
-    endbg.style.zIndex = 999;
-    endbg.style.backdropFilter = "blur(3px)";
-    endbg.style.textAlign = "center";
-    endbg.style.margin = "0";
-    endbg.style.width = "100%";
-    endbg.style.height = "100%";
-    endbg.style.position = "absolute";
-    endbg.style.bottom = "0";
-    endbg.style.top = "0";
-    endbg.style.left = "0";
-    endbg.style.right = "0";
-    endbg.style.backgroundColor = "#666666";
-    endbg.style.opacity = "0.95";
 }
 
 function startBefore() {
@@ -125,6 +69,9 @@ function startBefore() {
 
     const handCards = document.querySelector('.hand__cards')
     handCards.classList.add('hand__cards_start')
+
+    const cardsInner = document.querySelector(".cards")
+    cardsInner.classList.add("cards_start")
 
     const cardsHeader = document.createElement('p')
     cardsHeader.className = 'cards__header'
@@ -155,6 +102,7 @@ function start() {
     const startSubmit = document.getElementById('StartSubmit');
     const cardsHeader = document.querySelector('.cards__header');
     const cards = document.querySelectorAll('.cards__card_start');
+    const cardsInner = document.querySelector(".cards_start")
     const handCards = document.querySelector('.hand__cards_start');
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
@@ -164,6 +112,7 @@ function start() {
             handCards.removeChild(startSubmit);
             handCards.removeChild(cardsHeader);
             handCards.classList.remove('hand__cards_start');
+            cardsInner.classList.remove("cards_start")
 
             let replacedCardIds = [];
 
@@ -253,7 +202,7 @@ function afterStart() {
                     case 'warlock':
                         heroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (heroHealthElement.textContent <= 0) Lose()
+                        if (heroHealthElement.textContent <= 0) lose()
                         socket.send(JSON.stringify({
                             type: "ability",
                             data : {
@@ -284,7 +233,7 @@ function afterStart() {
                         const cardPlayer1 = document.getElementById('background__field');
                         cardPlayer1.appendChild(recruit);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (heroHealthElement.textContent <= 0) Lose()
+                        if (heroHealthElement.textContent <= 0) lose()
                         socket.send(JSON.stringify({
                             type: "ability",
                             data : {
@@ -435,11 +384,28 @@ export function socketInit() {
                 }
             }
             ViewCards(game.player1.cards, "background__field", "field__card")
+            if (game.player1.cards.length === 0) {
+                while (document.getElementById("background__field").firstChild)  {
+                    document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
+                }
+                let emptyField = document.createElement("div")
+                emptyField.classList.add("field__empty_opp")
+                document.getElementById("background__field").append(emptyField)
+            }
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+            if (game.player2.cards.length === 0) {
+                while (document.getElementById("background__field_opp").firstChild)  {
+                    document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)
+                }
+                let emptyField = document.createElement("div")
+                emptyField.classList.add("field__empty_opp")
+                document.getElementById("background__field_opp").append(emptyField)
+            }
             myHeroHealthValue.textContent = game.player1.HP
             enemyHeroHealthValue.textContent = game.player2.HP
-        } else {
+        }
+        if (clientId === game.player2.name) {
             if (game.player2.CounterOfMoves > 0) {
                 if (game.player2.turn) {
                     endTurnButton.addEventListener("click", function () {
@@ -453,13 +419,31 @@ export function socketInit() {
                 }
             }
             ViewCards(game.player2.cards, "background__field", "field__card")
+            if (game.player2.cards.length === 0) {
+                while (document.getElementById("background__field").firstChild)  {
+                    document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
+                }
+                let emptyField = document.createElement("div")
+                emptyField.classList.add("field__empty_opp")
+                document.getElementById("background__field").append(emptyField)
+            }
             ViewCards(game.player2.hand, "cards", "cards__card");
             ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
+            if (game.player1.cards.length === 0) {
+                while (document.getElementById("background__field_opp").firstChild)  {
+                    document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)
+                }
+                let emptyField = document.createElement("div")
+                emptyField.classList.add("field__empty_opp")
+                document.getElementById("background__field_opp").append(emptyField)
+            }
             myHeroHealthValue.textContent = game.player2.HP
             enemyHeroHealthValue.textContent = game.player1.HP
         }
 
         let i = 0;
+
+        console.log("attack cards length", attackCardsLength)
 
         document.querySelectorAll(".field__card").forEach(function (e) {
             i++
@@ -713,7 +697,9 @@ export function socketInit() {
                             comment.style.opacity = "0"
                         }, 1500);
                     }
-                    yourTurn()
+                    if (game.player1.HP > 0) {
+                        yourTurn()
+                    }
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -744,7 +730,9 @@ export function socketInit() {
                             comment.style.opacity = "0"
                         }, 1500);
                     }
-                    yourTurn()
+                    if (game.player2.HP > 0) {
+                        yourTurn()
+                    }
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../../static/images/field/end-turn1.png)";
                     endTurnButton.removeAttribute('disabled');
@@ -805,16 +793,16 @@ export function socketInit() {
                 }
                 console.log(type, game)
                 break
-            // case "attack":
-            //     if (game.player1.turn && clientId === game.player1.name) {
-            //         dragNDrop()
-            //         attack()
-            //     }
-            //     if (game.player2.turn && clientId === game.player2.name) {
-            //         dragNDrop()
-            //         attack()
-            //     }
-            //     break
+            case "attack":
+                if (game.player1.turn && clientId === game.player1.name) {
+                    dragNDrop()
+                    attack()
+                }
+                if (game.player2.turn && clientId === game.player2.name) {
+                    dragNDrop()
+                    attack()
+                }
+                break
             case "bot attack":
                 console.log("bot attack")
                 if (cardsNumber <= 7) {

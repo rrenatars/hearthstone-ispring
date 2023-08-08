@@ -4,18 +4,18 @@ import {socket} from "./websocket.js";
 const beforeStyle = document.createElement("style");
 document.head.appendChild(beforeStyle);
 
-function animateCards(b) {
-    const cardPortraitUrl = "url_to_your_card_portrait_image";
-
+function animateCards(b, s) {
     beforeStyle.innerHTML = `.cards__card_drag::before {` +
-        `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(` + b + `px);
+        `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(` + s + `) blur(` + b + `px);
     }`;
 
     setTimeout(function () {
         if (b === 9) {
-            animateCards(6);
+            animateCards(6, s);
+        } else if (s === 16) {
+            animateCards(b + 1, 4);
         } else {
-            animateCards(b + 1);
+            animateCards(b + 1, s + 1)
         }
     }, 500);
 }
@@ -75,7 +75,15 @@ export function dragNDrop() {
                         });
 
                         card.style.zIndex = 1000;
-                        const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
+                        const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage;
+                        let src;
+                        const filename = "../static/sounds/" + cardPortraitUrl.match(/url\("\.\.\/\.\.\/static\/images\/cards-in-hand\/(.*?)\.png"/)[1] + "-summon";
+                        console.log(filename)
+                        src = filename + '.wav'
+                        const summonSound = new Audio(src);
+                        summonSound.addEventListener('loadeddata', function () {
+                            summonSound.play();
+                        }, false);
                         const beforeStyle = document.createElement('style');
                         beforeStyle.innerHTML = `
             .cards__card_drag::before {
@@ -85,7 +93,7 @@ export function dragNDrop() {
                         // Добавляем созданный стиль в голову документа
                         document.head.appendChild(beforeStyle);
 
-                        animateCards(6);
+                        animateCards(6, 4);
 
                         function moveAt(e) {
                             card.style.left = e.pageX - 30 + 'px';

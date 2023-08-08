@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hearthstone</title>
+    <link rel="stylesheet" href="../static/css/sign-up.css">
     <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>
 </head>
+
 <body>
-    <h1>Sign Up</h1>
-    <form id="signupForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required><br>
-
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required><br>
-
-        <!-- <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required><br> -->
-
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required><br>
-
-        <input type="submit" value="Sign Up">
+<div class="bg">
+    <form id="form" class="form">
+        <input type="text" id="username" name="username" required class="field" placeholder="Логин"><br>
+        <input type="text" id="name" name="name" required class="field" placeholder="Отображаемое имя"><br>
+        <input type="password" id="password" name="password" required class="field" placeholder="Пароль"><br>
+        <input type="submit" class="button" value="Зарегистрироваться"><br>
     </form>
-</body>
+    <div class="sign-in-button" id="sign-in-button">Уже есть аккаунт?</div>
+</div>
 <script src="../static/js/sign-up.js" type="module"></script>
+</body>
+
 </html>

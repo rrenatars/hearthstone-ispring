@@ -1,4 +1,5 @@
 import {victory} from "./end-game.js";
+import {lose} from "./end-game.js";
 import {socket} from "./websocket.js"
 import {game} from "./game.js"
 
@@ -14,10 +15,9 @@ export function attack() {
     const manaElement = document.getElementById("MyMana");
     const myBattlefield = document.getElementById("background__field")
     const enemyBattlefield = document.getElementById("background__field_opp")
-    console.log(fightCards, "fightCards");
     var tauntOnField = false;
 
-    if (heroClass == "Mage") {
+    if (heroClass == "mage") {
         selectedHeroPowerElement.classList.add("field__card");
         let mana = parseInt(manaElement.textContent);
         if (mana >= 2) {
@@ -30,7 +30,9 @@ export function attack() {
 
     fightCards.forEach(function (e) {
         if ((e.classList.contains('canAttack')) || (e.getAttribute("data-specification") === "rush")) {
-            e.style.zIndex = 100;
+            if (!e.id === "heropower") {
+                e.style.zIndex = 100;
+            }
 
             e.addEventListener("mousedown", function () {
                 var xOrigin = e.offsetLeft + e.offsetWidth / 2;
@@ -86,15 +88,11 @@ export function attack() {
                         }, 1500);
 
                         opponentHeroElement.classList.remove("activeTarget");
-                        e.classList.remove("activeCard");
-                        e.classList.remove("canAttack");
-                        e.removeAttribute("data-specification");
-                        e.style.removeProperty("zIndex");
                     } else if (tauntOnField === true) {
                         if (svg.style.display == "block") {
                             const comment = document.getElementById("comment");
                             const commentText = document.getElementById("commentText");
-                            if ((heroClass == "Mage") || (heroClass == "Rogue")) {
+                            if ((heroClass == "mage") || (heroClass == "rogue")) {
                                 commentText.innerText = "Я должна\nатаковать\nпровокатора."
                             } else {
                                 commentText.innerText = "Я должен\nатаковать\nпровокатора."
@@ -123,7 +121,7 @@ export function attack() {
                                     }
                                     opponentheroHealthElement.style.color = '#c70d0d';
                                     if (opponentheroHealthElement.textContent <= 0) {
-                                        Victory()
+                                        victory()
                                     }
                                     setTimeout(function () {
                                         opponentheroHealthElement.style.color = '#FFFFFF';
@@ -171,20 +169,22 @@ export function attack() {
                     if (tauntOnField === false) {
                         e3.onclick = botCardClick
                     } else {
-                        e3.onclick = () => {
-                            if (svg.style.display == "block") {
-                                const comment = document.getElementById("comment");
-                                const commentText = document.getElementById("commentText");
-                                if ((heroClass == "Mage") || (heroClass == "Rogue")) {
-                                    commentText.innerText = "Я должна\nатаковать\nпровокатора."
-                                } else {
-                                    commentText.innerText = "Я должен\nатаковать\nпровокатора."
+                        if (e3.getAttribute("data-specification") !== "taunt") {
+                            e3.onclick = () => {
+                                if (svg.style.display == "block") {
+                                    const comment = document.getElementById("comment");
+                                    const commentText = document.getElementById("commentText");
+                                    if ((heroClass == "mage") || (heroClass == "rogue")) {
+                                        commentText.innerText = "Я должна\nатаковать\nпровокатора."
+                                    } else {
+                                        commentText.innerText = "Я должен\nатаковать\nпровокатора."
+                                    }
+                                    comment.style.opacity = "1";
+                                    commentText.style.fontSize = "20px";
+                                    setTimeout(function () {
+                                        comment.style.opacity = "0"
+                                    }, 1500);
                                 }
-                                comment.style.opacity = "1";
-                                commentText.style.fontSize = "20px";
-                                setTimeout(function () {
-                                    comment.style.opacity = "0"
-                                }, 1500);
                             }
                         }
                     }
@@ -209,14 +209,44 @@ export function attack() {
                                     if (e.id == "heropower") {
                                         botCardHP.textContent -= 1;
                                     } else if (e.getAttribute("data-specification") === "poisonous") {
+                                        let src;
+                                        const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-attack";
+                                        src = filename + '.wav'
+                                        const attackSound = new Audio(src);
+                                        attackSound.addEventListener('loadeddata', function () {
+                                            attackSound.play();
+                                        }, false);
                                         botCardHP.textContent -= botCardHP.textContent;
                                     } else {
+                                        let src;
+                                        const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-attack";
+                                        src = filename + '.wav'
+                                        const attackSound = new Audio(src);
+                                        attackSound.addEventListener('loadeddata', function () {
+                                            attackSound.play();
+                                        }, false);
                                         const cardAttackValue = cardAttack.childNodes[1];
                                         botCardHP.textContent -= cardAttackValue.textContent;
                                         cardAttackHP.textContent -= botCardAttack.textContent
                                     }
 
                                     if (botCardHP.textContent <= 0) {
+                                        function checkFileExists(url) {
+                                            try {
+                                                const response = fetch(url, { method: 'HEAD' });
+                                                return response.ok;
+                                            } catch (error) {
+                                                return false;
+                                            }
+                                        }
+                                        let src;
+                                        const filename = "../static/sounds/" + this.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-death";
+                                        src = filename + '.wav'
+                                        const deathSound = new Audio(src);
+                                        deathSound.addEventListener('loadeddata', function () {
+                                            deathSound.play();
+                                        }, false);
+
                                         this.style.transition = "all 1s";
                                         this.classList.add("killed");
                                         this.style.opacity = "0";
@@ -231,19 +261,28 @@ export function attack() {
                                         }, 1010);
                                     }
 
-                                    if (cardAttackHP.textContent <= 0) {
-                                        e.style.transition = "all 1s";
-                                        e.classList.add("killed");
-                                        e.style.opacity = "0";
-                                        var killed = e
-                                        setTimeout(function () {
-                                            e.remove()
-                                            if (myBattlefield.childElementCount === 0) {
-                                                let emptyField = document.createElement("div")
-                                                emptyField.classList.add("field__empty")
-                                                myBattlefield.append(emptyField)
-                                            }
-                                        }, 1010);
+                                    if (e.id != "heropower") {
+                                        if (cardAttackHP.textContent <= 0) {
+                                            let src;
+                                            const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-death";
+                                            src = filename + '.wav'
+                                            const deathSound = new Audio(src);
+                                            deathSound.addEventListener('loadeddata', function () {
+                                                deathSound.play();
+                                            }, false);
+                                            e.style.transition = "all 1s";
+                                            e.classList.add("killed");
+                                            e.style.opacity = "0";
+                                            var killed = e
+                                            setTimeout(function () {
+                                                e.remove()
+                                                if (myBattlefield.childElementCount === 0) {
+                                                    let emptyField = document.createElement("div")
+                                                    emptyField.classList.add("field__empty")
+                                                    myBattlefield.append(emptyField)
+                                                }
+                                            }, 1010);
+                                        }
                                     }
 
                                     botCardHP.style.color = '#c70d0d';
@@ -251,10 +290,14 @@ export function attack() {
                                         botCardHP.style.color = '#FFFFFF';
                                     }, 1500);
 
-                                    cardAttackHP.style.color = '#c70d0d';
-                                    setTimeout(function () {
-                                        cardAttackHP.style.color = '#FFFFFF';
-                                    }, 1500);
+                                    if (e.id != "heropower")
+                                    {
+                                        cardAttackHP.style.color = '#c70d0d';
+                                        setTimeout(function () {
+                                            cardAttackHP.style.color = '#FFFFFF';
+                                        }, 1500);
+                                    }
+
                                 }, 255)
 
 

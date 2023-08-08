@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Sign In</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>hearthstone</title>
+    <link rel="stylesheet" href="../static/css/sign-in.css">
     <link rel="icon" href="../static/images/field/favicon.ico" type="image/x-icon"/>
 </head>
+
 <body>
-<h1>Sign InNN</h1>
-<form id="signinForm">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-    <br>
-    <button type="submit">Sign In</button>
-</form>
+<div class="bg">
+    <form id="form" class="form">
+        <input type="text" id="username" name="login" required class="field" placeholder="Логин"><br>
+        <input type="password" id="password" name="password" required class="field" placeholder="Пароль"><br>
+        <button type="submit" class="button">Войти</button>
+    </form>
+    <div class="sign-up-button" id="sign-up-button">Еще нет аккаунта?</div>
+</div>
 <p id="errorMessage" style="color: red; display: none;"></p>
 <script src="../static/js/sign-in.js" type="module"></script>
 </body>
+
 </html>

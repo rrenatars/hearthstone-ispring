@@ -2,6 +2,17 @@ import { socket, socketInit, ParseDataToGameTable } from "./websocket.js";
 import { game, setGame, stateMachine } from "./game.js"
 // socketInit();
 
+var menuSound = new Audio("../static/sounds/menu.wav");
+var menuSoundLoaded = false;
+
+menuSound.addEventListener('loadeddata', function () {
+    menuSoundLoaded = true;
+    menuSound.loop = true;
+}, false);
+document.addEventListener("click", function () {
+    menuSound.play();
+}, { once:true })
+
 var selectGameMode = 'singleplayer';
 var selectDifficulty = 'easy';
 var selectHero = 'mage';

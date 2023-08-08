@@ -133,7 +133,7 @@
     font-family: 'Roboto', sans-serif;
     background-repeat: no-repeat;
     filter: drop-shadow(-44px 81px 15px rgba(34, 60, 80, 0.56));
-    transform: scale(1.2);
+    transform: scale(1.3);
 }
 
 .cards__card_drag::before {
@@ -146,7 +146,7 @@
     top: 0;
     left: -10px;
     transition: all .3s ease-out;
-    transform: translate(11%, -2%) scale(1.075);
+    transform: translate(11%, -2%) scale(1.175);
     filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(7px);
 }
 
@@ -256,6 +256,11 @@
     /*margin-top: 15%;*/
 }
 
+.cards_start
+{
+    gap: 140px;
+}
+
 .field__card_opp {
     display: flex;
     flex-direction: column;
@@ -291,7 +296,7 @@
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
-    z-index: 14;
+    /*z-index: 14;*/
 }
 
 .field__empty {

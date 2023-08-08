@@ -13,8 +13,8 @@ export function enemyTurnRun() {
             data: {}
         }
         newEnemyCard();
+        socket.send(JSON.stringify(dataToSend))
         setTimeout(() => {
-            socket.send(JSON.stringify(dataToSend))
             enemyTurn();
             const cardSet = document.getElementById("enemycards");
             const card = document.getElementsByClassName("enemycard");

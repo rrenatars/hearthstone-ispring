@@ -1,7 +1,9 @@
-document.getElementById("signupForm").addEventListener("submit",
-    function(event) {
+document.getElementById("form").addEventListener("submit",
+    function (event) {
         event.preventDefault();
         const formData = new FormData(event.target);
+
+        console.log("form data", formData)
 
         fetch("/auth/sign-up", {
             method: "POST",
@@ -22,3 +24,8 @@ document.getElementById("signupForm").addEventListener("submit",
                 console.error("Error occurred during signup:", error);
             });
     });
+
+const button = document.getElementById("sign-in-button");
+button.addEventListener("click", () => {
+    window.location.href = '/auth/sign-in';
+})
