@@ -68,7 +68,9 @@ func botAttack(bot *models.Player, player *models.Player, conn *websocket.Conn, 
 
 func botAttackPlayer(bot *models.Player, player *models.Player, i_ int, conn *websocket.Conn) bool {
 	for indexCard := i_; indexCard < len(bot.Cards); indexCard++ {
-		player.HP -= bot.Cards[indexCard].Attack
+		if bot.Cards[indexCard].Attack != 0 {
+			player.HP -= bot.Cards[indexCard].Attack
+		}
 		if player.HP <= 0 {
 			log.Printf("bot win")
 			return true
@@ -94,8 +96,10 @@ func botAttackCard(bot *models.Player, indexBotCards int, card *models.CardData,
 			return indexCard
 		}
 
-		card.HP -= bot.Cards[indexCard].Attack
-		bot.Cards[indexCard].HP -= card.Attack
+		if bot.Cards[indexCard].Attack != 0 {
+			card.HP -= bot.Cards[indexCard].Attack
+			bot.Cards[indexCard].HP -= card.Attack
+		}
 
 		if bot.Cards[indexCard].HP <= 0 {
 			//botIds = append(botIds, indexCard)
