@@ -30,7 +30,7 @@
     left: 0;
     right: 0;
     background-image: url(../images/field/background.png) !important;
-    background-size: contain;
+    background-size: cover;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -59,7 +59,7 @@
     height: 135px;
     gap: 5px;
     margin-top: 11.5%;
-    margin-right: 0.5%;
+    margin-right: 11.5%;
     z-index: 3;
 }
 
@@ -92,14 +92,91 @@
     flex-direction: column;
     justify-content: flex-end;
     font-family: 'Roboto', sans-serif;
-    box-shadow: none;
-    transform: none;
     background-repeat: no-repeat;
+    transform: translate(0px, 0px) scale(1.2);
+}
+
+.cards__card_inner {
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    background-repeat: no-repeat;
+    transform: translate(-3px, 0px) scale(1.0);
+}
+
+.cards__card_enable-to-drag {
+}
+
+.cards__card_enable-to-drag::before {
+    content: '';
+    position: absolute;
+    width: 94px;
+    height: 135px;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: -10px;
+    transition: all .3s ease-out;
+    transform: translate(11%, -3%) scale(1.1);
+    filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(15) blur(7px);
+}
+
+.cards__card_drag {
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    background-repeat: no-repeat;
+    filter: drop-shadow(-44px 81px 15px rgba(34, 60, 80, 0.56));
+    transform: scale(1.2);
+}
+
+.cards__card_drag::before {
+    content: '';
+    position: absolute;
+    width: 94px;
+    height: 135px;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: -10px;
+    transition: all .3s ease-out;
+    transform: translate(11%, -2%) scale(1.075);
+    filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(4) blur(7px);
+}
+
+.your-turn
+{
+    /*width: 50%;*/
+    /*height: 50%;*/
+    position: absolute;
+    left: 19%;
+    top: 27%;
+    z-index: 10000;
+    transform: scale(0.8);
 }
 
 .cards__card:hover {
     margin-bottom: 135px;
+    transition: all .1s ease-out;
     transform: scale(2.3);
+}
+
+.cards__card_hover-off
+{
+    width: 94px;
+    height: 135px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    font-family: 'Roboto', sans-serif;
+    background-repeat: no-repeat;
+    transform: translate(0px, 0px) scale(1.2);
 }
 
 .cards__card:active {
@@ -115,8 +192,8 @@
 }
 
 .cards__card_start:hover {
-    margin-bottom: 0px;
-    transform: scale(1.0);
+    margin-bottom: 0;
+    transform: scale(1.2);
 }
 
 .hand__cards {
@@ -131,6 +208,7 @@
 
 .hand__cards_start {
     margin-bottom: 200px;
+    gap: 100px;
 }
 
 
@@ -145,7 +223,7 @@
     color: #FFF;
     font-family: 'Hearthstone';
     font-size: 20px;
-    background-color: #52a4d7;
+    background-color: #65c3fd;
     /* #12f2f6 */
     padding: 10px;
     border-radius: 10px;
@@ -156,15 +234,12 @@
     from {
         box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .4em #34c9ff, .2em -.3em .3em #0c92ec;
     }
-
     45% {
         box-shadow: .15em 0 .4em #85dafe, -.1em -.25em .5em #34c9ff, .15em -.45em .5em #0c92ec;
     }
-
     70% {
         box-shadow: .1em -.1em .3em #85dafe, -.2em -.2em .6em #34c9ff, .2em -.3em .4em #0c92ec;
     }
-
     to {
         box-shadow: -.15em 0 .6em #85dafe, .1em -.25em .6em #34c9ff, -.15em -.45em .5em #0c92ec;
     }
@@ -176,14 +251,12 @@
     justify-content: center;
     width: 100%;
     height: 135px;
-    gap: 5px;
+    gap: 26px;
     z-index: 3;
     /*margin-top: 15%;*/
 }
 
 .field__card_opp {
-    /*width: 125px;*/
-    /*height: 175px;*/
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -232,11 +305,16 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+    /* Ограничьте размеры div, чтобы они не зависели от размеров содержимого */
+    /*width: 200px; !* Например, вы можете задать фиксированную ширину *!*/
+    /*height: 150px; !* Например, вы можете задать фиксированную высоту *!*/
+    /* Другие стили для внешнего вида div */
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
+    /*z-index: 12;*/
 }
 
 .card__attack {
@@ -244,24 +322,23 @@
     font-size: 130%;
     font-weight: bold;
     color: white;
-    text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
     margin-bottom: 19%;
-    margin-right: 45%;
+    margin-right: 22%;
     user-select: none;
 }
 
 .card__attack_taunt {
     margin-bottom: 28%;
-    margin-right: 37%;
+    margin-right: 10%;
 }
 
 .card__attack_poisonous {
     margin-bottom: 23%;
-    margin-right: 46%;
+    margin-right: 16%;
 }
 
 .card__hp {
@@ -269,24 +346,23 @@
     font-weight: bold;
     font-size: 130%;
     color: white;
-    text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
     margin-bottom: 19%;
-    margin-right: 11%;
+    margin-right: -1%;
     user-select: none;
 }
 
 .card__hp_taunt {
     margin-bottom: 28%;
-    margin-right: 16%;
+    margin-right: 3%;
 }
 
 .card__hp_poisonous {
     margin-bottom: 22%;
-    margin-right: 14%;
+    margin-right: -2%;
 }
 
 body {
@@ -311,16 +387,13 @@ button:active {
     position: absolute;
     width: 11%;
     height: 17%;
-    left: 45.35%;
-    top: 9.75%;
+    left: 45.3%;
+    top: 8.75%;
     z-index: 11;
     background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
     user-select: none;
-    /* border-top-left-radius: 90%;
-    border-top-right-radius: 90%;
-    box-shadow: inset 0px 0px 50px 4px #ba1515; */
 }
 
 .playerHero {
@@ -329,7 +402,6 @@ button:active {
     height: 17.5%;
     left: 45.05%;
     top: 67.45%;
-    z-index: 2;
     background-image: url(../images/field/mage.png);
     background-repeat: no-repeat;
     background-size: contain;
@@ -348,7 +420,7 @@ button:active {
 
 .opposingHeroHealthValue {
     margin-top: 47%;
-    margin-left: 5%;
+    margin-left: 10%;
     font-size: 26px;
     font-weight: bold;
     color: white;
@@ -364,7 +436,6 @@ button:active {
     background-image: url(../images/field/HP.png);
     background-size: cover;
     user-select: none;
-    /* visibility: hidden; */
 }
 
 .playerHeroHealthValue {
@@ -383,7 +454,7 @@ button:active {
     top: 70.5%;
     left: 54%;
     z-index: 2;
-    background-image: url(../images/field/magepower.png);
+    background-image: url(../images/field/mage-power.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -392,7 +463,7 @@ button:active {
     width: 8%;
     height: 8%;
     position: absolute;
-    left: 76.35%;
+    left: 77.35%;
     top: 42.1%;
     user-select: none;
     font-size: 16px;
@@ -416,24 +487,24 @@ button:active {
 
     45% {
         box-shadow: .1em -.2em .5em #62f164, .15em 0 .4em #29e73f, -.1em -.25em .5em #29e73f, .15em -.45em .5em #1bc529, -.1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
-        ;
+    ;
     }
 
     70% {
         box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .6em #29e73f, .2em -.3em .4em #1bc529, -.2em -.4em .7em #1bc529, .1em -.5em .7em #10cc1f;
-        ;
+    ;
     }
 
     to {
         box-shadow: -.1em -.2em .6em #62f164, -.15em 0 .6em #29e73f, .1em -.25em .6em #29e73f, -.15em -.45em .5em #1bc529, .1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
-        ;
+    ;
     }
 }
 
 .playerManaValue {
     position: absolute;
-    top: 91.2%;
-    left: 63.5%;
+    top: 92.5%;
+    left: 64%;
     color: white;
     font-size: 23px;
     font-weight: bold;
@@ -443,25 +514,14 @@ button:active {
 
 .opponentManaValue {
     position: absolute;
-    top: 5.2%;
-    left: 61.55%;
+    top: 4%;
+    left: 62.5%;
     color: white;
     font-size: 23px;
     font-weight: bold;
     user-select: none;
     text-shadow: 1px 1px 2px #000000;
 }
-
-/* .manabox {
-    background-image: url(../images/field/mana.png);
-    position: absolute;
-    width: 29px;
-    height: 32px;
-    left: 65.9%;
-    top: 90.2%;
-    margin: 8.66px 0;
-    user-select: none;
-} */
 
 .enemycards {
     margin-right: 81px;
@@ -492,8 +552,18 @@ button:active {
     flex-direction: row;
     width: 26px;
     height: 28px;
-    left: 67.8%;
-    bottom: 5.6%;
+    left: 68.3%;
+    bottom: 4.6%;
+}
+
+.manabar__crystall_bright {
+    transition: all .3s ease-out;
+    filter: brightness(4) sepia(1) hue-rotate(180deg) saturate(11) blur(1px);
+}
+
+.cross
+{
+    transform: scale(0.7);
 }
 
 #arrowcursor {
@@ -516,6 +586,11 @@ button:active {
     top: 13%;
     z-index: 10000;
     pointer-events: none;
+}
+
+.activeCard {
+    transition: all 0.4s;
+    transform: scale(1.2);
 }
 
 .divine-shield {
@@ -556,10 +631,10 @@ button:active {
     top: 25%;
     left: 32%;
     text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
 }
 
 .damageText {
@@ -571,10 +646,10 @@ button:active {
     top: 33%;
     left: 34%;
     text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
 }
 
 .opponentHeroDamageText
@@ -587,10 +662,10 @@ button:active {
     top: 35%;
     left: 28%;
     text-shadow:
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+            -1px -1px 0 #000,
+            1px -1px 0 #000,
+            -1px 1px 0 #000,
+            1px 1px 0 #000;
 }
 
 @-webkit-keyframes deathShake {
