@@ -46,11 +46,20 @@ func GetRandomElementsFromDeck(deckPtr *[]models.CardData, numElements int) []mo
 		arrOfRndmIndexes[i] = randomIndex
 	}
 
-	for _, rndmIndex := range arrOfRndmIndexes {
-		deck = RemoveElemsFromSlice(deck, rndmIndex)
+	var newDeck []models.CardData
+	for _, c := range deck {
+		flag := false
+		for _, cr := range result {
+			if c.CardID == cr.CardID {
+				flag = true
+			}
+		}
+		if !flag {
+			newDeck = append(newDeck, c)
+		}
 	}
 
-	*deckPtr = deck
+	*deckPtr = newDeck
 
 	return result
 }
