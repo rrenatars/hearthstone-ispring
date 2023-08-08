@@ -344,6 +344,12 @@ export function victory() {
         endbg.style.backgroundColor = "#666666";
         endbg.style.opacity = "0.9";
     }, 2000);
+    endbg.addEventListener('click', () => {
+        window.location.href = '/menu';
+    });
+    winImage.addEventListener('click', () => {
+        window.location.href = '/menu';
+    });
 }
 
 
@@ -374,4 +380,10 @@ export function lose() {
     endbg.style.right = "0";
     endbg.style.backgroundColor = "#666666";
     endbg.style.opacity = "0.9";
+    endbg.addEventListener('click', () => {
+        window.location.href = '/menu';
+    });
+    loseImage.addEventListener('click', () => {
+        window.location.href = '/menu';
+    });
 }

@@ -15,7 +15,7 @@ document.addEventListener("click", function () {
 
 var selectGameMode = 'singleplayer';
 var selectDifficulty = 'easy';
-var selectHero = 'mage';
+var selectHero = 'hunter';
 const selectGameModeButton = document.getElementById("select-game-mode");
 const selectDifficultyButton = document.getElementById('select-bot-difficulty');
 const selectHeroButton = document.getElementById('select-class');
@@ -219,11 +219,12 @@ startGameButton.addEventListener("click", function () {
     if (selectGameMode === 'singleplayer') {
         url = 'arena?heroclass=' + encodeURIComponent(selectHero) +
             '&difficulty=' + encodeURIComponent(selectDifficulty);
-        console.log(localStorage.getItem('id'), "artem")
+        console.log(localStorage.getItem('id'),typeof encodeURIComponent(selectHero), "artem")
         socket.send(JSON.stringify({
                 type: "create bot game",
                 data : {
-                    clientID: localStorage.getItem('id')
+                    clientID: localStorage.getItem('id'),
+                    hero: encodeURIComponent(selectHero),
                 }
             })
         )
@@ -232,7 +233,8 @@ startGameButton.addEventListener("click", function () {
         socket.send(JSON.stringify({
             type: "create game",
             data : {
-                clientID: localStorage.getItem('id')
+                clientID: localStorage.getItem('id'),
+                hero: encodeURIComponent(selectHero),
             }
         }))
     }

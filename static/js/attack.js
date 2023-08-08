@@ -54,13 +54,15 @@ export function attack() {
                         document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
                         svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
                     }
-                    if (document.querySelector(".activeCard")) {
-                        let cardsHand = document.querySelectorAll(".cards__card")
-                        cardsHand.forEach((cardHand) => {
-                            console.log(document.getElementById("arrowcursor"))
-                            cardHand.classList.remove("cards__card")
-                            cardHand.classList.add("cards__card_hover-off")
-                        });
+                    if (!e.id == "heropower") {
+                        if (document.querySelector(".activeCard")) {
+                            let cardsHand = document.querySelectorAll(".cards__card")
+                            cardsHand.forEach((cardHand) => {
+                                console.log(document.getElementById("arrowcursor"))
+                                cardHand.classList.remove("cards__card")
+                                cardHand.classList.add("cards__card_hover-off")
+                            });
+                        }
                     }
                 });
 
@@ -114,10 +116,50 @@ export function attack() {
                                 () => {
 
                                     if (e.id != "heropower") {
+                                        function mustype(minion) {
+                                            switch (minion) {
+                                                case 'argent-squire':return ".ogg"
+                                                case 'bluegill-warrior':return ".ogg"
+                                                case 'boar-rocktusk':return ".ogg"
+                                                case 'boulderfist-ogre':return ".ogg"
+                                                case 'emperor-cobra':return ".ogg"
+                                                case 'frostwolf-fighter':return ".ogg"
+                                                case 'goblin-bodyguard':return ".ogg"
+                                                case 'goldshire-soldier':return ".ogg"
+                                                case 'grizzly-steelmech':return ".ogg"
+                                                case 'scarlet-crusader':return ".ogg"
+                                                case 'shieldbearer':return ".ogg"
+                                                case 'stormwind-knight':return ".ogg"
+                                                case 'wisp':return ".ogg"
+                                                case 'wolf-rider':return ".ogg"
+                                            }
+                                            return ".wav"
+                                        }
+                                        if (!e.id == "heropower") {
+                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
+                                            const attackSound = new Audio(src);
+                                            attackSound.addEventListener('loadeddata', function () {
+                                                attackSound.play();
+                                            }, false);
+                                        }
                                         const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
                                         opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack)
                                     } else {
                                         opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 1);
+                                        e.classList.remove("activeCard")
+                                        socket.send(JSON.stringify({
+                                            type: "ability",
+                                            data: {
+                                                IdDefense: e3.id,
+                                                PlyaerId: localStorage.getItem("id"),
+                                            }
+                                        }))
+                                        let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                                        cardsHand.forEach((cardHand) => {
+                                            cardHand.classList.add("cards__card")
+                                            cardHand.classList.remove("cards__card_hover-off")
+                                        });
                                     }
                                     opponentheroHealthElement.style.color = '#c70d0d';
                                     if (opponentheroHealthElement.textContent <= 0) {
@@ -208,19 +250,62 @@ export function attack() {
                                     const botCardAttack = document.querySelector(".activeTarget").childNodes[1]
                                     if (e.id == "heropower") {
                                         botCardHP.textContent -= 1;
+                                        socket.send(JSON.stringify({
+                                            type: "ability",
+                                            data: {
+                                                IdDefense: e3.id,
+                                                PlyaerId: localStorage.getItem("id"),
+                                            }
+                                        }))
                                     } else if (e.getAttribute("data-specification") === "poisonous") {
-                                        let src;
-                                        const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-attack";
-                                        src = filename + '.wav'
+                                        function mustype(minion) {
+                                            switch (minion) {
+                                                case 'argent-squire':return ".ogg"
+                                                case 'bluegill-warrior':return ".ogg"
+                                                case 'boar-rocktusk':return ".ogg"
+                                                case 'boulderfist-ogre':return ".ogg"
+                                                case 'emperor-cobra':return ".ogg"
+                                                case 'frostwolf-fighter':return ".ogg"
+                                                case 'goblin-bodyguard':return ".ogg"
+                                                case 'goldshire-soldier':return ".ogg"
+                                                case 'grizzly-steelmech':return ".ogg"
+                                                case 'scarlet-crusader':return ".ogg"
+                                                case 'shieldbearer':return ".ogg"
+                                                case 'stormwind-knight':return ".ogg"
+                                                case 'wisp':return ".ogg"
+                                                case 'wolf-rider':return ".ogg"
+                                            }
+                                            return ".wav"
+                                        }
+                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                        let src = "../static/sounds/" + filename  + "-attack" + mustype(filename)
                                         const attackSound = new Audio(src);
                                         attackSound.addEventListener('loadeddata', function () {
                                             attackSound.play();
                                         }, false);
                                         botCardHP.textContent -= botCardHP.textContent;
                                     } else {
-                                        let src;
-                                        const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-attack";
-                                        src = filename + '.wav'
+                                        function mustype(minion) {
+                                            switch (minion) {
+                                                case 'argent-squire':return ".ogg"
+                                                case 'bluegill-warrior':return ".ogg"
+                                                case 'boar-rocktusk':return ".ogg"
+                                                case 'boulderfist-ogre':return ".ogg"
+                                                case 'emperor-cobra':return ".ogg"
+                                                case 'frostwolf-fighter':return ".ogg"
+                                                case 'goblin-bodyguard':return ".ogg"
+                                                case 'goldshire-soldier':return ".ogg"
+                                                case 'grizzly-steelmech':return ".ogg"
+                                                case 'scarlet-crusader':return ".ogg"
+                                                case 'shieldbearer':return ".ogg"
+                                                case 'stormwind-knight':return ".ogg"
+                                                case 'wisp':return ".ogg"
+                                                case 'wolf-rider':return ".ogg"
+                                            }
+                                            return ".wav"
+                                        }
+                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                        let src = "../static/sounds/" + filename  + "-attack" + mustype(filename)
                                         const attackSound = new Audio(src);
                                         attackSound.addEventListener('loadeddata', function () {
                                             attackSound.play();
@@ -239,9 +324,27 @@ export function attack() {
                                                 return false;
                                             }
                                         }
-                                        let src;
-                                        const filename = "../static/sounds/" + this.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-death";
-                                        src = filename + '.wav'
+                                        function mustype(minion) {
+                                            switch (minion) {
+                                                case 'argent-squire':return ".ogg"
+                                                case 'bluegill-warrior':return ".ogg"
+                                                case 'boar-rocktusk':return ".ogg"
+                                                case 'boulderfist-ogre':return ".ogg"
+                                                case 'emperor-cobra':return ".ogg"
+                                                case 'frostwolf-fighter':return ".ogg"
+                                                case 'goblin-bodyguard':return ".ogg"
+                                                case 'goldshire-soldier':return ".ogg"
+                                                case 'grizzly-steelmech':return ".ogg"
+                                                case 'scarlet-crusader':return ".ogg"
+                                                case 'shieldbearer':return ".ogg"
+                                                case 'stormwind-knight':return ".ogg"
+                                                case 'wisp':return ".ogg"
+                                                case 'wolf-rider':return ".ogg"
+                                            }
+                                            return ".wav"
+                                        }
+                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                        let src = "../static/sounds/" + filename  + "-death" + mustype(filename)
                                         const deathSound = new Audio(src);
                                         deathSound.addEventListener('loadeddata', function () {
                                             deathSound.play();
@@ -263,9 +366,27 @@ export function attack() {
 
                                     if (e.id != "heropower") {
                                         if (cardAttackHP.textContent <= 0) {
-                                            let src;
-                                            const filename = "../static/sounds/" + e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1] + "-death";
-                                            src = filename + '.wav'
+                                            function mustype(minion) {
+                                                switch (minion) {
+                                                    case 'argent-squire':return ".ogg"
+                                                    case 'bluegill-warrior':return ".ogg"
+                                                    case 'boar-rocktusk':return ".ogg"
+                                                    case 'boulderfist-ogre':return ".ogg"
+                                                    case 'emperor-cobra':return ".ogg"
+                                                    case 'frostwolf-fighter':return ".ogg"
+                                                    case 'goblin-bodyguard':return ".ogg"
+                                                    case 'goldshire-soldier':return ".ogg"
+                                                    case 'grizzly-steelmech':return ".ogg"
+                                                    case 'scarlet-crusader':return ".ogg"
+                                                    case 'shieldbearer':return ".ogg"
+                                                    case 'stormwind-knight':return ".ogg"
+                                                    case 'wisp':return ".ogg"
+                                                    case 'wolf-rider':return ".ogg"
+                                                }
+                                                return ".wav"
+                                            }
+                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            let src = "../static/sounds/" + filename  + "-death" + mustype(filename)
                                             const deathSound = new Audio(src);
                                             deathSound.addEventListener('loadeddata', function () {
                                                 deathSound.play();
@@ -377,7 +498,13 @@ export function collision(attacker, defender) {
         if (attacker.getAttribute("data-specification") === "taunt") {
             damageImage.classList.add("tauntDamage");
             damageText.classList.add("tauntDamageText");
-        } else if (defender.id == "opponenthero") {
+            if (defender.id === "opponenthero")
+            {
+                defender.style.position = "absolute";
+                damageImage.classList.add("opponentHeroDamage");
+                damageText.classList.add("opponentHeroDamageText");
+            }
+        } else if (defender.id === "opponenthero") {
             defender.style.position = "absolute";
             damageImage.classList.add("opponentHeroDamage");
             damageText.classList.add("opponentHeroDamageText");

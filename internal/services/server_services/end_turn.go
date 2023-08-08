@@ -2,7 +2,51 @@ package serverservices
 
 import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
+	"github.com/rrenatars/hearthstone-ispring/internal/tools"
 )
+
+func SetUpEndTurn(gameTable *models.GameTable) {
+
+	if gameTable.Player1.Turn {
+		endTurn(gameTable.Player1, gameTable.Player2, gameTable.History)
+	}
+
+	if gameTable.Player2.Turn {
+		endTurn(gameTable.Player2, gameTable.Player1, gameTable.History)
+	}
+
+	gameTable.Player1.Turn = !gameTable.Player1.Turn
+	gameTable.Player2.Turn = !gameTable.Player2.Turn
+
+	return
+}
+
+func setMana(p *models.Player) {
+	p.CounterOfMoves++
+	p.Mana = p.CounterOfMoves
+	if p.Mana >= 10 {
+		p.Mana = 10
+	}
+}
+
+func endTurn(p *models.Player, o *models.Player, history []models.CardData) {
+	setMana(p)
+
+	o.HeroTurn = false
+
+	if len(o.Hand) == 5 {
+		return
+	}
+
+	if len(o.Deck) == 0 {
+		o.HP -= 2
+		o.Hand = append(o.Hand, tools.GetRandomElementsFromDeck(&history, 1)...)
+		return
+	}
+
+	o.Hand = append(o.Hand, o.Deck[0])
+	o.Deck = o.Deck[1:]
+}
 
 func EndTurn(gameTable *models.GameTable) {
 	if gameTable.Player1.Turn {

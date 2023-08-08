@@ -55,9 +55,10 @@ function selectCardsToExchange() {
     });
 }
 
+let heroClass
 function startBefore() {
     const urlParams = new URLSearchParams(window.location.search);
-    const heroClass = urlParams.get('heroclass');
+    heroClass = urlParams.get('heroclass');
     const selectedHeroElement = document.getElementById('selectedHero');
     selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + heroClass + '.png)';
     const selectedHeroPowerElement = document.getElementById('heropower');
@@ -134,6 +135,9 @@ function start() {
             }
             console.log("отправили дату")
             socket.send(JSON.stringify(dataToSend))
+            setTimeout(function() {
+                window.location.reload();
+            }, 500)
         })
     }
 }
@@ -164,17 +168,17 @@ function afterStart() {
                         opponentheroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         if (opponentheroHealthElement.textContent <= 0) victory()
-                        socket.send(JSON.stringify({
-                            type: "ability",
-                            data : {
-                                PlyaerId : localStorage.getItem("id"),
-                                AbilityID : hunterAbID,
-                                AdditionalInformation : {
-                                    Type: "",
-                                    IdDefense : "",
-                                }
-                            }
-                        }))
+                        // socket.send(JSON.stringify({
+                        //     type: "ability",
+                        //     data : {
+                        //         PlyaerId : localStorage.getItem("id"),
+                        //         AbilityID : hunterAbID,
+                        //         AdditionalInformation : {
+                        //             Type: "",
+                        //             IdDefense : "",
+                        //         }
+                        //     }
+                        // }))
                         break;
                     case 'mage':
                         selectedHeroElement.addEventListener('click', () => {
@@ -187,64 +191,47 @@ function afterStart() {
                                 opponentheroHealthElement.textContent = parseInt(opponentheroHealthElement.textContent) - 1;
                             selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         }, {once: true});
-                        socket.send(JSON.stringify({
-                            type: "ability",
-                            data : {
-                                PlyaerId : localStorage.getItem("id"),
-                                AbilityID : mageAbID,
-                                AdditionalInformation : {
-                                    Type: "",
-                                    IdDefense : "",
-                                }
-                            }
-                        }))
+                        // socket.send(JSON.stringify({
+                        //     type: "ability",
+                        //     data : {
+                        //         PlyaerId : localStorage.getItem("id"),
+                        //         AbilityID : mageAbID,
+                        //         AdditionalInformation : {
+                        //             Type: "",
+                        //             IdDefense : "",
+                        //         }
+                        //     }
+                        // }))
                         break;
                     case 'warlock':
                         heroHealthElement.textContent -= 2;
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         if (heroHealthElement.textContent <= 0) lose()
-                        socket.send(JSON.stringify({
-                            type: "ability",
-                            data : {
-                                PlyaerId : localStorage.getItem("id"),
-                                AbilityID : warlockAbID,
-                                AdditionalInformation : {
-                                    Type: "",
-                                    IdDefense : "",
-                                }
-                            }
-                        }))
+                        // socket.send(JSON.stringify({
+                        //     type: "ability",
+                        //     data : {
+                        //         PlyaerId : localStorage.getItem("id"),
+                        //         AbilityID : warlockAbID,
+                        //         AdditionalInformation : {
+                        //             Type: "",
+                        //             IdDefense : "",
+                        //         }
+                        //     }
+                        // }))
                         break;
                     case 'paladin':
-                        let recruit = document.createElement('div');
-                        recruit.className = "field__empty";
-                        recruit.style.width = '90px';
-                        recruit.style.height = '120px';
-                        recruit.id = 'silver-hand-recruit';
-                        recruit.style.backgroundImage = 'url(../static/images/creatures/silver-hand-recruit.png'
-                        recruit.style.backgroundSize = `cover`;
-                        const attackElement = document.createElement('span')
-                        attackElement.className = "card__attack"
-                        attackElement.textContent = '1'
-                        recruit.appendChild(attackElement)
-                        const hpElement = document.createElement("span")
-                        hpElement.textContent = '1'
-                        recruit.appendChild(hpElement)
-                        const cardPlayer1 = document.getElementById('background__field');
-                        cardPlayer1.appendChild(recruit);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
-                        if (heroHealthElement.textContent <= 0) lose()
-                        socket.send(JSON.stringify({
-                            type: "ability",
-                            data : {
-                                PlyaerId : localStorage.getItem("id"),
-                                AbilityID : paladinAbID,
-                                AdditionalInformation : {
-                                    Type: "",
-                                    IdDefense : "",
-                                }
-                            }
-                        }))
+                        // socket.send(JSON.stringify({
+                        //     type: "ability",
+                        //     data : {
+                        //         PlyaerId : localStorage.getItem("id"),
+                        //         AbilityID : paladinAbID,
+                        //         AdditionalInformation : {
+                        //             Type: "",
+                        //             IdDefense : "",
+                        //         }
+                        //     }
+                        // }))
                         break;
                 }
 
@@ -363,6 +350,11 @@ function mouseOver(game, elements) {
 
 export function socketInit() {
     let attackCardsLength = 0;
+
+    const selectedHeroElement = document.getElementById('selectedHero');
+    const selectedHeroPowerElement = document.getElementById('heropower');
+    const opponentHeroElement = document.getElementById('opponenthero');
+    const endTurnButton = document.getElementById('endturn');
     socket.onmessage = function (event) {
         const endTurnButton = document.getElementById('endturn');
 
@@ -371,7 +363,27 @@ export function socketInit() {
 
         const {type, data} = JSON.parse(event.data);
         setGame(ParseDataToGameTable(data));
+        checkVictoryOrLoose(game)
         console.log(game)
+
+        if (game.player1.name === clientId) {
+            selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '.png)';
+            if (!game.player1.heroTurn) {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '-power.png)';
+            } else {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+            }
+            opponentHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '.png)'
+        } else {
+            selectedHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '.png)';
+            if (!game.player2.heroTurn) {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/' + game.player2.hero + '-power.png)';
+            } else {
+                selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
+            }
+            opponentHeroElement.style.backgroundImage = 'url(../static/images/field/' + game.player1.hero + '.png)'
+        }
+
         if (clientId === game.player1.name) {
             if (game.player1.CounterOfMoves > 0) {
                 if (game.player1.turn) {
@@ -853,6 +865,18 @@ export function socketInit() {
         }
     };
 
+    if (heroClass != "mage") {
+        selectedHeroPowerElement.addEventListener("click", event => {
+            socket.send(JSON.stringify({
+                type: "ability",
+                data: {
+                    IdDefense: "",
+                    PlyaerId: clientId,
+                }
+            }))
+        });
+    }
+
     socket.onopen = () => {
         console.log('Соединение установлено');
     };
@@ -864,6 +888,42 @@ export function socketInit() {
     socket.onerror = (error) => {
         console.error('Ошибка соединения:', error);
     };
+}
+
+function checkVictoryOrLoose(game) {
+    if (game != null || game != undefined || game !=  new GameTable()) {
+        if (game.player1.HP <= 0 && clientId == game.player1.name) {
+            lose()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player2.HP <= 0 && clientId == game.player2.name ) {
+            lose()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player1.HP <= 0 && clientId != game.player1.name) {
+            victory()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player2.HP <= 0 && clientId != game.player2.name ) {
+            victory()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+    }
 }
 
 export function ParseDataToGameTable(data) {
@@ -886,6 +946,8 @@ function ParseDataToPlayer(data) {
         data.Def,
         data.Mana,
         data.CounterOfMoves,
+        data.Hero,
+        data.HeroTurn,
     )
 }
 

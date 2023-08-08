@@ -80,7 +80,6 @@ func (c *Client) readPump() {
 		if setupMessageTypes(msgReq, c) {
 			log.Println("end game")
 			c.hub.deleteRoom(c.room.id)
-
 		}
 	}
 }
@@ -88,15 +87,6 @@ func (c *Client) readPump() {
 type Data struct {
 	RoomID string
 	Game   models.GameTable
-}
-
-type CreateGameData struct {
-	clientID string `json:"clientID"`
-}
-
-type CreateGameMess struct {
-	Type string         `json:"type"`
-	Data CreateGameData `json:"data"`
 }
 
 func (c *Client) writePump() {

@@ -20,6 +20,27 @@ function animateCards(b, s) {
     }, 500);
 }
 
+function greenButton() {
+    const cardsOnField = document.querySelectorAll(".field__card")
+    const cardsHand = document.querySelectorAll(".cards__card")
+
+    for (const card of cardsOnField) {
+        if (card.classList.contains("canAttack")) {
+            return
+        }
+    }
+
+    for (const card of cardsHand) {
+        if (card.classList.contains("cards__card_enable-to-drag")) {
+            return
+        }
+    }
+    const endTurnButton = document.getElementById('endturn');
+    endTurnButton.style.transition = "all 2.5s";
+    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn-green.png)";
+    endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
+}
+
 export function dragNDrop() {
     function getCoords(elem) {
         var box = elem.getBoundingClientRect();
@@ -37,6 +58,8 @@ export function dragNDrop() {
     for (const card of cards) {
         card.draggable = true;
     }
+
+    let cardsNumber = document.querySelector(".field__card")
 
     const handLimits = 520;
     for (var i = 0; i < cards.length; i++) {
@@ -57,6 +80,16 @@ export function dragNDrop() {
                             comment.style.opacity = "0"
                         }, 1500);
                         return;
+                    } else if (cardsNumber == 7) {
+                        console.log("cards Number", cardsNumber)
+                        const comment = document.getElementById("comment");
+                        const commentText = document.getElementById("commentText");
+                        commentText.innerText = "У меня слишком\nмного существ";
+                        comment.style.opacity = "1";
+                        commentText.style.fontSize = "20px";
+                        setTimeout(function () {
+                            comment.style.opacity = "0"
+                        }, 1500);
                     } else {
                         var coords = getCoords(card);
                         var shiftX = e.pageX - coords.left;
@@ -76,10 +109,27 @@ export function dragNDrop() {
 
                         card.style.zIndex = 1000;
                         const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage;
-                        let src;
-                        const filename = "../static/sounds/" + cardPortraitUrl.match(/url\("\.\.\/\.\.\/static\/images\/cards-in-hand\/(.*?)\.png"/)[1] + "-summon";
-                        console.log(filename)
-                        src = filename + '.wav'
+                        function mustype(minion) {
+                            switch (minion) {
+                                case 'argent-squire':return ".ogg"
+                                case 'bluegill-warrior':return ".ogg"
+                                case 'boar-rocktusk':return ".ogg"
+                                case 'boulderfist-ogre':return ".ogg"
+                                case 'emperor-cobra':return ".ogg"
+                                case 'frostwolf-fighter':return ".ogg"
+                                case 'goblin-bodyguard':return ".ogg"
+                                case 'goldshire-soldier':return ".ogg"
+                                case 'grizzly-steelmech':return ".ogg"
+                                case 'scarlet-crusader':return ".ogg"
+                                case 'shieldbearer':return ".ogg"
+                                case 'stormwind-knight':return ".ogg"
+                                case 'wisp':return ".ogg"
+                                case 'wolf-rider':return ".ogg"
+                            }
+                            return ".wav"
+                        }
+                        const filename = cardPortraitUrl.match(/url\("\.\.\/\.\.\/static\/images\/cards-in-hand\/(.*?)\.png"/)[1];
+                        let src = "../static/sounds/" + filename  + "-summon" + mustype(filename)
                         const summonSound = new Audio(src);
                         summonSound.addEventListener('loadeddata', function () {
                             summonSound.play();
@@ -130,7 +180,7 @@ export function dragNDrop() {
                                 //     card.classList.add("cards__card")
                                 //     card.classList.remove("cards__card_if-drag-card")
                                 // }
-
+                                cardsNumber = document.querySelector(".field__card")
                                 socket.send(JSON.stringify({
                                     type: "card drag",
                                     data: {

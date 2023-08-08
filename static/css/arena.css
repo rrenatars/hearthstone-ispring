@@ -296,7 +296,7 @@
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
-    /*z-index: 14;*/
+    z-index: 1;
 }
 
 .field__empty {
@@ -395,7 +395,7 @@ button:active {
     left: 45.3%;
     top: 8.75%;
     z-index: 11;
-    background-image: url(../images/field/mage.png);
+    background-image: url(../images/field/hunter.png);
     background-repeat: no-repeat;
     background-size: contain;
     user-select: none;
@@ -407,7 +407,7 @@ button:active {
     height: 17.5%;
     left: 45.05%;
     top: 67.45%;
-    background-image: url(../images/field/mage.png);
+    background-image: url(../images/field/hunter.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
@@ -459,7 +459,7 @@ button:active {
     top: 70.5%;
     left: 54%;
     z-index: 2;
-    background-image: url(../images/field/mage-power.png);
+    background-image: url(../images/field/hunter-power.png);
     background-repeat: no-repeat;
     background-size: contain;
 }
