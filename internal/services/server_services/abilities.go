@@ -116,6 +116,11 @@ func warlockAbility(p *models.Player, history *[]models.CardData) {
 	}
 	copyHistory := *history
 	cards = tools.GetRandomElementsFromDeck(&copyHistory, 1)
+	for _, c := range p.Hand {
+		if c == cards[0] && len(copyHistory) > 0 {
+			cards[0] = copyHistory[0]
+		}
+	}
 	// cards[0].Portrait = strings.Replace(cards[0].Portrait, "cards-in-hand", "creatures", 1)
 	p.HP -= (p.CounterOfMoves - lenOfDeck)
 	if len(p.Hand) < 5 {
