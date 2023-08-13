@@ -202,7 +202,7 @@
 .cards__card:active {
     cursor: url(../images/cursor/grab.png) 10 2, auto;
     margin-bottom: 0;
-    transform: none;
+    transform: translate(0px, 0px) scale(1.2);
 }
 
 .cards__card_start {

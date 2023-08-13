@@ -1,3 +1,6 @@
+import {GameTable} from "./models.js";
+import {socket} from "./websocket.js";
+
 export function victory() {
     let cs = document.createElement('canvas');
     cs.id = "fireworks-canvas";
@@ -352,7 +355,6 @@ export function victory() {
     });
 }
 
-
 export function lose() {
     const urlParams = new URLSearchParams(window.location.search);
     const heroClass = urlParams.get('heroclass');
@@ -386,4 +388,40 @@ export function lose() {
     loseImage.addEventListener('click', () => {
         window.location.href = '/menu';
     });
+}
+
+export function checkVictoryOrLose(game, clientId) {
+    if (game != null || game != undefined || game != new GameTable()) {
+        if (game.player1.HP <= 0 && clientId == game.player1.name) {
+            lose()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player2.HP <= 0 && clientId == game.player2.name) {
+            lose()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player1.HP <= 0 && clientId != game.player1.name) {
+            victory()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+
+        if (game.player2.HP <= 0 && clientId != game.player2.name) {
+            victory()
+            socket.send(JSON.stringify({
+                Type: "defeat",
+                Data: {}
+            }))
+        }
+    }
 }

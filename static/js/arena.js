@@ -1,8 +1,6 @@
-import { socket } from "./websocket.js";
 import { socketInit } from "./websocket.js";
 
 import { enemyTurnRun } from "./enemy-turn.js";
-import { dragNDrop } from "./dragndrop.js";
 const battleSound = new Audio("../static/sounds/battle.wav");
 let battleSoundLoaded = false;
 
@@ -17,12 +15,5 @@ let battleSoundLoaded = false;
 enemyTurnRun()
 
 socketInit()
-
-const startSubmit = document.getElementById("StartSubmit")
-console.log(startSubmit)
-if (!startSubmit) {
-    console.log('fadfaf')
-    dragNDrop()
-}
 
 

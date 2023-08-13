@@ -72,6 +72,7 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 	newCardsToAttack := pl.CardsToAttack
 	if newCard.Specification == "charge" || newCard.Specification == "rush" {
 		newCardsToAttack = append(newCardsToAttack, newCard)
+		log.Println("card drag new cards to attack", newCardsToAttack)
 	}
 
 	return models.NewPlayer(

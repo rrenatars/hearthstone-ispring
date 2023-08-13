@@ -6,8 +6,6 @@ async function fetchProtectedMenu() {
             return tokenValue;
         }
 
-        console.log("cookie", getCookie())
-
         let token = localStorage.getItem('token')
 
         const request = new Request('/protected/', {

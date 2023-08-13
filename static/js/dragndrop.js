@@ -59,7 +59,7 @@ export function dragNDrop() {
         card.draggable = true;
     }
 
-    let cardsNumber = document.querySelector(".field__card")
+    let cardsNumber = document.querySelectorAll(".field__card").length
 
     const handLimits = 520;
     for (var i = 0; i < cards.length; i++) {
