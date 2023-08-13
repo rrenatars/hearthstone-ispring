@@ -12,9 +12,10 @@ type Player struct {
 	CounterOfMoves int
 	Hero           string
 	HeroTurn       bool
+	CardsToAttack  []CardData
 }
 
-func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def, mana, counterOfMoves int, hero string) *Player {
+func NewPlayer(name string, hand, deck, cards, cardsToAttack []CardData, turn bool, hp, def, mana, counterOfMoves int, hero string) *Player {
 	return &Player{
 		Name:           name,
 		Hand:           hand,
@@ -27,5 +28,6 @@ func NewPlayer(name string, hand, deck, cards []CardData, turn bool, hp, def, ma
 		CounterOfMoves: counterOfMoves,
 		Hero:           hero,
 		HeroTurn:       false,
+		CardsToAttack:  cardsToAttack,
 	}
 }

@@ -69,11 +69,17 @@ func playerMadeMove(id string, pl *models.Player) (*models.Player, error) {
 
 	newPlayerMana := pl.Mana - newCard.Mana
 
+	newCardsToAttack := pl.CardsToAttack
+	if newCard.Specification == "charge" || newCard.Specification == "rush" {
+		newCardsToAttack = append(newCardsToAttack, newCard)
+	}
+
 	return models.NewPlayer(
 		pl.Name,
 		newHand,
 		pl.Deck,
 		newCards,
+		newCardsToAttack,
 		pl.Turn,
 		pl.HP,
 		pl.Def,

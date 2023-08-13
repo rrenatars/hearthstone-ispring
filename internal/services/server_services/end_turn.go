@@ -3,6 +3,7 @@ package serverservices
 import (
 	"github.com/rrenatars/hearthstone-ispring/internal/models"
 	"github.com/rrenatars/hearthstone-ispring/internal/tools"
+	"log"
 )
 
 func SetUpEndTurn(gameTable *models.GameTable) {
@@ -29,8 +30,15 @@ func setMana(p *models.Player) {
 	}
 }
 
+func setAttackCards(p *models.Player) {
+	p.CardsToAttack = p.Cards
+	log.Println("cards to attack", p.CardsToAttack, "cards on field", p.Cards)
+}
+
 func endTurn(p *models.Player, o *models.Player, history []models.CardData) {
 	setMana(p)
+
+	setAttackCards(o)
 
 	o.HeroTurn = false
 

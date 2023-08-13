@@ -29,410 +29,492 @@ export function attack() {
 
 
     fightCards.forEach(function (e) {
-        if ((e.classList.contains('canAttack')) || (e.getAttribute("data-specification") === "rush")) {
-            if (!e.id === "heropower") {
-                e.style.zIndex = 100;
-            }
+        if (e.classList.contains("canAttack")) {
+            if ((e.classList.contains('canAttack')) || (e.getAttribute("data-specification") === "rush")) {
+                if (!e.id === "heropower") {
+                    e.style.zIndex = 100;
+                }
 
-            e.addEventListener("mousedown", function () {
-                var xOrigin = e.offsetLeft + e.offsetWidth / 2;
-                var yOrigin = e.offsetTop + e.offsetHeight / 2;
-                svg.style.display = "block";
-                document.getElementById("arrowcursor").style.visibility = "visible";
-                document.body.style.cursor = "none";
-                e.classList.add("activeCard");
-                e.style.zIndex = "-1";
+                e.addEventListener("mousedown", function () {
+                    var xOrigin = e.offsetLeft + e.offsetWidth / 2;
+                    var yOrigin = e.offsetTop + e.offsetHeight / 2;
+                    svg.style.display = "block";
+                    document.getElementById("arrowcursor").style.visibility = "visible";
+                    document.body.style.cursor = "none";
+                    e.classList.add("activeCard");
+                    e.style.zIndex = "-1";
 
-                document.body.addEventListener('mousemove', function (e2) {
-                    if (document.querySelector(".activeCard")) {
-                        var xDest = e2.clientX;
-                        var yDest = e2.clientY;
-                        var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
-                        var deg = angleDeg + 90;
-                        document.getElementById("arrowcursor").style.left = xDest + 'px';
-                        document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
-                        document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
-                        svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
-                    }
-                    if (!e.id == "heropower") {
+                    document.body.addEventListener('mousemove', function (e2) {
                         if (document.querySelector(".activeCard")) {
-                            let cardsHand = document.querySelectorAll(".cards__card")
-                            cardsHand.forEach((cardHand) => {
-                                console.log(document.getElementById("arrowcursor"))
-                                cardHand.classList.remove("cards__card")
-                                cardHand.classList.add("cards__card_hover-off")
-                            });
+                            var xDest = e2.clientX;
+                            var yDest = e2.clientY;
+                            var angleDeg = Math.atan2(yDest - yOrigin, xDest - xOrigin) * 180 / Math.PI;
+                            var deg = angleDeg + 90;
+                            document.getElementById("arrowcursor").style.left = xDest + 'px';
+                            document.getElementById("arrowcursor").style.top = yDest + 30 + 'px';
+                            document.getElementById("arrowcursor").style.transform = 'rotate(' + deg + 'deg) translate(-50%, -110%)';
+                            svgpath.setAttribute('d', 'M' + xDest + ',' + (yDest - 75) + ' ' + xOrigin + ',' + (yOrigin - 98) + '');
                         }
-                    }
-                });
+                        if (!e.id == "heropower") {
+                            if (document.querySelector(".activeCard")) {
+                                let cardsHand = document.querySelectorAll(".cards__card")
+                                cardsHand.forEach((cardHand) => {
+                                    console.log(document.getElementById("arrowcursor"))
+                                    cardHand.classList.remove("cards__card")
+                                    cardHand.classList.add("cards__card_hover-off")
+                                });
+                            }
+                        }
+                    });
 
 
-                // e.addEventListener("click", function () {
-                //     svg.style.display = "none";
-                //     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                //     document.getElementById("arrowcursor").style.visibility = "hidden";
-                //     document.getElementById("innercursor").style.visibility = "hidden";
-                //     document.getElementById("outercursor").style.visibility = "hidden";
-                //     // e.classList.remove('canAttack');
-                //     e.style.removeProperty("zIndex");
-                // });
+                    // e.addEventListener("click", function () {
+                    //     svg.style.display = "none";
+                    //     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                    //     document.getElementById("arrowcursor").style.visibility = "hidden";
+                    //     document.getElementById("innercursor").style.visibility = "hidden";
+                    //     document.getElementById("outercursor").style.visibility = "hidden";
+                    //     // e.classList.remove('canAttack');
+                    //     e.style.removeProperty("zIndex");
+                    // });
 
 
-                opponentHeroElement.onclick = function (p) {
-                    if ((e.getAttribute("data-specification") === "rush") && !(e.classList.contains("canAttack"))) {
-                        const comment = document.getElementById("comment");
-                        const commentText = document.getElementById("commentText");
-                        commentText.innerText = "Это существо\nсможет атаковать в\nмой следующий ход.";
-                        comment.style.opacity = "1";
-                        commentText.style.fontSize = "17px";
-                        setTimeout(function () {
-                            comment.style.opacity = "0"
-                        }, 1500);
-
-                        opponentHeroElement.classList.remove("activeTarget");
-                    } else if (tauntOnField === true) {
-                        if (svg.style.display == "block") {
+                    opponentHeroElement.onclick = function (p) {
+                        if ((e.getAttribute("data-specification") === "rush") && !(e.classList.contains("canAttack"))) {
                             const comment = document.getElementById("comment");
                             const commentText = document.getElementById("commentText");
-                            if ((heroClass == "mage") || (heroClass == "rogue")) {
-                                commentText.innerText = "Я должна\nатаковать\nпровокатора."
-                            } else {
-                                commentText.innerText = "Я должен\nатаковать\nпровокатора."
-                            }
+                            commentText.innerText = "Это существо\nсможет атаковать в\nмой следующий ход.";
                             comment.style.opacity = "1";
-                            commentText.style.fontSize = "20px";
+                            commentText.style.fontSize = "17px";
                             setTimeout(function () {
                                 comment.style.opacity = "0"
                             }, 1500);
-                        }
-                    } else {
-                        if (svg.style.display == "block") {
 
-                            if (e.id != "heropower") {
-                                collision(e, opponentHeroElement);
+                            opponentHeroElement.classList.remove("activeTarget");
+                        } else if (tauntOnField === true) {
+                            if (svg.style.display == "block") {
+                                const comment = document.getElementById("comment");
+                                const commentText = document.getElementById("commentText");
+                                if ((heroClass == "mage") || (heroClass == "rogue")) {
+                                    commentText.innerText = "Я должна\nатаковать\nпровокатора."
+                                } else {
+                                    commentText.innerText = "Я должен\nатаковать\nпровокатора."
+                                }
+                                comment.style.opacity = "1";
+                                commentText.style.fontSize = "20px";
+                                setTimeout(function () {
+                                    comment.style.opacity = "0"
+                                }, 1500);
                             }
+                        } else {
+                            if (svg.style.display == "block") {
 
-                            setTimeout(
-                                () => {
+                                if (e.id != "heropower") {
+                                    collision(e, opponentHeroElement);
+                                }
 
-                                    if (e.id != "heropower") {
-                                        function mustype(minion) {
-                                            switch (minion) {
-                                                case 'argent-squire':return ".ogg"
-                                                case 'bluegill-warrior':return ".ogg"
-                                                case 'boar-rocktusk':return ".ogg"
-                                                case 'boulderfist-ogre':return ".ogg"
-                                                case 'emperor-cobra':return ".ogg"
-                                                case 'frostwolf-fighter':return ".ogg"
-                                                case 'goblin-bodyguard':return ".ogg"
-                                                case 'goldshire-soldier':return ".ogg"
-                                                case 'grizzly-steelmech':return ".ogg"
-                                                case 'scarlet-crusader':return ".ogg"
-                                                case 'shieldbearer':return ".ogg"
-                                                case 'stormwind-knight':return ".ogg"
-                                                case 'wisp':return ".ogg"
-                                                case 'wolf-rider':return ".ogg"
+                                setTimeout(
+                                    () => {
+
+                                        if (e.id != "heropower") {
+                                            function mustype(minion) {
+                                                switch (minion) {
+                                                    case 'argent-squire':
+                                                        return ".ogg"
+                                                    case 'bluegill-warrior':
+                                                        return ".ogg"
+                                                    case 'boar-rocktusk':
+                                                        return ".ogg"
+                                                    case 'boulderfist-ogre':
+                                                        return ".ogg"
+                                                    case 'emperor-cobra':
+                                                        return ".ogg"
+                                                    case 'frostwolf-fighter':
+                                                        return ".ogg"
+                                                    case 'goblin-bodyguard':
+                                                        return ".ogg"
+                                                    case 'goldshire-soldier':
+                                                        return ".ogg"
+                                                    case 'grizzly-steelmech':
+                                                        return ".ogg"
+                                                    case 'scarlet-crusader':
+                                                        return ".ogg"
+                                                    case 'shieldbearer':
+                                                        return ".ogg"
+                                                    case 'stormwind-knight':
+                                                        return ".ogg"
+                                                    case 'wisp':
+                                                        return ".ogg"
+                                                    case 'wolf-rider':
+                                                        return ".ogg"
+                                                }
+                                                return ".wav"
                                             }
-                                            return ".wav"
+
+                                            if (!e.id == "heropower") {
+                                                console.log("card attack e", e.querySelector(".cards__card_inner"))
+                                                const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                                let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
+                                                const attackSound = new Audio(src);
+                                                attackSound.addEventListener('loadeddata', function () {
+                                                    attackSound.play();
+                                                }, false);
+                                            }
+                                            const cardAttackValue = document.querySelector(".activeCard").querySelector(".card__attack").textContent;
+                                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttackValue)
+                                        } else {
+                                            opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 1);
+                                            e.classList.remove("activeCard")
+                                            socket.send(JSON.stringify({
+                                                type: "ability",
+                                                data: {
+                                                    IdDefense: e3.id,
+                                                    PlyaerId: localStorage.getItem("id"),
+                                                }
+                                            }))
+                                            let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                                            cardsHand.forEach((cardHand) => {
+                                                cardHand.classList.add("cards__card")
+                                                cardHand.classList.remove("cards__card_hover-off")
+                                            });
                                         }
-                                        if (!e.id == "heropower") {
-                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                        opponentheroHealthElement.style.color = '#c70d0d';
+                                        if (opponentheroHealthElement.textContent <= 0) {
+                                            victory()
+                                        }
+                                        setTimeout(function () {
+                                            opponentheroHealthElement.style.color = '#FFFFFF';
+                                        }, 2000);
+                                    }, 255)
+                                svg.style.display = "none";
+                                document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+
+                                document.getElementById("arrowcursor").style.visibility = "hidden";
+                                document.getElementById("innercursor").style.visibility = "hidden";
+                                document.getElementById("outercursor").style.visibility = "hidden";
+                            }
+                            ;
+                        }
+
+                        let cardsHand = document.querySelectorAll(".cards__card_hover-off")
+                        console.log(cardsHand, "attack")
+                        cardsHand.forEach((cardHand) => {
+                            console.log("----", cardHand)
+                            cardHand.classList.add("cards__card")
+                            cardHand.classList.remove("cards__card_hover-off")
+                        });
+                    };
+
+                    const botCards = document.querySelectorAll(".field__empty_opp");
+                    botCards.forEach(function (e3) {
+                        tauntOnField = false;
+
+                        botCards.forEach(function (e4) {
+                            if (e4.getAttribute("data-specification") === "taunt") {
+                                e4.onclick = botCardClick;
+                                tauntOnField = true
+                            }
+                        })
+
+                        // if (e3.getAttribute("data-specification") === "divine-shield")
+                        // {
+                        //     let shield = document.createElement("img");
+                        //     shield.src = "/static/images/field/divine-shield.png";
+                        //     e3.style.position = "relative";
+                        //     shield.classList.add("divine-shield")
+                        //     e3.appendChild(shield);
+                        // }
+
+                        if (tauntOnField === false) {
+                            e3.onclick = botCardClick
+                        } else {
+                            if (e3.getAttribute("data-specification") !== "taunt") {
+                                e3.onclick = () => {
+                                    if (svg.style.display == "block") {
+                                        const comment = document.getElementById("comment");
+                                        const commentText = document.getElementById("commentText");
+                                        if ((heroClass == "mage") || (heroClass == "rogue")) {
+                                            commentText.innerText = "Я должна\nатаковать\nпровокатора."
+                                        } else {
+                                            commentText.innerText = "Я должен\nатаковать\nпровокатора."
+                                        }
+                                        comment.style.opacity = "1";
+                                        commentText.style.fontSize = "20px";
+                                        setTimeout(function () {
+                                            comment.style.opacity = "0"
+                                        }, 1500);
+                                    }
+                                }
+                            }
+                        }
+
+
+                        function botCardClick() {
+
+                            if (svg.style.display == "block") {
+
+                                if (e.id != "heropower") {
+                                    collision(e, this)
+                                }
+
+                                const cardAttack = document.querySelector(".activeCard")
+                                const cardAttackHP = cardAttack.querySelector(".card__hp")
+
+                                setTimeout(
+                                    () => {
+                                        this.classList.add("activeTarget");
+                                        const botCardHP = document.querySelector(".activeTarget").querySelector(".card__hp");
+                                        const botCardAttack = document.querySelector(".activeTarget").querySelector(".card__attack")
+                                        if (e.id == "heropower") {
+                                            botCardHP.textContent -= 1;
+                                            socket.send(JSON.stringify({
+                                                type: "ability",
+                                                data: {
+                                                    IdDefense: e3.id,
+                                                    PlyaerId: localStorage.getItem("id"),
+                                                }
+                                            }))
+                                        } else if (e.getAttribute("data-specification") === "poisonous") {
+                                            function mustype(minion) {
+                                                switch (minion) {
+                                                    case 'argent-squire':
+                                                        return ".ogg"
+                                                    case 'bluegill-warrior':
+                                                        return ".ogg"
+                                                    case 'boar-rocktusk':
+                                                        return ".ogg"
+                                                    case 'boulderfist-ogre':
+                                                        return ".ogg"
+                                                    case 'emperor-cobra':
+                                                        return ".ogg"
+                                                    case 'frostwolf-fighter':
+                                                        return ".ogg"
+                                                    case 'goblin-bodyguard':
+                                                        return ".ogg"
+                                                    case 'goldshire-soldier':
+                                                        return ".ogg"
+                                                    case 'grizzly-steelmech':
+                                                        return ".ogg"
+                                                    case 'scarlet-crusader':
+                                                        return ".ogg"
+                                                    case 'shieldbearer':
+                                                        return ".ogg"
+                                                    case 'stormwind-knight':
+                                                        return ".ogg"
+                                                    case 'wisp':
+                                                        return ".ogg"
+                                                    case 'wolf-rider':
+                                                        return ".ogg"
+                                                }
+                                                return ".wav"
+                                            }
+
+                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
+                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                             let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
                                             const attackSound = new Audio(src);
                                             attackSound.addEventListener('loadeddata', function () {
                                                 attackSound.play();
                                             }, false);
-                                        }
-                                        const cardAttack = document.querySelector(".activeCard").childNodes[1].textContent;
-                                        opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - cardAttack)
-                                    } else {
-                                        opponentheroHealthElement.textContent = String(Number(opponentheroHealthElement.textContent) - 1);
-                                        e.classList.remove("activeCard")
-                                        socket.send(JSON.stringify({
-                                            type: "ability",
-                                            data: {
-                                                IdDefense: e3.id,
-                                                PlyaerId: localStorage.getItem("id"),
-                                            }
-                                        }))
-                                        let cardsHand = document.querySelectorAll(".cards__card_hover-off")
-                                        cardsHand.forEach((cardHand) => {
-                                            cardHand.classList.add("cards__card")
-                                            cardHand.classList.remove("cards__card_hover-off")
-                                        });
-                                    }
-                                    opponentheroHealthElement.style.color = '#c70d0d';
-                                    if (opponentheroHealthElement.textContent <= 0) {
-                                        victory()
-                                    }
-                                    setTimeout(function () {
-                                        opponentheroHealthElement.style.color = '#FFFFFF';
-                                    }, 2000);
-                                }, 255)
-                            svg.style.display = "none";
-                            document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-
-                            document.getElementById("arrowcursor").style.visibility = "hidden";
-                            document.getElementById("innercursor").style.visibility = "hidden";
-                            document.getElementById("outercursor").style.visibility = "hidden";
-                        }
-                        ;
-                    }
-
-                    let cardsHand = document.querySelectorAll(".cards__card_hover-off")
-                    console.log(cardsHand, "attack")
-                    cardsHand.forEach((cardHand) => {
-                        console.log("----", cardHand)
-                        cardHand.classList.add("cards__card")
-                        cardHand.classList.remove("cards__card_hover-off")
-                    });
-                };
-
-                const botCards = document.querySelectorAll(".field__empty_opp");
-                botCards.forEach(function (e3) {
-                    tauntOnField = false;
-
-                    botCards.forEach(function (e4) {
-                        if (e4.getAttribute("data-specification") === "taunt") {
-                            e4.onclick = botCardClick;
-                            tauntOnField = true
-                        }
-                    })
-
-                    // if (e3.getAttribute("data-specification") === "divine-shield")
-                    // {
-                    //     let shield = document.createElement("img");
-                    //     shield.src = "/static/images/field/divine-shield.png";
-                    //     e3.style.position = "relative";
-                    //     shield.classList.add("divine-shield")
-                    //     e3.appendChild(shield);
-                    // }
-
-                    if (tauntOnField === false) {
-                        e3.onclick = botCardClick
-                    } else {
-                        if (e3.getAttribute("data-specification") !== "taunt") {
-                            e3.onclick = () => {
-                                if (svg.style.display == "block") {
-                                    const comment = document.getElementById("comment");
-                                    const commentText = document.getElementById("commentText");
-                                    if ((heroClass == "mage") || (heroClass == "rogue")) {
-                                        commentText.innerText = "Я должна\nатаковать\nпровокатора."
-                                    } else {
-                                        commentText.innerText = "Я должен\nатаковать\nпровокатора."
-                                    }
-                                    comment.style.opacity = "1";
-                                    commentText.style.fontSize = "20px";
-                                    setTimeout(function () {
-                                        comment.style.opacity = "0"
-                                    }, 1500);
-                                }
-                            }
-                        }
-                    }
-
-
-                    function botCardClick() {
-
-                        if (svg.style.display == "block") {
-
-                            if (e.id != "heropower") {
-                                collision(e, this)
-                            }
-
-                            const cardAttack = document.querySelector(".activeCard")
-                            const cardAttackHP = cardAttack.querySelector(".card__hp")
-
-                            setTimeout(
-                                () => {
-                                    this.classList.add("activeTarget");
-                                    const botCardHP = document.querySelector(".activeTarget").childNodes[2];
-                                    const botCardAttack = document.querySelector(".activeTarget").childNodes[1]
-                                    if (e.id == "heropower") {
-                                        botCardHP.textContent -= 1;
-                                        socket.send(JSON.stringify({
-                                            type: "ability",
-                                            data: {
-                                                IdDefense: e3.id,
-                                                PlyaerId: localStorage.getItem("id"),
-                                            }
-                                        }))
-                                    } else if (e.getAttribute("data-specification") === "poisonous") {
-                                        function mustype(minion) {
-                                            switch (minion) {
-                                                case 'argent-squire':return ".ogg"
-                                                case 'bluegill-warrior':return ".ogg"
-                                                case 'boar-rocktusk':return ".ogg"
-                                                case 'boulderfist-ogre':return ".ogg"
-                                                case 'emperor-cobra':return ".ogg"
-                                                case 'frostwolf-fighter':return ".ogg"
-                                                case 'goblin-bodyguard':return ".ogg"
-                                                case 'goldshire-soldier':return ".ogg"
-                                                case 'grizzly-steelmech':return ".ogg"
-                                                case 'scarlet-crusader':return ".ogg"
-                                                case 'shieldbearer':return ".ogg"
-                                                case 'stormwind-knight':return ".ogg"
-                                                case 'wisp':return ".ogg"
-                                                case 'wolf-rider':return ".ogg"
-                                            }
-                                            return ".wav"
-                                        }
-                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
-                                        let src = "../static/sounds/" + filename  + "-attack" + mustype(filename)
-                                        const attackSound = new Audio(src);
-                                        attackSound.addEventListener('loadeddata', function () {
-                                            attackSound.play();
-                                        }, false);
-                                        botCardHP.textContent -= botCardHP.textContent;
-                                    } else {
-                                        function mustype(minion) {
-                                            switch (minion) {
-                                                case 'argent-squire':return ".ogg"
-                                                case 'bluegill-warrior':return ".ogg"
-                                                case 'boar-rocktusk':return ".ogg"
-                                                case 'boulderfist-ogre':return ".ogg"
-                                                case 'emperor-cobra':return ".ogg"
-                                                case 'frostwolf-fighter':return ".ogg"
-                                                case 'goblin-bodyguard':return ".ogg"
-                                                case 'goldshire-soldier':return ".ogg"
-                                                case 'grizzly-steelmech':return ".ogg"
-                                                case 'scarlet-crusader':return ".ogg"
-                                                case 'shieldbearer':return ".ogg"
-                                                case 'stormwind-knight':return ".ogg"
-                                                case 'wisp':return ".ogg"
-                                                case 'wolf-rider':return ".ogg"
-                                            }
-                                            return ".wav"
-                                        }
-                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
-                                        let src = "../static/sounds/" + filename  + "-attack" + mustype(filename)
-                                        const attackSound = new Audio(src);
-                                        attackSound.addEventListener('loadeddata', function () {
-                                            attackSound.play();
-                                        }, false);
-                                        const cardAttackValue = cardAttack.childNodes[1];
-                                        botCardHP.textContent -= cardAttackValue.textContent;
-                                        cardAttackHP.textContent -= botCardAttack.textContent
-                                    }
-
-                                    if (botCardHP.textContent <= 0) {
-                                        function checkFileExists(url) {
-                                            try {
-                                                const response = fetch(url, { method: 'HEAD' });
-                                                return response.ok;
-                                            } catch (error) {
-                                                return false;
-                                            }
-                                        }
-                                        function mustype(minion) {
-                                            switch (minion) {
-                                                case 'argent-squire':return ".ogg"
-                                                case 'bluegill-warrior':return ".ogg"
-                                                case 'boar-rocktusk':return ".ogg"
-                                                case 'boulderfist-ogre':return ".ogg"
-                                                case 'emperor-cobra':return ".ogg"
-                                                case 'frostwolf-fighter':return ".ogg"
-                                                case 'goblin-bodyguard':return ".ogg"
-                                                case 'goldshire-soldier':return ".ogg"
-                                                case 'grizzly-steelmech':return ".ogg"
-                                                case 'scarlet-crusader':return ".ogg"
-                                                case 'shieldbearer':return ".ogg"
-                                                case 'stormwind-knight':return ".ogg"
-                                                case 'wisp':return ".ogg"
-                                                case 'wolf-rider':return ".ogg"
-                                            }
-                                            return ".wav"
-                                        }
-                                        const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
-                                        let src = "../static/sounds/" + filename  + "-death" + mustype(filename)
-                                        const deathSound = new Audio(src);
-                                        deathSound.addEventListener('loadeddata', function () {
-                                            deathSound.play();
-                                        }, false);
-
-                                        this.style.transition = "all 1s";
-                                        this.classList.add("killed");
-                                        this.style.opacity = "0";
-                                        var killed = this
-                                        setTimeout(function () {
-                                            killed.remove()
-                                            if (enemyBattlefield.childElementCount === 0) {
-                                                let emptyField = document.createElement("div")
-                                                emptyField.classList.add("field__empty_opp")
-                                                enemyBattlefield.append(emptyField)
-                                            }
-                                        }, 1010);
-                                    }
-
-                                    if (e.id != "heropower") {
-                                        if (cardAttackHP.textContent <= 0) {
+                                            botCardHP.textContent -= botCardHP.textContent;
+                                        } else {
                                             function mustype(minion) {
                                                 switch (minion) {
-                                                    case 'argent-squire':return ".ogg"
-                                                    case 'bluegill-warrior':return ".ogg"
-                                                    case 'boar-rocktusk':return ".ogg"
-                                                    case 'boulderfist-ogre':return ".ogg"
-                                                    case 'emperor-cobra':return ".ogg"
-                                                    case 'frostwolf-fighter':return ".ogg"
-                                                    case 'goblin-bodyguard':return ".ogg"
-                                                    case 'goldshire-soldier':return ".ogg"
-                                                    case 'grizzly-steelmech':return ".ogg"
-                                                    case 'scarlet-crusader':return ".ogg"
-                                                    case 'shieldbearer':return ".ogg"
-                                                    case 'stormwind-knight':return ".ogg"
-                                                    case 'wisp':return ".ogg"
-                                                    case 'wolf-rider':return ".ogg"
+                                                    case 'argent-squire':
+                                                        return ".ogg"
+                                                    case 'bluegill-warrior':
+                                                        return ".ogg"
+                                                    case 'boar-rocktusk':
+                                                        return ".ogg"
+                                                    case 'boulderfist-ogre':
+                                                        return ".ogg"
+                                                    case 'emperor-cobra':
+                                                        return ".ogg"
+                                                    case 'frostwolf-fighter':
+                                                        return ".ogg"
+                                                    case 'goblin-bodyguard':
+                                                        return ".ogg"
+                                                    case 'goldshire-soldier':
+                                                        return ".ogg"
+                                                    case 'grizzly-steelmech':
+                                                        return ".ogg"
+                                                    case 'scarlet-crusader':
+                                                        return ".ogg"
+                                                    case 'shieldbearer':
+                                                        return ".ogg"
+                                                    case 'stormwind-knight':
+                                                        return ".ogg"
+                                                    case 'wisp':
+                                                        return ".ogg"
+                                                    case 'wolf-rider':
+                                                        return ".ogg"
                                                 }
                                                 return ".wav"
                                             }
-                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
-                                            let src = "../static/sounds/" + filename  + "-death" + mustype(filename)
+
+                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
+                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
+                                            const attackSound = new Audio(src);
+                                            attackSound.addEventListener('loadeddata', function () {
+                                                attackSound.play();
+                                            }, false);
+                                            const cardAttackValue = cardAttack.querySelector(".card__attack");
+                                            botCardHP.textContent -= cardAttackValue.textContent;
+                                            cardAttackHP.textContent -= botCardAttack.textContent
+                                        }
+
+                                        if (botCardHP.textContent <= 0) {
+                                            function checkFileExists(url) {
+                                                try {
+                                                    const response = fetch(url, {method: 'HEAD'});
+                                                    return response.ok;
+                                                } catch (error) {
+                                                    return false;
+                                                }
+                                            }
+
+                                            function mustype(minion) {
+                                                switch (minion) {
+                                                    case 'argent-squire':
+                                                        return ".ogg"
+                                                    case 'bluegill-warrior':
+                                                        return ".ogg"
+                                                    case 'boar-rocktusk':
+                                                        return ".ogg"
+                                                    case 'boulderfist-ogre':
+                                                        return ".ogg"
+                                                    case 'emperor-cobra':
+                                                        return ".ogg"
+                                                    case 'frostwolf-fighter':
+                                                        return ".ogg"
+                                                    case 'goblin-bodyguard':
+                                                        return ".ogg"
+                                                    case 'goldshire-soldier':
+                                                        return ".ogg"
+                                                    case 'grizzly-steelmech':
+                                                        return ".ogg"
+                                                    case 'scarlet-crusader':
+                                                        return ".ogg"
+                                                    case 'shieldbearer':
+                                                        return ".ogg"
+                                                    case 'stormwind-knight':
+                                                        return ".ogg"
+                                                    case 'wisp':
+                                                        return ".ogg"
+                                                    case 'wolf-rider':
+                                                        return ".ogg"
+                                                }
+                                                return ".wav"
+                                            }
+
+                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
+                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            let src = "../static/sounds/" + filename + "-death" + mustype(filename)
                                             const deathSound = new Audio(src);
                                             deathSound.addEventListener('loadeddata', function () {
                                                 deathSound.play();
                                             }, false);
-                                            e.style.transition = "all 1s";
-                                            e.classList.add("killed");
-                                            e.style.opacity = "0";
-                                            var killed = e
+
+                                            this.style.transition = "all 1s";
+                                            this.classList.add("killed");
+                                            this.style.opacity = "0";
+                                            var killed = this
                                             setTimeout(function () {
-                                                e.remove()
-                                                if (myBattlefield.childElementCount === 0) {
+                                                killed.remove()
+                                                if (enemyBattlefield.childElementCount === 0) {
                                                     let emptyField = document.createElement("div")
-                                                    emptyField.classList.add("field__empty")
-                                                    myBattlefield.append(emptyField)
+                                                    emptyField.classList.add("field__empty_opp")
+                                                    enemyBattlefield.append(emptyField)
                                                 }
                                             }, 1010);
                                         }
-                                    }
 
-                                    botCardHP.style.color = '#c70d0d';
-                                    setTimeout(function () {
-                                        botCardHP.style.color = '#FFFFFF';
-                                    }, 1500);
+                                        if (e.id != "heropower") {
+                                            if (cardAttackHP.textContent <= 0) {
+                                                function mustype(minion) {
+                                                    switch (minion) {
+                                                        case 'argent-squire':
+                                                            return ".ogg"
+                                                        case 'bluegill-warrior':
+                                                            return ".ogg"
+                                                        case 'boar-rocktusk':
+                                                            return ".ogg"
+                                                        case 'boulderfist-ogre':
+                                                            return ".ogg"
+                                                        case 'emperor-cobra':
+                                                            return ".ogg"
+                                                        case 'frostwolf-fighter':
+                                                            return ".ogg"
+                                                        case 'goblin-bodyguard':
+                                                            return ".ogg"
+                                                        case 'goldshire-soldier':
+                                                            return ".ogg"
+                                                        case 'grizzly-steelmech':
+                                                            return ".ogg"
+                                                        case 'scarlet-crusader':
+                                                            return ".ogg"
+                                                        case 'shieldbearer':
+                                                            return ".ogg"
+                                                        case 'stormwind-knight':
+                                                            return ".ogg"
+                                                        case 'wisp':
+                                                            return ".ogg"
+                                                        case 'wolf-rider':
+                                                            return ".ogg"
+                                                    }
+                                                    return ".wav"
+                                                }
 
-                                    if (e.id != "heropower")
-                                    {
-                                        cardAttackHP.style.color = '#c70d0d';
+                                                console.log("card attack e", e.querySelector(".cards__card_inner"))
+                                                const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                                let src = "../static/sounds/" + filename + "-death" + mustype(filename)
+                                                const deathSound = new Audio(src);
+                                                deathSound.addEventListener('loadeddata', function () {
+                                                    deathSound.play();
+                                                }, false);
+                                                e.style.transition = "all 1s";
+                                                e.classList.add("killed");
+                                                e.style.opacity = "0";
+                                                var killed = e
+                                                setTimeout(function () {
+                                                    e.remove()
+                                                    if (myBattlefield.childElementCount === 0) {
+                                                        let emptyField = document.createElement("div")
+                                                        emptyField.classList.add("field__empty")
+                                                        myBattlefield.append(emptyField)
+                                                    }
+                                                }, 1010);
+                                            }
+                                        }
+
+                                        botCardHP.style.color = '#c70d0d';
                                         setTimeout(function () {
-                                            cardAttackHP.style.color = '#FFFFFF';
+                                            botCardHP.style.color = '#FFFFFF';
                                         }, 1500);
-                                    }
 
-                                }, 255)
+                                        if (e.id != "heropower") {
+                                            cardAttackHP.style.color = '#c70d0d';
+                                            setTimeout(function () {
+                                                cardAttackHP.style.color = '#FFFFFF';
+                                            }, 1500);
+                                        }
+
+                                    }, 255)
 
 
-                        }
-                        ;
-                        svg.style.display = "none";
-                        document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
-                        document.getElementById("arrowcursor").style.visibility = "hidden";
-                        document.getElementById("innercursor").style.visibility = "hidden";
-                        document.getElementById("outercursor").style.visibility = "hidden";
-                    };
-                });
-            }, {once: true})
+                            }
+                            ;
+                            svg.style.display = "none";
+                            document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
+                            document.getElementById("arrowcursor").style.visibility = "hidden";
+                            document.getElementById("innercursor").style.visibility = "hidden";
+                            document.getElementById("outercursor").style.visibility = "hidden";
+                        };
+                    });
+                }, {once: true})
 
+            }
         }
     })
 }
@@ -490,7 +572,7 @@ export function collision(attacker, defender) {
 
     function damageImg() {
         console.log("damage img")
-        const attackValue = document.querySelector(".activeCard").childNodes[1].textContent;
+        const attackValue = document.querySelector(".activeCard").querySelector(".card__attack").textContent;
         let damageImage = document.createElement("img");
         let damageText = document.createElement("div");
         damageImage.src = "/static/images/field/damage.png";
@@ -513,7 +595,7 @@ export function collision(attacker, defender) {
             damageText.classList.add("damageText");
         }
         if ((attacker.getAttribute("data-specification") === "poisonous") && (defender.id != "opponenthero")) {
-            const hpValue = defender.childNodes[2].textContent;
+            const hpValue = defender.querySelector(".card__hp").textContent;
             damageText.innerText = String(-hpValue);
         } else {
             if (attackValue != 0) {

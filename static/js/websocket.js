@@ -3,8 +3,7 @@ import {CardData, GameTable, Player} from "./models.js";
 import {game, setGame} from "./game.js"
 import {ViewCards} from "./view.js";
 
-import { lose } from "./end-game.js"
-import { victory } from "./end-game.js"
+import {lose, victory} from "./end-game.js"
 
 import {dragNDrop} from "./dragndrop.js";
 import {manabarFilling, manabarFillingHover} from "./manabar-filling.js";
@@ -36,7 +35,6 @@ function selectCardsToExchange() {
             if (card.classList.contains('cards__card_swap')) {
                 card.classList.remove('cards__card_swap');
                 if (img) {
-                    console.log("card remove img", card, "img", img)
                     card.removeChild(img); // Удаляем img только если он был добавлен ранее
                     img = null; // Сбрасываем флаг
                 }
@@ -56,6 +54,7 @@ function selectCardsToExchange() {
 }
 
 let heroClass
+
 function startBefore() {
     const urlParams = new URLSearchParams(window.location.search);
     heroClass = urlParams.get('heroclass');
@@ -107,7 +106,6 @@ function start() {
     const handCards = document.querySelector('.hand__cards_start');
     if (startSubmit) {
         startSubmit.addEventListener('click', (evt) => {
-            console.log("нажали на start submit")
             hand.classList.remove('hand-and-manabar__hand_start');
 
             handCards.removeChild(startSubmit);
@@ -133,9 +131,8 @@ function start() {
                     replacedCardIds: replacedCardIds
                 }
             }
-            console.log("отправили дату")
             socket.send(JSON.stringify(dataToSend))
-            setTimeout(function() {
+            setTimeout(function () {
                 window.location.reload();
             }, 500)
         })
@@ -144,8 +141,8 @@ function start() {
 
 let paladinAbID = 1
 let warlockAbID = 2
-let hunterAbID  = 3
-let mageAbID    = 4
+let hunterAbID = 3
+let mageAbID = 4
 
 function afterStart() {
     const startSubmit = document.getElementById('StartSubmit');
@@ -242,18 +239,34 @@ function afterStart() {
 const beforeStyleAnim = document.createElement("style");
 document.head.appendChild(beforeStyleAnim);
 
-function animateCards(b, s) {
+function animateCardsEnableToDrag(b, s) {
     beforeStyleAnim.innerHTML = `.cards__card_enable-to-drag::before {` +
-        `filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(` + s +`) blur(` + b + `px);
+        `filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(` + s + `) blur(` + b + `px);
     }`;
 
-    setTimeout(function() {
+    setTimeout(function () {
         if (b === 9) {
-            animateCards(6, s);
+            animateCardsEnableToDrag(6, s);
         } else if (s === 16) {
-            animateCards(b + 1, 4);
+            animateCardsEnableToDrag(b + 1, 4);
         } else {
-            animateCards(b + 1, s + 1)
+            animateCardsEnableToDrag(b + 1, s + 1)
+        }
+    }, 500);
+}
+
+function animateCardsEnableToAttack(b, s) {
+    beforeStyleAnim.innerHTML = `.canAttack::before {` +
+        `filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(` + s + `) blur(` + b + `px);
+    }`;
+
+    setTimeout(function () {
+        if (b === 9) {
+            animateCardsEnableToAttack(6, s);
+        } else if (s === 16) {
+            animateCardsEnableToAttack(b + 1, 4);
+        } else {
+            animateCardsEnableToAttack(b + 1, s + 1)
         }
     }, 500);
 }
@@ -294,9 +307,42 @@ function enableToDrag(manaValue) {
             card.style.backgroundImage = ''
             card.append(innerE)
 
-            animateCards(6, 4);
+            animateCardsEnableToDrag(6, 4);
         }
     })
+}
+
+function enableToAttack(cardsToAttack) {
+    for (const card of document.querySelectorAll(".field__card")) {
+        card.classList.remove("canAttack")
+    }
+
+    const cardsOnField = document.querySelectorAll(".field__card")
+    for (let i = 0; i < cardsToAttack.length; i++) {
+        for (let j = 0; j < cardsOnField.length; j++) {
+            if (i === j && cardsToAttack[i].cardID === cardsOnField[j].id) {
+                cardsOnField[j].classList.add("canAttack")
+                const cardPortraitUrl = cardsOnField[j].style.backgroundImage.match(/url\(["']?([^"']+)["']?\)/)[1];
+
+                const innerE = document.createElement("div")
+                innerE.style.backgroundImage = "url(" + cardPortraitUrl + ")"
+                innerE.style.backgroundSize = "cover"
+                innerE.classList.add("cards__card_inner")
+                cardsOnField[j].style.backgroundImage = ''
+                const hpElement = cardsOnField[j].querySelector(".card__hp")
+                const manaElement = cardsOnField[j].querySelector(".card__mana")
+                const attackElement = cardsOnField[j].querySelector(".card__attack")
+
+                innerE.append(attackElement)
+                innerE.append(hpElement)
+                innerE.append(manaElement)
+
+                cardsOnField[j].append(innerE)
+
+                animateCardsEnableToAttack(6, 4);
+            }
+        }
+    }
 }
 
 function mouseOver(game, elements) {
@@ -397,7 +443,7 @@ export function socketInit() {
             }
             ViewCards(game.player1.cards, "background__field", "field__card")
             if (game.player1.cards.length === 0) {
-                while (document.getElementById("background__field").firstChild)  {
+                while (document.getElementById("background__field").firstChild) {
                     document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
                 }
                 let emptyField = document.createElement("div")
@@ -407,7 +453,7 @@ export function socketInit() {
             ViewCards(game.player1.hand, "cards", "cards__card");
             ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
             if (game.player2.cards.length === 0) {
-                while (document.getElementById("background__field_opp").firstChild)  {
+                while (document.getElementById("background__field_opp").firstChild) {
                     document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)
                 }
                 let emptyField = document.createElement("div")
@@ -432,7 +478,7 @@ export function socketInit() {
             }
             ViewCards(game.player2.cards, "background__field", "field__card")
             if (game.player2.cards.length === 0) {
-                while (document.getElementById("background__field").firstChild)  {
+                while (document.getElementById("background__field").firstChild) {
                     document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
                 }
                 let emptyField = document.createElement("div")
@@ -442,7 +488,7 @@ export function socketInit() {
             ViewCards(game.player2.hand, "cards", "cards__card");
             ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
             if (game.player1.cards.length === 0) {
-                while (document.getElementById("background__field_opp").firstChild)  {
+                while (document.getElementById("background__field_opp").firstChild) {
                     document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)
                 }
                 let emptyField = document.createElement("div")
@@ -455,23 +501,22 @@ export function socketInit() {
 
         let i = 0;
 
-        console.log("attack cards length", attackCardsLength)
-
-        document.querySelectorAll(".field__card").forEach(function (e) {
-            i++
-            if ((i <= attackCardsLength)) {
-                e.classList.add("canAttack")
-            }
-            if (e.getAttribute("data-specification") === "charge") {
-                e.classList.add("canAttack")
-            }
-        });
+        // document.querySelectorAll(".field__card").forEach(function (e) {
+        //     i++
+        //     if ((i <= attackCardsLength)) {
+        //         e.classList.add("canAttack")
+        //     }
+        //     if (e.getAttribute("data-specification") === "charge") {
+        //         e.classList.add("canAttack")
+        //     }
+        // });
 
         if (clientId === game.player1.name && game.player1.turn && game.player1.CounterOfMoves > 0) {
             enableToDrag(game.player1.Mana)
             const cards = document.querySelectorAll(".cards__card")
             mouseOver(game, cards)
             dragNDrop()
+            enableToAttack(game.player1.cardsToAttack)
             attack()
         }
         if (clientId === game.player2.name && game.player2.turn && game.player2.CounterOfMoves > 0) {
@@ -479,6 +524,7 @@ export function socketInit() {
             const cards = document.querySelectorAll(".cards__card")
             mouseOver(game, cards)
             dragNDrop()
+            enableToAttack(game.player2.cardsToAttack)
             attack()
         }
 
@@ -525,53 +571,9 @@ export function socketInit() {
                 }
                 break;
             case "exchange cards":
-                // if (clientId === game.player1.name) {
-                //     if (game.player1.CounterOfMoves > 0) {
-                //         console.log("fjajdf", game.player1.CounterOfMoves)
-                //         afterStart()
-                //         ViewCards(game.player1.hand, "cards", "cards__card");
-                //         if (game.player1.turn) {
-                //             manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
-                //             manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
-                //             dragNDrop()
-                //             attack()
-                //         }
-                //     } else {
-                //         const startSubmit = document.getElementById("StartSubmit")
-                //         console.log("else")
-                //         if (!startSubmit) {
-                //             console.log("else2")
-                //             startBefore()
-                //             start()
-                //         }
-                //     }
-                // }
-                // if (clientId === game.player2.name) {
-                //     if (game.player2.CounterOfMoves > 0) {
-                //         console.log("fjajdf", game.player2.CounterOfMoves)
-                //         afterStart()
-                //         ViewCards(game.player2.hand, "cards", "cards__card");
-                //         if (game.player2.turn) {
-                //             manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
-                //             manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
-                //             dragNDrop()
-                //             attack()
-                //         }
-                //     } else {
-                //         const startSubmit = document.getElementById("StartSubmit")
-                //         console.log("else")
-                //         if (!startSubmit) {
-                //             console.log("else2")
-                //             startBefore()
-                //             start()
-                //         }
-                //     }
-                // }
-                console.log("карты сразу после того как зашли в exchange cards", document.querySelectorAll(".cards__card"))
                 if (clientId === game.player1.name) {
                     if (game.player1.turn && game.player1.CounterOfMoves > 0) {
                         afterStart()
-                        console.log("зашел после after start")
                         manabarFilling(game.player1.Mana, myManaElement, game.player1.CounterOfMoves);
                         manabarFilling(game.player2.Mana, enemyManaElement, game.player2.CounterOfMoves)
                         const cards = document.querySelectorAll(".cards__card")
@@ -580,9 +582,7 @@ export function socketInit() {
                         dragNDrop()
                         attack()
                     } else {
-                        console.log("зашел в else start", document.getElementById("StartSubmit"))
                         if (document.getElementById("StartSubmit")) {
-                            console.log("зашел в if с cards start")
                             const hand = document.querySelector('.hand-and-manabar__hand');
 
                             const startSubmit = document.getElementById('StartSubmit');
@@ -603,7 +603,6 @@ export function socketInit() {
                 if (clientId === game.player2.name) {
                     if (game.player2.CounterOfMoves > 0 && game.player2.turn) {
                         afterStart()
-                        console.log("зашел после after start")
                         manabarFilling(game.player2.Mana, myManaElement, game.player2.CounterOfMoves)
                         manabarFilling(game.player1.Mana, enemyManaElement, game.player1.CounterOfMoves)
                         const cards = document.querySelectorAll(".cards__card")
@@ -612,9 +611,7 @@ export function socketInit() {
                         dragNDrop()
                         attack()
                     } else {
-                        console.log("зашел в else start", document.getElementById("StartSubmit"))
                         if (document.getElementById("StartSubmit")) {
-                            console.log("зашел в if с cards start")
                             const hand = document.querySelector('.hand-and-manabar__hand');
 
                             const startSubmit = document.getElementById('StartSubmit');
@@ -649,8 +646,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -668,8 +664,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -698,8 +693,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -731,8 +725,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -772,8 +765,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -790,8 +782,7 @@ export function socketInit() {
                     mouseOver(game, cards)
                     if (cardsNumber <= 7) {
                         dragNDrop()
-                    }
-                    else {
+                    } else {
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
                         commentText.innerText = "У меня слишком\nмного существ";
@@ -819,8 +810,7 @@ export function socketInit() {
                 console.log("bot attack")
                 if (cardsNumber <= 7) {
                     dragNDrop()
-                }
-                else {
+                } else {
                     const comment = document.getElementById("comment");
                     const commentText = document.getElementById("commentText");
                     commentText.innerText = "У меня слишком\nмного существ";
@@ -837,7 +827,7 @@ export function socketInit() {
                 lose()
                 socket.send(JSON.stringify({
                     type: "defeat",
-                    data : {
+                    data: {
                         clientID: localStorage.getItem('id')
                     }
                 }))
@@ -846,8 +836,7 @@ export function socketInit() {
                 console.log("ability")
                 if (cardsNumber <= 7) {
                     dragNDrop()
-                }
-                else {
+                } else {
                     const comment = document.getElementById("comment");
                     const commentText = document.getElementById("commentText");
                     commentText.innerText = "У меня слишком\nмного существ";
@@ -891,7 +880,7 @@ export function socketInit() {
 }
 
 function checkVictoryOrLoose(game) {
-    if (game != null || game != undefined || game !=  new GameTable()) {
+    if (game != null || game != undefined || game != new GameTable()) {
         if (game.player1.HP <= 0 && clientId == game.player1.name) {
             lose()
             socket.send(JSON.stringify({
@@ -900,7 +889,7 @@ function checkVictoryOrLoose(game) {
             }))
         }
 
-        if (game.player2.HP <= 0 && clientId == game.player2.name ) {
+        if (game.player2.HP <= 0 && clientId == game.player2.name) {
             lose()
             socket.send(JSON.stringify({
                 Type: "defeat",
@@ -916,7 +905,7 @@ function checkVictoryOrLoose(game) {
             }))
         }
 
-        if (game.player2.HP <= 0 && clientId != game.player2.name ) {
+        if (game.player2.HP <= 0 && clientId != game.player2.name) {
             victory()
             socket.send(JSON.stringify({
                 Type: "defeat",
@@ -948,6 +937,7 @@ function ParseDataToPlayer(data) {
         data.CounterOfMoves,
         data.Hero,
         data.HeroTurn,
+        ParseDataToCards(data.CardsToAttack),
     )
 }
 

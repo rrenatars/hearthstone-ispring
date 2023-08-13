@@ -42,6 +42,8 @@ func attack(attackData *AttackType, p *models.Player, o *models.Player, historyP
 		return err
 	}
 
+	p.CardsToAttack = tools.RemoveElemsFromSlice(p.CardsToAttack, indexCardAttack)
+
 	if attackData.IdDefense == "opponenthero" {
 		o.HP = o.HP - p.Cards[indexCardAttack].Attack
 		return nil

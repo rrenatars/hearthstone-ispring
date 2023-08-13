@@ -34,8 +34,9 @@ export class Player {
      * @param {number} counterOfMoves
      * @param {string} hero
      * @param {bool} heroTurn
+     * @param {Array<CardData>} cardsToAttack
      */
-    constructor(name, hand, cards, deck, turn, HP, Def, mana, counterOfMoves, hero, heroTurn) {
+    constructor(name, hand, cards, deck, turn, HP, Def, mana, counterOfMoves, hero, heroTurn, cardsToAttack) {
         this.name = name;
         this.hand = hand;
         this.cards = cards;
@@ -47,6 +48,7 @@ export class Player {
         this.CounterOfMoves = counterOfMoves;
         this.hero = hero;
         this.heroTurn = heroTurn;
+        this.cardsToAttack = cardsToAttack;
     }
 }
 

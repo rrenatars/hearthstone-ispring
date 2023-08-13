@@ -97,14 +97,34 @@
 }
 
 .cards__card_inner {
-    width: 94px;
-    height: 135px;
+    width: 100px;
+    height: 134px;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    /*flex-direction: column;*/
+    justify-content: space-around;
+    align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     background-repeat: no-repeat;
     transform: translate(-3px, 0px) scale(1.0);
+}
+
+.canAttack {
+
+}
+
+.canAttack::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 134px;
+    background-size: cover;
+    background-position: center;
+    top: 0;
+    left: 0;
+    background-image: url("../../static/images/creatures/arcane-servant.png");
+    transition: all .3s ease-out;
+    transform: translate(-7%, -3%) scale(1.1);
+    filter: brightness(1) sepia(1) hue-rotate(60deg) saturate(15) blur(7px);
 }
 
 .cards__card_enable-to-drag {
@@ -319,6 +339,7 @@
     align-items: flex-end;
     font-family: 'Roboto', sans-serif;
     user-select: none;
+    transform: translate(0px, 0px);
     /*z-index: 12;*/
 }
 
