@@ -75,11 +75,11 @@ export function socketInit() {
                     document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
                 }
                 let emptyField = document.createElement("div")
-                emptyField.classList.add("field__empty_opp")
+                emptyField.classList.add("field__empty")
                 document.getElementById("background__field").append(emptyField)
             }
             ViewCards(game.player1.hand, "cards", "cards__card");
-            ViewCards(game.player2.cards, "background__field_opp", "field__empty_opp");
+            ViewCards(game.player2.cards, "background__field_opp", "field__card_opp");
             if (game.player2.cards.length === 0) {
                 while (document.getElementById("background__field_opp").firstChild) {
                     document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)
@@ -117,11 +117,11 @@ export function socketInit() {
                     document.getElementById("background__field").removeChild(document.getElementById("background__field").firstChild)
                 }
                 let emptyField = document.createElement("div")
-                emptyField.classList.add("field__empty_opp")
+                emptyField.classList.add("field__empty")
                 document.getElementById("background__field").append(emptyField)
             }
             ViewCards(game.player2.hand, "cards", "cards__card");
-            ViewCards(game.player1.cards, "background__field_opp", "field__empty_opp");
+            ViewCards(game.player1.cards, "background__field_opp", "field__card_opp");
             if (game.player1.cards.length === 0) {
                 while (document.getElementById("background__field_opp").firstChild) {
                     document.getElementById("background__field_opp").removeChild(document.getElementById("background__field_opp").firstChild)

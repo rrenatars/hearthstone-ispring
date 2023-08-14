@@ -1,25 +1,6 @@
 import {game} from "./game.js";
 import {socket} from "./websocket.js";
 
-const beforeStyle = document.createElement("style");
-document.head.appendChild(beforeStyle);
-
-function animateCards(b, s) {
-    beforeStyle.innerHTML = `.cards__card_drag::before {` +
-        `filter: brightness(2) sepia(1) hue-rotate(180deg) saturate(` + s + `) blur(` + b + `px);
-    }`;
-
-    setTimeout(function () {
-        if (b === 9) {
-            animateCards(6, s);
-        } else if (s === 16) {
-            animateCards(b + 1, 4);
-        } else {
-            animateCards(b + 1, s + 1)
-        }
-    }, 500);
-}
-
 function greenButton() {
     const cardsOnField = document.querySelectorAll(".field__card")
     const cardsHand = document.querySelectorAll(".cards__card")
@@ -38,7 +19,7 @@ function greenButton() {
     const endTurnButton = document.getElementById('endturn');
     endTurnButton.style.transition = "all 2.5s";
     endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn-green.png)";
-    endTurnButton.style.animation = "burn2 1.5s linear infinite alternate";
+    endTurnButton.style.animation = "burn-button-end-turn 1.5s linear infinite alternate";
 }
 
 export function dragNDrop() {
@@ -96,7 +77,6 @@ export function dragNDrop() {
                         var shiftY = e.pageY - coords.top;
 
                         card.style.position = 'absolute';
-                        console.log("card drag", card)
                         card.classList.remove("cards__card")
                         card.classList.remove("cards__card_enable-to-drag")
                         card.classList.add("cards__card_drag")
@@ -108,7 +88,7 @@ export function dragNDrop() {
                         });
 
                         card.style.zIndex = 1000;
-                        const cardPortraitUrl = card.querySelector(".cards__card_inner").style.backgroundImage;
+                        const cardPortraitUrl = card.style.backgroundImage;
                         function mustype(minion) {
                             switch (minion) {
                                 case 'argent-squire':return ".ogg"
@@ -134,16 +114,6 @@ export function dragNDrop() {
                         summonSound.addEventListener('loadeddata', function () {
                             summonSound.play();
                         }, false);
-                        const beforeStyle = document.createElement('style');
-                        beforeStyle.innerHTML = `
-            .cards__card_drag::before {
-                background-image: url(` + cardPortraitUrl + `);
-            }
-            `;
-                        // Добавляем созданный стиль в голову документа
-                        document.head.appendChild(beforeStyle);
-
-                        animateCards(6, 4);
 
                         function moveAt(e) {
                             card.style.left = e.pageX - 30 + 'px';
@@ -176,10 +146,6 @@ export function dragNDrop() {
                                     cardNotToDrag.classList.remove("cards__card_hover-off")
                                 });
 
-                                // for (const card of cards) {
-                                //     card.classList.add("cards__card")
-                                //     card.classList.remove("cards__card_if-drag-card")
-                                // }
                                 cardsNumber = document.querySelector(".field__card")
                                 socket.send(JSON.stringify({
                                     type: "card drag",

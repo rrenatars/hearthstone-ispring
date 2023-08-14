@@ -43,10 +43,6 @@ export function mouseOver(game, elements, clientId) {
     function handleMouseOver(event) {
         let card = event.target
 
-        if (event.target.classList.contains("cards__card_inner")) {
-            card = event.target.parentElement
-        }
-
         if (card.classList.contains("cards__card_enable-to-drag")) {
             const cardManaValue = parseInt(card.querySelector(".card__mana").textContent)
             if (cardManaValue > 0) {
@@ -61,10 +57,6 @@ export function mouseOver(game, elements, clientId) {
 
     function handleMouseOut(event) {
         let card = event.target
-
-        if (event.target.classList.contains("cards__card_inner")) {
-            card = event.target.parentElement
-        }
 
         if (card.classList.contains("cards__card_enable-to-drag")) {
             const myManaElement = document.getElementById("MyMana")

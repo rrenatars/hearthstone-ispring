@@ -1,7 +1,6 @@
 import {victory} from "./end-game.js";
-import {lose} from "./end-game.js";
 import {socket} from "./websocket.js"
-import {game} from "./game.js"
+import {vulnerableToAttack} from "./enable.js";
 
 export function attack() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -27,7 +26,6 @@ export function attack() {
         }
     }
 
-
     fightCards.forEach(function (e) {
         if (e.classList.contains("canAttack")) {
             if ((e.classList.contains('canAttack')) || (e.getAttribute("data-specification") === "rush")) {
@@ -43,6 +41,8 @@ export function attack() {
                     document.body.style.cursor = "none";
                     e.classList.add("activeCard");
                     e.style.zIndex = "-1";
+
+                    vulnerableToAttack(document.querySelectorAll(".field__card_opp"))
 
                     document.body.addEventListener('mousemove', function (e2) {
                         if (document.querySelector(".activeCard")) {
@@ -66,7 +66,6 @@ export function attack() {
                             }
                         }
                     });
-
 
                     // e.addEventListener("click", function () {
                     //     svg.style.display = "none";
@@ -152,8 +151,7 @@ export function attack() {
                                             }
 
                                             if (!e.id == "heropower") {
-                                                console.log("card attack e", e.querySelector(".cards__card_inner"))
-                                                const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                                const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                                 let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
                                                 const attackSound = new Audio(src);
                                                 attackSound.addEventListener('loadeddata', function () {
@@ -205,7 +203,7 @@ export function attack() {
                         });
                     };
 
-                    const botCards = document.querySelectorAll(".field__empty_opp");
+                    const botCards = document.querySelectorAll(".field__card_opp");
                     botCards.forEach(function (e3) {
                         tauntOnField = false;
 
@@ -309,8 +307,7 @@ export function attack() {
                                                 return ".wav"
                                             }
 
-                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
-                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                             let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
                                             const attackSound = new Audio(src);
                                             attackSound.addEventListener('loadeddata', function () {
@@ -352,8 +349,7 @@ export function attack() {
                                                 return ".wav"
                                             }
 
-                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
-                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                             let src = "../static/sounds/" + filename + "-attack" + mustype(filename)
                                             const attackSound = new Audio(src);
                                             attackSound.addEventListener('loadeddata', function () {
@@ -408,8 +404,7 @@ export function attack() {
                                                 return ".wav"
                                             }
 
-                                            console.log("card attack e", e.querySelector(".cards__card_inner"))
-                                            const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                            const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                             let src = "../static/sounds/" + filename + "-death" + mustype(filename)
                                             const deathSound = new Audio(src);
                                             deathSound.addEventListener('loadeddata', function () {
@@ -424,7 +419,7 @@ export function attack() {
                                                 killed.remove()
                                                 if (enemyBattlefield.childElementCount === 0) {
                                                     let emptyField = document.createElement("div")
-                                                    emptyField.classList.add("field__empty_opp")
+                                                    emptyField.classList.add("field__card_opp")
                                                     enemyBattlefield.append(emptyField)
                                                 }
                                             }, 1010);
@@ -466,8 +461,7 @@ export function attack() {
                                                     return ".wav"
                                                 }
 
-                                                console.log("card attack e", e.querySelector(".cards__card_inner"))
-                                                const filename = e.querySelector(".cards__card_inner").style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
+                                                const filename = e.style.backgroundImage.match(/url\("\.\.\/\.\.\/static\/images\/creatures\/(.*?)\.png"/)[1];
                                                 let src = "../static/sounds/" + filename + "-death" + mustype(filename)
                                                 const deathSound = new Audio(src);
                                                 deathSound.addEventListener('loadeddata', function () {
