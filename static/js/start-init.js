@@ -1,4 +1,4 @@
-import {selectCardsToExchange} from "./tools.js";
+import {selectCardsToExchange} from "./exchange-cards.js";
 import {lose, victory} from "./end-game.js";
 import {socket} from "./websocket.js";
 
@@ -80,10 +80,11 @@ export function start() {
                     replacedCardIds: replacedCardIds
                 }
             }
+
             socket.send(JSON.stringify(dataToSend))
             setTimeout(function () {
                 window.location.reload();
-            }, 500)
+            }, 100)
         })
     }
 }

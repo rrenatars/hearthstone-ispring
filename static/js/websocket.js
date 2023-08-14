@@ -11,7 +11,9 @@ import {attack} from "./attack.js";
 
 import {enableToDrag, enableToAttack} from "./enable.js";
 
-import {yourTurn, mouseOver} from "./tools.js";
+import {yourTurn} from "./your-turn.js";
+import {handMouseOver, fieldMouseOver, buttonMouseOver} from "./hover.js";
+import {greenButton} from "./green-button.js";
 
 import {startBefore, start, afterStart} from "./start-init.js";
 
@@ -92,16 +94,22 @@ export function socketInit() {
             myHeroHealthValue.textContent = game.player1.HP
             enemyHeroHealthValue.textContent = game.player2.HP
 
+            const myCreatures = document.querySelectorAll(".field__card")
+            const enemyCreatures = document.querySelectorAll(".field__card_opp")
+
             if (game.player1.CounterOfMoves > 0) {
                 if (game.player1.turn) {
                     document.body.style.cursor = "url(../static/images/cursor/cursor.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn1.png)";
                     enableToDrag(game.player1.Mana)
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(game, cards, clientId)
+                    handMouseOver(game, cards, clientId)
+                    fieldMouseOver(Array.from(myCreatures).concat(Array.from(enemyCreatures)))
+                    buttonMouseOver(document.querySelector(".endturn-button"))
                     dragNDrop()
                     enableToAttack(game.player1.cardsToAttack)
                     attack()
+                    greenButton()
                 } else {
                     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
@@ -134,6 +142,9 @@ export function socketInit() {
             myHeroHealthValue.textContent = game.player2.HP
             enemyHeroHealthValue.textContent = game.player1.HP
 
+            const myCreatures = document.querySelectorAll(".field__card")
+            const enemyCreatures = document.querySelectorAll(".field__card_opp")
+
             if (game.player2.CounterOfMoves > 0) {
                 if (game.player2.turn) {
                     endTurnButton.addEventListener("click", function () {
@@ -142,10 +153,13 @@ export function socketInit() {
                     })
                     enableToDrag(game.player2.Mana)
                     const cards = document.querySelectorAll(".cards__card")
-                    mouseOver(game, cards, clientId)
+                    handMouseOver(game, cards, clientId)
+                    fieldMouseOver(Array.from(myCreatures).concat(Array.from(enemyCreatures)))
+                    buttonMouseOver(document.querySelector(".endturn-button"))
                     dragNDrop()
                     enableToAttack(game.player2.cardsToAttack)
                     attack()
+                    greenButton()
                 } else {
                     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";

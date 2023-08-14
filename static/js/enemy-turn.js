@@ -3,10 +3,10 @@ import { manabarFilling } from "./manabar-filling.js";
 
 export function enemyTurnRun() {
     const endTurnButton = document.getElementById('endturn');
-    const manaElement = document.getElementById("MyMana")
     endTurnButton.addEventListener("click", function () {
         endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
         document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
+        endTurnButton.style.animation = "none"
         endTurnButton.setAttribute('disabled', '');
         const dataToSend = {
             type: "end turn",
@@ -26,7 +26,6 @@ export function enemyTurnRun() {
     });
 
     function enemyTurn() {
-        // manabarFilling(10, manaElement);
         const urlParams = new URLSearchParams(window.location.search);
         const heroClass = urlParams.get('heroclass');
         const selectedHeroPowerElement = document.getElementById('heropower');

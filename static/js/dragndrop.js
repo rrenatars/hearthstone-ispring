@@ -1,27 +1,6 @@
 import {game} from "./game.js";
 import {socket} from "./websocket.js";
 
-function greenButton() {
-    const cardsOnField = document.querySelectorAll(".field__card")
-    const cardsHand = document.querySelectorAll(".cards__card")
-
-    for (const card of cardsOnField) {
-        if (card.classList.contains("canAttack")) {
-            return
-        }
-    }
-
-    for (const card of cardsHand) {
-        if (card.classList.contains("cards__card_enable-to-drag")) {
-            return
-        }
-    }
-    const endTurnButton = document.getElementById('endturn');
-    endTurnButton.style.transition = "all 2.5s";
-    endTurnButton.style.backgroundImage = "url(../static/images/field/end-turn-green.png)";
-    endTurnButton.style.animation = "burn-button-end-turn 1.5s linear infinite alternate";
-}
-
 export function dragNDrop() {
     function getCoords(elem) {
         var box = elem.getBoundingClientRect();
