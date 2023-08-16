@@ -110,7 +110,12 @@ export function afterStart() {
             if (selectedHeroPowerElement.style.backgroundImage == ('url("../static/images/field/' + heroClass + '-power.png")'))
                 switch (heroClass) {
                     case 'hunter':
+                        /// после обновления страницы перестанет работать
                         opponentheroHealthElement.textContent -= 2;
+                        opponentHeroElement.style.color = '#c70d0d';
+                        setTimeout(function () {
+                            opponentHeroElement.style.color = '#FFFFFF';
+                        }, 1500);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         if (opponentheroHealthElement.textContent <= 0) victory()
                         break;
@@ -128,6 +133,11 @@ export function afterStart() {
                         break;
                     case 'warlock':
                         heroHealthElement.textContent -= 2;
+                        /// при обновлении страниц перестанет работать
+                        opponentHeroElement.style.color = '#c70d0d';
+                        setTimeout(function () {
+                            opponentHeroElement.style.color = '#FFFFFF';
+                        }, 1500);
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         if (heroHealthElement.textContent <= 0) lose()
                         break;
@@ -135,7 +145,6 @@ export function afterStart() {
                         selectedHeroPowerElement.style.backgroundImage = 'url(../static/images/field/used-power.png)';
                         break;
                 }
-
         });
     }
 }

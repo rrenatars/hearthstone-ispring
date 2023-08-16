@@ -8,6 +8,12 @@ export function enableToDrag(manaValue) {
     })
 }
 
+export function heroPowerEnableToAttack(manaValue, heroPower) {
+    if (manaValue >= 2) {
+        heroPower.classList.add("cards__card_enable-to-drag")
+    }
+}
+
 export function enableToAttack(cardsToAttack) {
     for (const card of document.querySelectorAll(".field__card")) {
         card.classList.remove("canAttack")

@@ -97,7 +97,7 @@
 }
 
 .canAttack {
-    animation: burn-card-green 2s linear infinite alternate;
+    animation: burn-green 2s linear infinite alternate;
 }
 
 .field__card_vulnerable {
@@ -142,7 +142,7 @@
 
 
 .cards__card_enable-to-drag {
-    animation: burn-card-green 2s linear infinite alternate;
+    animation: burn-green 2s linear infinite alternate;
 }
 
 .cards__card_drag {
@@ -212,14 +212,14 @@
     width: 217px;
     height: 309px;
     background-repeat: no-repeat;
-    animation: burn-card-green 2s linear infinite alternate;
+    animation: burn-green 2s linear infinite alternate;
 }
 
 .cards__card_swap {
     animation: none;
 }
 
-@keyframes burn-card-green {
+@keyframes burn-green {
     from {
         filter: drop-shadow(-0.02em 0 .08em #62f164) drop-shadow(0.02em -0.02em .08em #29e73f) drop-shadow(-0.04em -0.04em .1em #29e73f) drop-shadow(0.04em -0.06em .08em #1bc529) drop-shadow(-0.04em -0.08em .1em #1bc529) drop-shadow(0.02em -0.1em .18em #10cc1f);
     }
@@ -402,11 +402,14 @@
 
 .field__image-card {
     position: absolute;
-    top: -150%;
-    left: 33%;
-    z-index: 1000;
-    animation: none !important;
+    transition: opacity 0.3s ease;
     transform: scale(0.6);
+}
+
+.specification-image {
+    position: absolute;
+    transition: opacity 0.3s ease;
+    transform: scale(1.0);
 }
 
 .card__attack {
@@ -575,28 +578,11 @@ button:active {
 .endturn-button_green {
     transition: all 2.5s;
     background-image: url(../images/field/end-turn-green.png);
-    animation: burn-button-end-turn 2s linear infinite alternate;
+    animation: burn-green 2s linear infinite alternate;
 }
 
-@keyframes burn-button-end-turn {
-    from {
-        box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .4em #29e73f, .2em -.3em .3em #1bc529, -.2em -.4em .4em #1bc529, .1em -.5em .7em #10cc1f;
-    }
-
-    45% {
-        box-shadow: .1em -.2em .5em #62f164, .15em 0 .4em #29e73f, -.1em -.25em .5em #29e73f, .15em -.45em .5em #1bc529, -.1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
-    ;
-    }
-
-    70% {
-        box-shadow: -.1em 0 .3em #62f164, .1em -.1em .3em #29e73f, -.2em -.2em .6em #29e73f, .2em -.3em .4em #1bc529, -.2em -.4em .7em #1bc529, .1em -.5em .7em #10cc1f;
-    ;
-    }
-
-    to {
-        box-shadow: -.1em -.2em .6em #62f164, -.15em 0 .6em #29e73f, .1em -.25em .6em #29e73f, -.15em -.45em .5em #1bc529, .1em -.5em .6em #1bc529, 0 -.8em .6em #10cc1f;
-    ;
-    }
+.enemyturn-button {
+    background: url(../images/field/enemy-turn.png);
 }
 
 .playerManaValue {
