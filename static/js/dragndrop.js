@@ -40,7 +40,7 @@ export function dragNDrop() {
                             comment.style.opacity = "0"
                         }, 1500);
                         return;
-                    } else if (cardsNumber == 7) {
+                    } else if (cardsNumber === 7) {
                         console.log("cards Number", cardsNumber)
                         const comment = document.getElementById("comment");
                         const commentText = document.getElementById("commentText");
@@ -116,7 +116,7 @@ export function dragNDrop() {
                                 }
                                 field.appendChild(card);
                                 card.style.position = 'static';
-                                card.classList.remove('cards__drag');
+                                card.classList.remove('cards__card_drag');
                                 card.classList.add('field__card');
 
                                 cardsNotToDrag = document.querySelectorAll(".cards__card")
@@ -137,7 +137,6 @@ export function dragNDrop() {
                                 card.classList.remove("cards__card_drag")
                                 card.classList.add("cards__card")
                                 card.classList.add("cards__card_enable-to-drag")
-                                cardsElement.appendChild(card);
                                 card.style.position = 'static';
 
                                 cardsNotToDrag = document.querySelectorAll(".cards__card_hover-off")

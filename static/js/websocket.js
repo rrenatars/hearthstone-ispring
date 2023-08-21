@@ -120,6 +120,8 @@ export function socketInit() {
                 } else {
                     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                    endTurnButton.classList.remove("endturn-button_green")
+                    endTurnButton.style.removeProperty("animation")
                     endTurnButton.setAttribute('disabled', '');
                 }
             }
@@ -172,6 +174,8 @@ export function socketInit() {
                 } else {
                     document.body.style.cursor = "url(../static/images/cursor/spectate.png) 10 2, auto";
                     endTurnButton.style.backgroundImage = "url(../static/images/field/enemy-turn.png)";
+                    endTurnButton.classList.remove("endturn-button_green")
+                    endTurnButton.style.removeProperty("animation")
                     endTurnButton.setAttribute('disabled', '');
                 }
             }

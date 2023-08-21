@@ -13,6 +13,23 @@ export function handMouseOver(game, elements, clientId) {
             }
         }
 
+        if ((card.getAttribute("data-specification") === "taunt") && (!(document.querySelector(".cards__card_drag")))) {
+            const rect = card.getBoundingClientRect();
+            const cardX = rect.left;
+            const cardY = rect.top;
+
+            const tauntImg = document.createElement("img")
+            tauntImg.src = "../../static/images/field/taunt-image.png"
+            tauntImg.classList.add("specification-image")
+            setTimeout(function () {
+                tauntImg.style.opacity = "1"
+            }, 500)
+            tauntImg.style.left = cardX - 280 + "px"
+            tauntImg.style.top = cardY - 175 + "px"
+
+            document.body.appendChild(tauntImg)
+        }
+
         card.addEventListener("mouseout", handleMouseOut)
     }
 
@@ -31,6 +48,10 @@ export function handMouseOver(game, elements, clientId) {
                 }, 200)
             }
         }
+
+        if (document.querySelector(".specification-image")) {
+            document.body.removeChild(document.querySelector(".specification-image"))
+        }
     }
 
     elements.forEach((element) => {
@@ -44,11 +65,39 @@ export function abilityMouseOver(game, element, clientId) {
 
         if (ability.classList.contains("cards__card_enable-to-drag")) {
             const cardManaValue = 2
-            if ((cardManaValue > 0) && (!(document.querySelector(".activeCard"))) && (!(document.querySelector(".card__drag")))) {
+            if ((!(document.querySelector(".activeCard"))) && (!(document.querySelector(".card__drag")))) {
                 setTimeout(function () {
                     manabarFillingHover(cardManaValue)
                 }, 200)
             }
+
+            setTimeout(function () {
+                ability.style.animation = "burn-card-green-white 2s linear infinite alternate"
+            }, 100)
+        } else {
+            setTimeout(function () {
+                ability.style.animation = "burn-card-white 2s linear infinite alternate"
+            }, 100)
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        let heroClass = urlParams.get('heroclass');
+
+        if (heroClass === "mage") {
+            const rect = ability.getBoundingClientRect();
+            const cardX = rect.left;
+            const cardY = rect.top;
+
+            const abilityImg = document.createElement("img")
+            abilityImg.src = "../../static/images/cards-in-hand/fireblast.png"
+            abilityImg.classList.add("ability__image-card")
+            setTimeout(function () {
+                abilityImg.style.opacity = "1"
+            }, 500)
+            abilityImg.style.left = cardX - 40 + "px"
+            abilityImg.style.top = cardY - 310 + "px"
+
+            document.body.appendChild(abilityImg)
         }
 
         ability.addEventListener("mouseout", handleMouseOut)
@@ -69,6 +118,14 @@ export function abilityMouseOver(game, element, clientId) {
                 }, 200)
             }
         }
+
+        setTimeout(function () {
+            ability.style.removeProperty("animation")
+        }, 100)
+
+        if (document.querySelector(".ability__image-card")) {
+            document.body.removeChild(document.querySelector(".ability__image-card"))
+        }
     }
 
     element.addEventListener("mouseover", handleMouseOver);
@@ -86,15 +143,14 @@ export function fieldMouseOver(elements) {
             cardImg.src = cardPortraitUrl
             cardImg.classList.add("field__image-card")
 
-            if (!(document.querySelector(".activeCard")) && (!(document.querySelector(".card__drag")))) {
-                card.style.position = "relative"
-                card.style.zIndex = "1000"
-
+            if (!(document.querySelector(".activeCard")) || (!(document.querySelector(".card__card_drag")))) {
                 const rect = card.getBoundingClientRect();
                 const cardX = rect.left;
                 const cardY = rect.top;
 
-                cardImg.style.removeProperty("animation")
+                setTimeout(function () {
+                    cardImg.style.opacity = "1"
+                }, 100)
                 cardImg.style.left = cardX + 30 + "px"
                 cardImg.style.top = cardY - 200 + "px"
                 document.body.appendChild(cardImg)
@@ -103,12 +159,16 @@ export function fieldMouseOver(elements) {
                     const tauntImg = document.createElement("img")
                     tauntImg.src = "../../static/images/field/taunt-image.png"
                     tauntImg.classList.add("specification-image")
+                    setTimeout(function () {
+                        tauntImg.style.opacity = "1"
+                    }, 500)
                     tauntImg.style.left = cardX + 325 + "px"
-                    tauntImg.style.top = cardY - 55 + "px"
+                    tauntImg.style.top = cardY - 60 + "px"
 
                     document.body.appendChild(tauntImg)
                 }
             }
+
             if (card.classList.contains("canAttack")) {
                 setTimeout(function () {
                     card.style.animation = "burn-card-green-white 2s linear infinite alternate"
@@ -135,8 +195,6 @@ export function fieldMouseOver(elements) {
             if (document.querySelector(".specification-image")) {
                 document.body.removeChild(document.querySelector(".specification-image"))
             }
-            card.style.position = ""
-            card.style.zIndex = ""
         }
 
         setTimeout(function () {

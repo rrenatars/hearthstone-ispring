@@ -29,10 +29,11 @@ export function ViewCards(cards, parentId, childClassName) {
         manaElement.style.visibility = "hidden"
         newCardElement.appendChild(manaElement);
 
+        newCardElement.setAttribute("data-specification", cardInHand.specification)
+
         if (!(parentId === 'cards')) {
             const attackElement = document.createElement('span')
             attackElement.className = "card__attack"
-            newCardElement.setAttribute("data-specification", cardInHand.specification)
             if ((cardInHand.specification === "taunt") && (parentId != "cards")) {
                 attackElement.classList.add("card__attack_taunt")
             } else if ((cardInHand.specification === "poisonous") && (parentId != "cards")) {
